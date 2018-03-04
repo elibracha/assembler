@@ -5,14 +5,14 @@
 
  ********************************************/
 
-#include <mem.h>
+#include <string.h>
 #include <stdlib.h>
 
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
 
-const char* convert2BitsTo32(char* number_to_convert){
+const char* convert_2bits_to_32(char* number_to_convert){
 
     char BaseChars32[] = { '!','@','#','$','%','^','&'
             ,'*','<','>','a','b','c','d'
@@ -21,27 +21,31 @@ const char* convert2BitsTo32(char* number_to_convert){
             ,'s','t','u','v' };
 
     short int length = (short) strlen(number_to_convert);
-    short int numbersBase10[length/5];
-    short int currentSum = 0;
-    short int currentIndex = 0;
+    short int numbers_base_10[length/5];
+    short int current_sum = 0;
+    short int current_index = 0;
     short int stages[] = {16,8,4,2,1};
 
-    for (int i=0; i < length; i++) {
+    int i;
+
+    for (i = 0; i < length; i++) {
         int temp = number_to_convert[i] - '0';
         if (temp == 1)
-            currentSum += temp*stages[i%5];
+            current_sum += temp*stages[i%5];
         if((i+1)%5 == 0 && i != 0){
-            numbersBase10[currentIndex++] = currentSum;
-            currentSum = 0;
+            numbers_base_10[current_index++] = current_sum;
+            current_sum = 0;
         }
     }
 
-    int arr_length = sizeof(numbersBase10)/sizeof(short int);
+    int arr_length = sizeof(numbers_base_10)/sizeof(short int);
 
     char result[arr_length + 1];
 
-    for (int j = 0; j < arr_length; j++){
-        char convertedLetter = BaseChars32[numbersBase10[j]];
+    int j;
+
+    for (j = 0; j < arr_length; j++){
+        char convertedLetter = BaseChars32[numbers_base_10[j]];
         result[j] = convertedLetter;
     }
 
@@ -53,11 +57,11 @@ const char* convert2BitsTo32(char* number_to_convert){
  * This function responsible for swapping between number on base 10 to base 2.
  */
 
-const char* convert10BitsTo2(char* number_to_convert) {
+const char* convert_10bits_to_2(char* number_to_convert) {
 
-    unsigned int number = (unsigned int) atoi(number_to_convert);
-    unsigned short int* binary_number = NULL;
-    unsigned short int *temp = NULL;
+    signed int number = atoi(number_to_convert);
+    signed short int* binary_number = NULL;
+    signed short int *temp = NULL;
     short int counter = 0;
     _Bool flag1 = 1;
 
@@ -66,20 +70,24 @@ const char* convert10BitsTo2(char* number_to_convert) {
         if(number == 0)
             flag1 = 0;
 
-        temp = (unsigned short int *) calloc((size_t) (counter + 1)
-                , sizeof(unsigned short int));
+        temp = (signed short int *) calloc((size_t) (counter + 1)
+                , sizeof(signed short int));
 
         if (temp != NULL) {
-            for (int i = 0; i < counter; ++i) {
+
+            int i;
+
+            for (i = 0; i < counter; ++i) {
                 *(temp + i) = *(binary_number + i);
             }
             free(binary_number);
             binary_number = temp;
         }
+
         if (number % 2 == 0)
             number = number / 2;
         else {
-            binary_number[counter] = (unsigned short) (number % 2);
+            binary_number[counter] = (signed short int) (number % 2);
             number = (number - 1) / 2;
         }
     }
@@ -101,12 +109,11 @@ const char* convert10BitsTo2(char* number_to_convert) {
             binary_number_str = (char*) calloc((size_t) (counter + 1), sizeof(char));
 
         if(*(binary_number + counter -1) == 1)
-            binary_number_str[i] = '1';
+            binary_number_str[i++] = '1';
         else
-            binary_number_str[i] = '0';
+            binary_number_str[i++] = '0';
 
         counter--;
-        i++;
     }
 
     char *binary_number_str_final = NULL;
@@ -117,7 +124,9 @@ const char* convert10BitsTo2(char* number_to_convert) {
 
         binary_number_str_final = (char*) calloc((size_t) (length + 1), sizeof(char));
 
-        for (int j = 0; j < length; ++j) {
+        int j;
+
+        for (j = 0; j < length; ++j) {
             if(j < 5 - strlen(binary_number_str) % 5)
                 binary_number_str_final[j] = '0';
             else
@@ -126,7 +135,6 @@ const char* convert10BitsTo2(char* number_to_convert) {
 
     }
 
-    free(binary_number);
     free(binary_number_str);
     free(temp);
 

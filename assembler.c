@@ -10,25 +10,26 @@
 
 #include <stdio.h>
 #define MINIMUM_ARGUMENTS 1
+#define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
 
-const char* convert2BitsTo32(char*);
-const char* convert10BitsTo2(char*);
+const char* convert_2bits_to_32(char*);
+const char* convert_10bits_to_2(char*);
 void start(int, char*[]);
 
 int main(int argc, char* argv[]){
-    if(argc > MINIMUM_ARGUMENTS)
-        start(argc, argv);
-    else
-        printf("Error: No File Paths Specified As Arguments.");
+    argc > MINIMUM_ARGUMENTS ? start(argc, argv): printf(STARTUP_ERROR);
     return 0;
 }
 
-void start(int count, char* args[]){
+void start(int count, char* paths[]){
+
     printf("\n");
-    for (int i = 1; i < count; ++i) {
-        printf("%s\n", *(args + i));
+    int i;
+
+    for (i = 1; i < count; ++i) {
+        printf("%s\n", *(paths + i));
     }
 
-    printf("%s\n", convert10BitsTo2("100"));
-    printf("%s\n", convert2BitsTo32("0000100100"));
+    printf("%s\n", convert_10bits_to_2("100"));
+    printf("%s\n", convert_2bits_to_32("0000100100"));
 }
