@@ -42,18 +42,20 @@ const char* convert_2bits_to_32(const char* number_to_convert){
         }
     }
 
-    int arr_length = sizeof(numbers_base_10)/sizeof(short int);
+    int result_length = sizeof(numbers_base_10)/sizeof(short int);
 
-    char result[arr_length + 1];
+    char* result = (char*) calloc(result_length, sizeof(char));
     int j;
 
-    for (j = 0; j < arr_length; j++){
-        char convertedLetter = BaseChars32[numbers_base_10[j]];
-        result[j] = convertedLetter;
-    }
+    if(result != NULL)
+        for (j = 0; j < result_length; j++){
+            char convertedLetter = BaseChars32[numbers_base_10[j]];
+            result[j] = convertedLetter;
+        }
+    else
+        exit_program();
 
-    const char* res = result;
-    return res;
+    return result;
 }
 
 /*

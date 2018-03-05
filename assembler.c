@@ -29,7 +29,7 @@ void start(int count, char* files[]){
         printf("%s\n", *(files + i));
     }
 
-    printf("%s\n", convert_10bits_to_2("10000"));
+    printf("%s\n", convert_10bits_to_2("100"));
     printf("%s\n", convert_2bits_to_32(convert_10bits_to_2("100")));
     printf(SUCCESS_MESSAGE);
 }
