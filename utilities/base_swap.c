@@ -45,7 +45,6 @@ const char* convert_2bits_to_32(const char* number_to_convert){
     int arr_length = sizeof(numbers_base_10)/sizeof(short int);
 
     char result[arr_length + 1];
-
     int j;
 
     for (j = 0; j < arr_length; j++){
@@ -66,41 +65,43 @@ const char* convert_10bits_to_2(const char* number_to_convert) {
     signed int number = atoi(number_to_convert);
     short int counter = 0;
     _Bool* binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
-    _Bool flag = 1;
 
-    while (number >= 0 && flag) {
+    while (number >= 0) {
 
-        if(number == 0)
-            flag = 0;
+        if(number == 0){
+            break;
+        }
 
         if (binary_number == NULL) {
             exit_program();
         }
 
+        binary_number[counter] = (_Bool) (number % 2);
+
         if (number % 2 == 0){
             number = number / 2;
         } else {
-            binary_number[counter] = (_Bool) (number % 2);
             number = (number - 1) / 2;
         }
 
         counter++;
-        binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
+        if(number != 0)
+            binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
     }
 
-    flag = 1;
     int j, i;
-    int length = 5 - (counter % 5);
+    _Bool flag = 1;
+    int length = (5 - (counter % 5)) % 5;
     char* result = (char*) calloc((size_t) (counter + length), sizeof(char));
 
     for (i = counter-1; i >= 0; --i) {
         if(counter  %5 != 0 && flag) {
             for (j = 0; j < length; ++j)
                 *(result + j) = '0';
-            flag = 0;
         }
+        flag = 0;
 
-        if(*(binary_number+i) == 1)
+        if(*(binary_number + i) == 1)
             *(result + length++) = '1' ;
         else
             *(result + length++) = '0';
