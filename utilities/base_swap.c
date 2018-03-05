@@ -106,6 +106,7 @@ const char* convert_10bits_to_2(const char* number_to_convert) {
             *(result + length++) = '0';
     }
 
+    free(binary_number);
     return result;
 }
 
