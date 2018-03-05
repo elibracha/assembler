@@ -11,9 +11,10 @@
 #include <stdio.h>
 #define MINIMUM_ARGUMENTS 1
 #define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
+#define SUCCESS_MESSAGE "Build: Success Building Output Files."
 
-const char* convert_2bits_to_32(char*);
-const char* convert_10bits_to_2(char*);
+const char* convert_2bits_to_32(const char*);
+const char* convert_10bits_to_2(const char*);
 void start(int, char*[]);
 
 int main(int argc, char* argv[]){
@@ -21,15 +22,14 @@ int main(int argc, char* argv[]){
     return 0;
 }
 
-void start(int count, char* paths[]){
-
-    printf("\n");
+void start(int count, char* files[]){
     int i;
 
     for (i = 1; i < count; ++i) {
-        printf("%s\n", *(paths + i));
+        printf("%s\n", *(files + i));
     }
 
     printf("%s\n", convert_10bits_to_2("100"));
-    printf("%s\n", convert_2bits_to_32("0000100100"));
+    printf("%s\n", convert_2bits_to_32(convert_10bits_to_2("101")));
+    printf(SUCCESS_MESSAGE);
 }

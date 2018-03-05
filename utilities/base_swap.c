@@ -5,14 +5,18 @@
 
  ********************************************/
 
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#define MEMORY_OVERFLOW "Error: No Memory Space To Execute Convertion Between Bases.\n"
+
+void exit_program();
 
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
 
-const char* convert_2bits_to_32(char* number_to_convert){
+const char* convert_2bits_to_32(const char* number_to_convert){
 
     char BaseChars32[] = { '!','@','#','$','%','^','&'
             ,'*','<','>','a','b','c','d'
@@ -49,7 +53,7 @@ const char* convert_2bits_to_32(char* number_to_convert){
         result[j] = convertedLetter;
     }
 
-    char* res = result;
+    const char* res = result;
     return res;
 }
 
@@ -57,86 +61,55 @@ const char* convert_2bits_to_32(char* number_to_convert){
  * This function responsible for swapping between number on base 10 to base 2.
  */
 
-const char* convert_10bits_to_2(char* number_to_convert) {
+const char* convert_10bits_to_2(const char* number_to_convert) {
 
     signed int number = atoi(number_to_convert);
-    signed short int* binary_number = NULL;
-    signed short int *temp = NULL;
     short int counter = 0;
-    _Bool flag1 = 1;
+    _Bool* binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
+    _Bool flag = 1;
 
-    for (counter; number >= 0 && flag1; ++counter) {
+    while (number >= 0 && flag) {
 
         if(number == 0)
-            flag1 = 0;
+            flag = 0;
 
-        temp = (signed short int *) calloc((size_t) (counter + 1)
-                , sizeof(signed short int));
-
-        if (temp != NULL) {
-
-            int i;
-
-            for (i = 0; i < counter; ++i) {
-                *(temp + i) = *(binary_number + i);
-            }
-            free(binary_number);
-            binary_number = temp;
+        if (binary_number == NULL) {
+            exit_program();
         }
 
-        if (number % 2 == 0)
+        if (number % 2 == 0){
             number = number / 2;
-        else {
-            binary_number[counter] = (signed short int) (number % 2);
+        } else {
+            binary_number[counter] = (_Bool) (number % 2);
             number = (number - 1) / 2;
         }
+
+        counter++;
+        binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
     }
 
-    char* binary_number_str = NULL;
-    _Bool flag2 = 1;
-    int i = 0;
+    flag = 1;
+    int j, i;
+    int length = 5 - (counter % 5);
+    char* result = (char*) calloc((size_t) (counter + length), sizeof(char));
 
-    while (counter > 0) {
-        if(flag2){
-            if(*(binary_number + counter-1) == 0){
-                counter--;
-                continue;
-            }
+    for (i = counter-1; i >= 0; --i) {
+        if(counter  %5 != 0 && flag) {
+            for (j = 0; j < length; ++j)
+                *(result + j) = '0';
+            flag = 0;
         }
 
-        flag2 = 0;
-        if(binary_number_str == NULL)
-            binary_number_str = (char*) calloc((size_t) (counter + 1), sizeof(char));
-
-        if(*(binary_number + counter -1) == 1)
-            binary_number_str[i++] = '1';
+        if(*(binary_number+i) == 1)
+            *(result + length++) = '1' ;
         else
-            binary_number_str[i++] = '0';
-
-        counter--;
+            *(result + length++) = '0';
     }
 
-    char *binary_number_str_final = NULL;
+    return result;
+}
 
-    if(strlen(binary_number_str) % 5 != 0){
-        int current = 0;
-        int length = (5 - strlen(binary_number_str) % 5) + strlen(binary_number_str);
-
-        binary_number_str_final = (char*) calloc((size_t) (length + 1), sizeof(char));
-
-        int j;
-
-        for (j = 0; j < length; ++j) {
-            if(j < 5 - strlen(binary_number_str) % 5)
-                binary_number_str_final[j] = '0';
-            else
-                binary_number_str_final[j] = binary_number_str[current++];
-        }
-
-    }
-
-    free(binary_number_str);
-    free(temp);
-
-    return binary_number_str_final;
+void exit_program(){
+    printf(MEMORY_OVERFLOW);
+    exit(0);
 }
