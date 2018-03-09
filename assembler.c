@@ -24,9 +24,7 @@ int main(int argc, char* argv[]){
 }
 
 void start_assembler(int count, char **files){
-    while(*++files)
-        printf("%s\n", *files);
-
+    file_exist(files);
     printf("%s\n", convert_10bits_to_2(100));
     printf("%s\n", convert_2bits_to_32(convert_10bits_to_2(100)));
     printf(SUCCESS_MESSAGE);
