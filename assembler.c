@@ -15,19 +15,17 @@
 
 const char* convert_2bits_to_32(const char*);
 const char* convert_10bits_to_2(const char*);
-void start(int, char*[]);
+const _Bool file_exist(const char**);
+void start_assembler(int, char **);
 
 int main(int argc, char* argv[]){
-    argc > MINIMUM_ARGUMENTS ? start(argc, argv): printf(STARTUP_ERROR);
+    argc > MINIMUM_ARGUMENTS ? start_assembler(argc, argv): printf(STARTUP_ERROR);
     return 0;
 }
 
-void start(int count, char* files[]){
-    int i;
-
-    for (i = 1; i < count; ++i) {
-        printf("%s\n", *(files + i));
-    }
+void start_assembler(int count, char **files){
+    while(*++files)
+        printf("%s\n", *files);
 
     printf("%s\n", convert_10bits_to_2("100"));
     printf("%s\n", convert_2bits_to_32(convert_10bits_to_2("100")));

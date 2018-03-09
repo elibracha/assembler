@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MEMORY_OVERFLOW "Error: No Memory Space To Execute Convertion Between Bases.\n"
+#define MEMORY_OVERFLOW "Error: Noty Enough Memory To Execute Convertion Between Bases.\n"
 
 void exit_program();
 
@@ -43,6 +43,7 @@ const char* convert_2bits_to_32(const char* number_to_convert){
     int result_length = sizeof(numbers_base_10)/sizeof(short int);
 
     char* result = (char*) calloc((size_t) result_length, sizeof(char));
+
     int j;
 
     if(result != NULL)
