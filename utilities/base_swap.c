@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#define MEMORY_OVERFLOW "Error: Noty Enough Memory To Execute Convertion Between Bases.\n"
+#define MEMORY_OVERFLOW "Error: Noty Enoug Memory To Execute Convertion Between Bases.\n"
 
 void exit_program();
 
@@ -42,7 +42,7 @@ const char* convert_2bits_to_32(const char* number_to_convert){
 
     int result_length = sizeof(numbers_base_10)/sizeof(short int);
 
-    char* result = (char*) calloc((size_t) result_length, sizeof(char));
+    char* result = (char*) calloc((size_t) result_length + 1, sizeof(char));
 
     int j;
 
@@ -61,39 +61,38 @@ const char* convert_2bits_to_32(const char* number_to_convert){
  * This function responsible for swapping between number on base 10 to base 2.
  */
 
-const char* convert_10bits_to_2(const char* number_to_convert) {
+const char* convert_10bits_to_2(signed int number_to_convert) {
 
-    signed int number = atoi(number_to_convert);
     short int counter = 0;
     _Bool* binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
 
-    while (number >= 0) {
+    while (number_to_convert >= 0) {
 
-        if(number == 0){
+        if(number_to_convert == 0){
             break;
         }
 
         if (binary_number == NULL) {
             exit_program();
+        }else{
+            binary_number[counter] = (_Bool) (number_to_convert % 2);
+
+            if (number_to_convert % 2 == 0){
+                number_to_convert = number_to_convert / 2;
+            } else {
+                number_to_convert = (number_to_convert - 1) / 2;
+            }
+
+            counter++;
+            if(number_to_convert != 0)
+                binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
         }
-
-        binary_number[counter] = (_Bool) (number % 2);
-
-        if (number % 2 == 0){
-            number = number / 2;
-        } else {
-            number = (number - 1) / 2;
-        }
-
-        counter++;
-        if(number != 0)
-            binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
     }
 
     int j, i;
     _Bool flag = 1;
     int length = (5 - (counter % 5)) % 5;
-    char* result = (char*) calloc((size_t) (counter + length), sizeof(char));
+    char* result = (char*) calloc((size_t) (counter + length + 1), sizeof(char));
 
     for (i = counter-1; i >= 0; --i) {
         if(counter  %5 != 0 && flag) {

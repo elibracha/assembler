@@ -14,7 +14,7 @@
 #define SUCCESS_MESSAGE "Build: Success Building Output Files."
 
 const char* convert_2bits_to_32(const char*);
-const char* convert_10bits_to_2(const char*);
+const char* convert_10bits_to_2(signed int);
 const _Bool file_exist(const char**);
 void start_assembler(int, char **);
 
@@ -27,7 +27,7 @@ void start_assembler(int count, char **files){
     while(*++files)
         printf("%s\n", *files);
 
-    printf("%s\n", convert_10bits_to_2("100"));
-    printf("%s\n", convert_2bits_to_32(convert_10bits_to_2("100")));
+    printf("%s\n", convert_10bits_to_2(100));
+    printf("%s\n", convert_2bits_to_32(convert_10bits_to_2(100)));
     printf(SUCCESS_MESSAGE);
 }
