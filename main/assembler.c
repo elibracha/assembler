@@ -15,7 +15,8 @@
 
 const char* convert_2bits_to_32(const char*);
 const char* convert_10bits_to_2(signed int);
-const _Bool file_exist(const char**);
+void file_exist(char**);
+void parse(char**);
 void start_assembler(int, char **);
 
 int main(int argc, char* argv[]){
@@ -25,7 +26,6 @@ int main(int argc, char* argv[]){
 
 void start_assembler(int count, char **files){
     file_exist(files);
-    printf("%s\n", convert_10bits_to_2(100));
-    printf("%s\n", convert_2bits_to_32(convert_10bits_to_2(100)));
+    parse(files);
     printf(SUCCESS_MESSAGE);
 }
