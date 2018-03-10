@@ -49,7 +49,6 @@ void assemble(char **paths){
 
         enum status state = OPCODE;
         int line = 1;
-        _Bool flag = 0;
 
         while (!feof(fd)){
             if(!commend){
