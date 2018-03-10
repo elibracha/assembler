@@ -1,1 +1,9 @@
-move #1, d
+mov #1
+         mov #1        ,         d
+cmp #1, d
+not #1, d
+
+
+
+jmp #1, d
+        bne  sad    ,       asd
