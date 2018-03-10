@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <mem.h>
+#include <string.h>
 #include <stdlib.h>
 
 #define COMMEND_SYNTEX_ERROR "Syntex: On Line %d Commend Not Recognized (%s).\n"
@@ -29,13 +29,13 @@ typedef struct {
     unsigned int _opcode : 4;
 } commend;
 
-int check_syntax(char *, char*, char*, int);
+unsigned int check_syntax(char *, char*, char*, int);
 void build(char*, char*, char*, int);
 
 void cmd_handler(char *opcmd, int line ){
 
     char *op = NULL, *operand1 = NULL, *operand2 = NULL;
-    signed short int flag = 0;
+    unsigned short int flag = 0;
     int i, j = 0, size = 1;
 
     for (i = 0; i < strlen(opcmd); ++i) {
@@ -114,13 +114,13 @@ void cmd_handler(char *opcmd, int line ){
 }
 
 void build(char *op, char *operand1, char *operand2, int line) {
-    int result = check_syntax(op, operand1, operand2, line);
+    unsigned int result = check_syntax(op, operand1, operand2, line);
     commend operation;
     operation. _opcode = result;
     printf("OPCODE - %d\n" , operation._opcode);
 }
 
-int check_syntax(char *op, char *operand1, char *operand2, int line){
+unsigned int check_syntax(char *op, char *operand1, char *operand2, int line){
     if(strcmp(op, "mov") == 0){
         return 0;
     }else if(strcmp(op, "cmp") == 0){

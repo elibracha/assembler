@@ -1,9 +1,13 @@
 mov #1
-         mov #1        ,         d
+
+         sub  #1        ,         d
 cmp #1, d
 not #1, d
 
-
+        lea #1        ,         d
+                                                      cmp #1, d
+     red #1, d
 
 jmp #1, d
+
         bne  sad    ,       asd

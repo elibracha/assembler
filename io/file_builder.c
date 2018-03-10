@@ -49,6 +49,7 @@ void assemble(char **paths){
 
         enum status state = OPCODE;
         int line = 1;
+        _Bool flag = 0;
 
         while (!feof(fd)){
             if(!commend){
@@ -60,7 +61,7 @@ void assemble(char **paths){
 
             switch (state){
                 case OPCODE:
-                    if(ch == ' '  || ch == '\t' || ch == -1 || ch == '\n'){
+                    if(ch == ' '  || ch == '\t' || ch == -1 || ch == '\n' || ch == '\r'){
                         if(size > 1){
                             *(commend + size - 1) = '/';
                             state = OPRAND;
@@ -76,7 +77,7 @@ void assemble(char **paths){
                                 break;
                             }
                         } else {
-                            if(ch == '\n')
+                            if (ch == '\n')
                                 line++;
                             continue;
                         }
