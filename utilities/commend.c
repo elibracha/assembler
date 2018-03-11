@@ -1,39 +1,11 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
-#define COMMEND_SYNTEX_ERROR "Syntex: On Line %d Commend Not Recognized (%s).\n"
-#define COMMEND_CHECK_FAILURE "Error: Not Enough Space To Analyze Commends.\n"
+/*******************************************************
+   This file responsible for commend check and handle.
+ ******************************************************/
 
-#define MOV_ARGUMENTS 2
-#define CMP_ARGUMENTS 2
-#define ADD_ARGUMENTS 2
-#define SUB_ARGUMENTS 2
-#define LEA_ARGUMENTS 2
-#define NOT_ARGUMENTS 1
-#define CLR_ARGUMENTS 1
-#define INC_ARGUMENTS 1
-#define DEC_ARGUMENTS 1
-#define JMP_ARGUMENTS 1
-#define BNE_ARGUMENTS 1
-#define RED_ARGUMENTS 1
-#define PRN_ARGUMENTS 1
-#define JSR_ARGUMENTS 1
-#define RTS_ARGUMENTS 0
-#define STOP_ARGUMENTS 0
+#include "./commend.h"
 
-typedef struct {
-    unsigned int _ERA : 2;
-    unsigned int _des_operand : 2;
-    unsigned int _src_operand : 2;
-    unsigned int _opcode : 4;
-} commend;
-
-unsigned int check_syntax(char *, char **, int);
-
-void build(char *, char **, int);
-
-void cmd_handler(char *opcmd, int line, _Bool label) {
+void handle_commend(char *opcmd, int line, _Bool label) {
 
     char *op = NULL, *lab = NULL;
     char **operands = NULL;
@@ -72,6 +44,10 @@ void cmd_handler(char *opcmd, int line, _Bool label) {
                     if (label) {
                         if (*(opcmd + i) != '/') {
                             lab = (char *) realloc(lab, (size_t) size++);
+                            if(!lab){
+                                printf(SPACE_ALLOCATION_FAILED);
+                                exit(0);
+                            }
                             lab[j++] = *(opcmd + i);
                         } else {
                             size = 1;
@@ -88,6 +64,10 @@ void cmd_handler(char *opcmd, int line, _Bool label) {
                 case 1:
                     if (*(opcmd + i) != '/') {
                         op = (char *) realloc(op, (size_t) ++size);
+                        if(!op){
+                            printf(SPACE_ALLOCATION_FAILED);
+                            exit(0);
+                        }
                         op[j++] = *(opcmd + i);
                     } else {
                         size = 1;
@@ -99,9 +79,15 @@ void cmd_handler(char *opcmd, int line, _Bool label) {
                     break;
                 default:
                     if (*(opcmd + i) != '/') {
-                        if(size == 1)
-                             operands[counter] = (char *) malloc(sizeof(char));
-                        operands[counter] = (char *) realloc(operands[counter], (size_t) size++);
+                        if(size == 1) {
+                            operands[counter] = (char *) malloc(sizeof(char));
+                            size++;
+                        }else
+                            operands[counter] = (char *) realloc(operands[counter], (size_t) size++);
+                        if (!operands[counter]) {
+                            printf(SPACE_ALLOCATION_FAILED);
+                            exit(0);
+                        }
                         operands [counter][j++] = *(opcmd + i);
                     } else {
                         size = 1;
@@ -114,19 +100,14 @@ void cmd_handler(char *opcmd, int line, _Bool label) {
             }
         }
     }
-
-    while(--k != -1) {
-        printf("%s\n",operands[k]);
-    }
-
-    build(op, operands, line);
+    build_data(op, operands, line);
 }
 
-void build(char *op, char **operands, int line) {
+void build_data(char *op, char **operands, int line) {
     unsigned int result = check_syntax(op, operands, line);
     commend operation;
     operation._opcode = result;
-    printf("OPCODE - %d\n", operation._opcode);
+    printf("CODE - %d\n", operation._opcode);
 }
 
 unsigned int check_syntax(char *op, char **operands, int line) {
@@ -164,16 +145,16 @@ unsigned int check_syntax(char *op, char **operands, int line) {
         return 15;
     } else if (strcmp(op, ".string") == 0) {
         return 16;
-    } else if (strcmp(op, ".module") == 0) {
-        return 17;
     } else if (strcmp(op, ".struct") == 0) {
         return 18;
     } else if (strcmp(op, ".entry") == 0) {
         return 19;
     } else if (strcmp(op, ".extern") == 0) {
         return 20;
+    } else if (strcmp(op, ".data") == 0) {
+        return 20;
     } else {
-        printf(COMMEND_SYNTEX_ERROR, op);
+        printf(COMMEND_SYNTEX_ERROR, line, op);
         exit(0);
     }
 }

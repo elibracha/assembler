@@ -2,14 +2,7 @@
 /********************************************
    This file responsible for base swapping.
  ********************************************/
-
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#define MEMORY_OVERFLOW "Error: Noty Enoug Memory To Execute Convertion Between Bases.\n"
-
-void exit_program();
-
+#include "./convertor.h"
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
