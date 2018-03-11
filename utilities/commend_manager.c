@@ -29,51 +29,63 @@ typedef struct {
     unsigned int _opcode : 4;
 } commend;
 
-unsigned int check_syntax(char *, char*, char*, int);
-void build(char*, char*, char*, int);
+unsigned int check_syntax(char *, char **, int);
 
-void cmd_handler(char *opcmd, int line ){
+void build(char *, char **, int);
 
-    char *op = NULL, *operand1 = NULL, *operand2 = NULL;
+void cmd_handler(char *opcmd, int line, _Bool label) {
+
+    char *op = NULL, *lab = NULL;
+    char **operands = NULL;
     unsigned short int flag = 0;
-    int i, j = 0, size = 1;
+    signed short int counter = 0;
+    int i, j = 0, size = 1, k = 0;;
 
-    for (i = 0; i < strlen(opcmd); ++i) {
-        if (*(opcmd + i) == '/'){
-            op = (char*) malloc(sizeof(char));
-            operand1 = (char*) malloc(sizeof(char));
-            operand2 = (char*) malloc(sizeof(char));
-            flag = 1;
-        }
-    }
+    for (i = 0; i < strlen(opcmd) && !flag; ++i) {
+        if (*(opcmd + i) == '/' && op == NULL && operands == NULL) {
+            op = (char *) malloc(sizeof(char));
+            operands = (char **) malloc(sizeof(char*));
 
-    if(op == NULL)
-        op = opcmd;
-
-    if(flag){
-        flag = 0;
-        for (i = 0; i <= strlen(opcmd); ++i) {
-            if(!op || !operand1 || !operand2) {
+            if (!op || !operands ) {
                 printf(COMMEND_CHECK_FAILURE);
                 exit(0);
             }
-            if(i == strlen(opcmd)){
-                switch(flag){
-                    case 0:
-                        op = (char *) realloc(op, (size_t) ++size);
-                        op[j++] = '\0';
-                        break;
-                    case 1:
-                        operand1 = (char *) realloc(operand1, (size_t) ++size);
-                        operand1[j++] = '\0';
-                        break;
-                    case 2:
-                        operand2 = (char *) realloc(operand2, (size_t) ++size);
-                        operand2[j++] = '\0';
-                }
+            flag = 1;
+        }
+        if (label && lab == NULL) {
+            lab = (char *) malloc(sizeof(char));
+            if (!lab) {
+                printf(COMMEND_CHECK_FAILURE);
+                exit(0);
             }
+        }
+    }
+
+    if (op == NULL && !label)
+        op = opcmd;
+
+    if (flag) {
+        flag = 0;
+        for (i = 0; i <= strlen(opcmd); ++i) {
             switch (flag) {
                 case 0:
+                    if (label) {
+                        if (*(opcmd + i) != '/') {
+                            lab = (char *) realloc(lab, (size_t) size++);
+                            lab[j++] = *(opcmd + i);
+                        } else {
+                            size = 1;
+                            lab[j] = '\0';
+                            j = 0;
+                            flag++;
+                        }
+                    }
+                    else{
+                        flag++;
+                        i--;
+                    }
+                    break;
+                case 1:
                     if (*(opcmd + i) != '/') {
                         op = (char *) realloc(op, (size_t) ++size);
                         op[j++] = *(opcmd + i);
@@ -82,79 +94,87 @@ void cmd_handler(char *opcmd, int line ){
                         op[j] = '\0';
                         j = 0;
                         flag++;
+                        k++;
                     }
                     break;
-                case 1:
+                default:
                     if (*(opcmd + i) != '/') {
-                        operand1 = (char *) realloc(operand1, (size_t) size++);
-                        operand1[j++] = *(opcmd + i);
-                    }else {
+                        if(size == 1)
+                             operands[counter] = (char *) malloc(sizeof(char));
+                        operands[counter] = (char *) realloc(operands[counter], (size_t) size++);
+                        operands [counter][j++] = *(opcmd + i);
+                    } else {
                         size = 1;
-                        op[i] = '\0';
+                        operands [counter][j++] = '\0';
+                        counter++;
+                        k++;
                         j = 0;
-                        flag++;
-                    }
-                    break;
-                case 2:
-                    if (*(opcmd + i) != '/'){
-                        operand2 = (char *) realloc(operand2, (size_t) size++);
-                        operand2[j++] = *(opcmd + i);
-                    }else{
-                        size = 1;
-                        op[i] = '\0';
-                        j = 0;
-                        flag++;
                     }
                     break;
             }
         }
     }
 
-    build(op, operand1, operand2, line);
+    while(--k != -1) {
+        printf("%s\n",operands[k]);
+    }
+
+    build(op, operands, line);
 }
 
-void build(char *op, char *operand1, char *operand2, int line) {
-    unsigned int result = check_syntax(op, operand1, operand2, line);
+void build(char *op, char **operands, int line) {
+    unsigned int result = check_syntax(op, operands, line);
     commend operation;
-    operation. _opcode = result;
-    printf("OPCODE - %d\n" , operation._opcode);
+    operation._opcode = result;
+    printf("OPCODE - %d\n", operation._opcode);
 }
 
-unsigned int check_syntax(char *op, char *operand1, char *operand2, int line){
-    if(strcmp(op, "mov") == 0){
+unsigned int check_syntax(char *op, char **operands, int line) {
+    if (strcmp(op, "mov") == 0) {
         return 0;
-    }else if(strcmp(op, "cmp") == 0){
+    } else if (strcmp(op, "cmp") == 0) {
         return 1;
-    }else if(strcmp(op, "add") == 0){
+    } else if (strcmp(op, "add") == 0) {
         return 2;
-    }else if(strcmp(op, "sub") == 0){
+    } else if (strcmp(op, "sub") == 0) {
         return 3;
-    }else if(strcmp(op, "not") == 0){
+    } else if (strcmp(op, "not") == 0) {
         return 4;
-    }else if(strcmp(op, "clr") == 0){
+    } else if (strcmp(op, "clr") == 0) {
         return 5;
-    }else if(strcmp(op, "lea") == 0){
+    } else if (strcmp(op, "lea") == 0) {
         return 6;
-    }else if(strcmp(op, "inc") == 0){
+    } else if (strcmp(op, "inc") == 0) {
         return 7;
-    }else if(strcmp(op, "dec") == 0){
+    } else if (strcmp(op, "dec") == 0) {
         return 8;
-    }else if(strcmp(op, "jmp") == 0){
+    } else if (strcmp(op, "jmp") == 0) {
         return 9;
-    }else if(strcmp(op, "bne") == 0){
+    } else if (strcmp(op, "bne") == 0) {
         return 10;
-    }else if(strcmp(op, "red") == 0){
+    } else if (strcmp(op, "red") == 0) {
         return 11;
-    }else if(strcmp(op, "prn") == 0){
+    } else if (strcmp(op, "prn") == 0) {
         return 12;
-    }else if(strcmp(op, "jsr") == 0){
+    } else if (strcmp(op, "jsr") == 0) {
         return 13;
-    }else if(strcmp(op, "rts") == 0){
+    } else if (strcmp(op, "rts") == 0) {
         return 14;
-    }else if(strcmp(op, "stop") == 0){
+    } else if (strcmp(op, "stop") == 0) {
         return 15;
-    }else{
-        printf(COMMEND_SYNTEX_ERROR, line, op);
+    } else if (strcmp(op, ".string") == 0) {
+        return 16;
+    } else if (strcmp(op, ".data") == 0) {
+        return 17;
+    } else if (strcmp(op, ".struct") == 0) {
+        return 18;
+    } else if (strcmp(op, ".entry") == 0) {
+        return 19;
+    } else if (strcmp(op, ".extern") == 0) {
+        return 20;
+    } else {
+        printf(COMMEND_SYNTEX_ERROR, op);
         exit(0);
     }
 }
+
