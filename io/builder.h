@@ -26,4 +26,6 @@ _Bool check_for_comment(char ch, enum status *);
 void handle_comment(signed short int *, char, signed short int *, _Bool *, char **, enum status *);
 _Bool handle_line(signed short int *, char, signed short int *, _Bool *, char **, enum status *);
 void handle_operand(signed short int*, char, signed short int*, _Bool*, char **, enum status *, enum status *);
+void handle_opcode(signed short int*, char, signed short int*, _Bool*, char **, enum status *);
+
 #endif //ASSEMBLER_BUILDER_H

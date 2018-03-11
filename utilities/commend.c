@@ -105,9 +105,6 @@ void handle_commend(char *opcmd, int line, _Bool label) {
 
 void build_data(char *op, char **operands, int line) {
     unsigned int result = check_syntax(op, operands, line);
-    commend operation;
-    operation._opcode = result;
-    printf("CODE - %d\n", operation._opcode);
 }
 
 unsigned int check_syntax(char *op, char **operands, int line) {
