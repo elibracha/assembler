@@ -164,7 +164,7 @@ unsigned int check_syntax(char *op, char **operands, int line) {
         return 15;
     } else if (strcmp(op, ".string") == 0) {
         return 16;
-    } else if (strcmp(op, ".data") == 0) {
+    } else if (strcmp(op, ".module") == 0) {
         return 17;
     } else if (strcmp(op, ".struct") == 0) {
         return 18;
