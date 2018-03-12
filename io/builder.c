@@ -5,49 +5,53 @@
 
 #include "./builder.h"
 
-void file_exist(char **files) {
-    while (*++files) {
-        _Bool flag = 0;
-        FILE *file = fopen(*files, "r+");
+_Bool validate_files(char *file) {
 
-        file != NULL ? _log(*files, ++flag) : _log(*files, flag);
+    _Bool flag = 0;
+    _Bool _valid = 1;
 
-        if (file != NULL)
-            fclose(file);
-        if (!flag)
-            exit(0);
+    FILE *fd = fopen(file, "r+");
+    fd ? _log(file, ++flag) : _log(file, flag);
+
+    extension(file, _valid);
+
+    if (fd != NULL) {
+        fclose(fd);
+        if (_valid)
+            return 1;
     }
+    return 0;
 }
 
-void assemble(char **paths) {
-    while (*++paths) {
-        FILE *fd = fopen(*paths, "r+");
+void assemble(char *file) {
 
-        signed short int size = 1;
-        char *commend = (char *) malloc((size_t) sizeof(char));
+    FILE *fd = fopen(file, "r+");
 
-        enum status state = OPCODE;
-        enum status sub_state = OUTSIDE_QUOTATION_MARK;
-        _Bool has_label = 0;
-        signed short int line = 1;
+    signed short int size = 1;
+    char *commend = (char *) malloc((size_t) sizeof(char));
 
-        while (!feof(fd)) {
-            mem_check(&commend);
+    enum status state = OPCODE;
+    enum sub_status sub_state = OUTSIDE_QUOTATION_MARK;
+    _Bool has_label = 0;
+    signed short int line = 1;
 
-            char ch = (char) fgetc(fd);
+    while (!feof(fd)) {
+        mem_check(&commend);
 
-            switch (state) {
-                case OPCODE:
-                    handle_opcode(&size, ch, &line, &has_label, &commend, &state);
-                    break;
-                case OPRAND:
-                    handle_operand(&size, ch, &line, &has_label, &commend, &state, &sub_state);
-                    break;
-                case COMMENT:
-                    handle_comment(&size, ch, &line, &has_label, &commend, &state);
-            }
+        char ch = (char) fgetc(fd);
+
+        switch (state) {
+            case OPCODE:
+                handle_opcode(&size, ch, &line, &has_label, &commend, &state);
+                break;
+            case OPRAND:
+                handle_operand(&size, ch, &line, &has_label, &commend, &state, &sub_state);
+                break;
+            case COMMENT:
+                handle_comment(&size, ch, &line, &has_label, &commend, &state);
         }
     }
+
 }
 
 void handle_opcode(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
@@ -73,10 +77,9 @@ void handle_opcode(signed short int *size, char ch, signed short int *line, _Boo
 }
 
 void handle_operand(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
-                    enum status *pstatus, enum status *psub_status) {
+                    enum status *pstatus, enum sub_status *psub_status) {
 
-    if (handle_label(ch, pstatus, has_label) || check_for_comment(ch, pstatus)
-        || handle_line(size, ch, line, has_label, &(*commend), pstatus)
+    if (handle_label(ch, pstatus, has_label) || handle_line(size, ch, line, has_label, &(*commend), pstatus)
         || ch == ' ' || ch == '\t')
         return;
     if (ch == '(')
@@ -142,7 +145,7 @@ void forward(signed short int *size, char **commend) {
     *commend = (char *) realloc(*commend, sizeof(char) * *size);
 }
 
-void mem_check(char ** commend){
+void mem_check(char **commend) {
     if (!(*commend)) {
         printf(SPACE_ALLOCATION_FAILED);
         exit(0);

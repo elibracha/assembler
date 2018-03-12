@@ -151,7 +151,6 @@ unsigned int syntex(char *op, char **operands, int line) {
         return 20;
     } else {
         printf(COMMEND_SYNTEX_ERROR, line, op);
-        exit(0);
     }
 }
 

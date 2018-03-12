@@ -15,8 +15,8 @@
 
 const char* convert_2bits_to_32(const char*);
 const char* convert_10bits_to_2(signed int);
-void file_exist(char**);
-void assemble(char **);
+_Bool validate_files(char *);
+void assemble(char *);
 void start_assembler(int, char **);
 
 int main(int argc, char* argv[]){
@@ -25,7 +25,9 @@ int main(int argc, char* argv[]){
 }
 
 void start_assembler(int count, char **files){
-    file_exist(files);
-    assemble(files);
+    while (*++files) {
+        if (validate_files(*files))
+            assemble(*files);
+    }
     printf(SUCCESS_MESSAGE);
 }
