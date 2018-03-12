@@ -16,9 +16,9 @@ void handle_commend(char *opcmd, int line, _Bool label) {
     for (i = 0; i < strlen(opcmd) && !flag; ++i) {
         if (*(opcmd + i) == '/' && op == NULL && operands == NULL) {
             op = (char *) malloc(sizeof(char));
-            operands = (char **) malloc(sizeof(char*));
+            operands = (char **) malloc(sizeof(char *));
 
-            if (!op || !operands ) {
+            if (!op || !operands) {
                 printf(COMMEND_CHECK_FAILURE);
                 exit(0);
             }
@@ -44,7 +44,7 @@ void handle_commend(char *opcmd, int line, _Bool label) {
                     if (label) {
                         if (*(opcmd + i) != '/') {
                             lab = (char *) realloc(lab, (size_t) size++);
-                            if(!lab){
+                            if (!lab) {
                                 printf(SPACE_ALLOCATION_FAILED);
                                 exit(0);
                             }
@@ -55,8 +55,7 @@ void handle_commend(char *opcmd, int line, _Bool label) {
                             j = 0;
                             flag++;
                         }
-                    }
-                    else{
+                    } else {
                         flag++;
                         i--;
                     }
@@ -64,7 +63,7 @@ void handle_commend(char *opcmd, int line, _Bool label) {
                 case 1:
                     if (*(opcmd + i) != '/') {
                         op = (char *) realloc(op, (size_t) ++size);
-                        if(!op){
+                        if (!op) {
                             printf(SPACE_ALLOCATION_FAILED);
                             exit(0);
                         }
@@ -79,19 +78,19 @@ void handle_commend(char *opcmd, int line, _Bool label) {
                     break;
                 default:
                     if (*(opcmd + i) != '/') {
-                        if(size == 1) {
+                        if (size == 1) {
                             operands[counter] = (char *) malloc(sizeof(char));
                             size++;
-                        }else
+                        } else
                             operands[counter] = (char *) realloc(operands[counter], (size_t) size++);
                         if (!operands[counter]) {
                             printf(SPACE_ALLOCATION_FAILED);
                             exit(0);
                         }
-                        operands [counter][j++] = *(opcmd + i);
+                        operands[counter][j++] = *(opcmd + i);
                     } else {
                         size = 1;
-                        operands [counter][j++] = '\0';
+                        operands[counter][j++] = '\0';
                         counter++;
                         k++;
                         j = 0;
@@ -104,10 +103,10 @@ void handle_commend(char *opcmd, int line, _Bool label) {
 }
 
 void build_data(char *op, char **operands, int line) {
-    unsigned int result = check_syntax(op, operands, line);
+    syntex(op, operands, line);
 }
 
-unsigned int check_syntax(char *op, char **operands, int line) {
+unsigned int syntex(char *op, char **operands, int line) {
     if (strcmp(op, "mov") == 0) {
         return 0;
     } else if (strcmp(op, "cmp") == 0) {

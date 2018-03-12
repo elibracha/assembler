@@ -9,7 +9,7 @@
 #define COMMEND_CHECK_FAILURE "Error: Not Enough Space To Analyze Commends.\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
 
-unsigned int check_syntax(char *, char **, int);
+unsigned int syntex(char *, char **, int);
 void build_data(char *, char **, int);
 void mov_handler(char, char**, int);
 void cmp_handler(char, char**, int);

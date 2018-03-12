@@ -25,5 +25,4 @@ typedef struct {
     unsigned int _opcode : 4;
 } commend;
 
-
 #endif
