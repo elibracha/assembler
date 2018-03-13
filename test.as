@@ -1,5 +1,5 @@
 ;file ps.as
-.entry LENGTH,
+.entry LENGTH
 .extern W
 MAIN:   mov r3 ,LENGTH
 LOOP:   jmp L1(#-1,r6)
