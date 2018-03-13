@@ -3,15 +3,15 @@
    This file responsible for IO management.
  ********************************************/
 
-#include "./builder.h"
+#include "../headers/builder.h"
+#include "../headers/const.h"
 
 _Bool validate_files(char *file) {
-
-    _Bool flag = 0;
+    _Bool exist_or_not = 0;
     _Bool _valid = 1;
 
-    FILE *fd = fopen(file, "r+");
-    fd ? _log(file, ++flag) : _log(file, flag);
+    FILE *fd = fopen(file, "r");
+    fd ? _log(file, ++exist_or_not) : _log(file, exist_or_not);
 
     extension(file, _valid);
 
@@ -28,74 +28,104 @@ void assemble(char *file) {
     FILE *fd = fopen(file, "r+");
 
     signed short int size = 1;
-    char *commend = (char *) malloc((size_t) sizeof(char));
+    char *cmd = (char *) malloc((size_t) sizeof(char));
 
     enum status state = OPCODE;
-    enum sub_status sub_state = OUTSIDE_QUOTATION_MARK;
+    enum sub_status sub_state = OUTSIDE_PARENTHESIS;
     _Bool has_label = 0;
     signed short int line = 1;
 
     while (!feof(fd)) {
-        mem_check(&commend);
+        mem_check(&cmd);
 
         char ch = (char) fgetc(fd);
 
         switch (state) {
             case OPCODE:
-                handle_opcode(&size, ch, &line, &has_label, &commend, &state);
+                handle_opcode(&size, ch, &line, &has_label, &cmd, &state);
                 break;
             case OPRAND:
-                handle_operand(&size, ch, &line, &has_label, &commend, &state, &sub_state);
+                handle_operand(&size, ch, &line, &has_label, &cmd, &state, &sub_state);
                 break;
             case COMMENT:
-                handle_comment(&size, ch, &line, &has_label, &commend, &state);
+                handle_comment(ch, &line, &state);
         }
     }
 
 }
 
+_Bool continue_2_operand = 0, ignore_spacing = 0;
+
 void handle_opcode(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
                    enum status *pstatus) {
-    if (check_for_comment(ch, pstatus))
+    if (check_for_comment(ch, pstatus) || handle_label(ch, pstatus, has_label))
         return;
-    handle_label(ch, pstatus, has_label);
-    if (ch == ' ' || ch == '\t' || ch == -1 || ch == '\n' || ch == '\r') {
-        if (*size > 1) {
-            *((*commend) + *size - 1) = '/';
-            *pstatus = OPRAND;
-            if (handle_line(size, ch, line, has_label, &(*commend), pstatus))
-                return;
-        } else {
-            if (ch == '\n')
-                *line += 1;
+    if (ch == SPACE ||
+        ch == TAB || ch == END_OF_FILE || ch == NEW_LINE || ch == WIN_NEW_LINE) {
+        if (!ignore_spacing && *size > MIN_CHARS)
+            *((*commend) + *size - 1) = SEPARATOR;
+        else if (ch == SPACE || ch == TAB)
             return;
-        }
-    } else if (*pstatus != COMMENT)
+        if (handle_line(size, ch, line, has_label, &(*commend), pstatus))
+            return;
+        else if (!continue_2_operand)
+            *pstatus = OPRAND;
+        ignore_spacing = 1;
+    } else if (*pstatus != COMMENT) {
+        ignore_spacing = 0;
+        if (continue_2_operand)
+            continue_2_operand = 0;
         *(*(commend) + *size - 1) = ch;
-
+    }
     forward(size, commend);
 }
 
 void handle_operand(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
                     enum status *pstatus, enum sub_status *psub_status) {
-
     if (handle_label(ch, pstatus, has_label) || handle_line(size, ch, line, has_label, &(*commend), pstatus)
-        || ch == ' ' || ch == '\t')
+        || ch == SPACE || ch == SEPARATOR)
         return;
-    if (ch == '(')
-        *psub_status = INSIDE_QUOTATION_MARK;
-    else if (ch == ')')
-        *psub_status = OUTSIDE_QUOTATION_MARK;
-    if (ch == ',' && *psub_status != INSIDE_QUOTATION_MARK)
-        *((*commend) + *size - 1) = '/';
+    if (ch == PARENTHESIS_IN)
+        *psub_status = INSIDE_PARENTHESIS;
+    else if (ch == PARENTHESIS_OUT)
+        *psub_status = OUTSIDE_PARENTHESIS;
+    if (ch == COMMA && *psub_status != INSIDE_PARENTHESIS)
+        *((*commend) + *size - 1) = SEPARATOR;
     else if (*pstatus != COMMENT)
         *(*(commend) + *size - 1) = ch;
-
     forward(size, commend);
 }
 
+_Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool *label, char **commend,
+                  enum status *pstatus) {
+    if (ch == NEW_LINE || ch == END_OF_FILE) {
+        if(*size == MIN_CHARS)
+            return 1;
+
+        *(*commend + *size - 1) = END_OF_INPUT;
+        printf("%s\n", *commend);
+        handle_commend(*commend, *line, *label);
+        free(*commend);
+        *commend = (char *) malloc((size_t) sizeof(char));
+        *pstatus = OPCODE;
+        *label = 0;
+        *line += 1;
+        *size = 1;
+        continue_2_operand = 1;
+        return 1;
+    }
+    return 0;
+}
+
+void handle_comment(char ch, signed short int *line, enum status *pstatus) {
+    if (ch == NEW_LINE) {
+        *pstatus = OPCODE;
+        *line = (short) (*line + 1);
+    }
+}
+
 _Bool check_for_comment(char ch, enum status *pstatus) {
-    if (ch == ';') {
+    if (ch == DOT_COMMA) {
         *pstatus = COMMENT;
         return 1;
     }
@@ -103,51 +133,16 @@ _Bool check_for_comment(char ch, enum status *pstatus) {
 }
 
 _Bool handle_label(char ch, enum status *state, _Bool *label) {
-    if (ch == ':') {
+    if (ch == TWO_DOTS) {
         *label = 1;
         *state = OPCODE;
+        continue_2_operand = 1;
         return 1;
     }
     return 0;
-}
-
-_Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool *label, char **commend,
-                  enum status *pstatus) {
-    if (ch == '\n' || ch == -1) {
-        *(*commend + *size - 1) = '\0';
-        printf("%s\n", *commend);
-        *pstatus = OPCODE;
-        handle_commend(*commend, *line, *label);
-        *label = 0;
-        free(*commend);
-        *commend = (char *) malloc((size_t) sizeof(char));
-        *size = 1;
-        *line = (short) (*line + 1);
-        return 1;
-    }
-    return 0;
-}
-
-void handle_comment(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
-                    enum status *pstatus) {
-    if (ch == '\n') {
-        if (*size > 1) {
-            handle_line(size, ch, line, has_label, commend, pstatus);
-        } else {
-            *pstatus = OPCODE;
-            *line = (short) (*line + 1);
-        }
-    }
 }
 
 void forward(signed short int *size, char **commend) {
     *size = (short) (*size + 1);
     *commend = (char *) realloc(*commend, sizeof(char) * *size);
-}
-
-void mem_check(char **commend) {
-    if (!(*commend)) {
-        printf(SPACE_ALLOCATION_FAILED);
-        exit(0);
-    }
 }

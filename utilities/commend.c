@@ -3,81 +3,84 @@
    This file responsible for commend check and handle.
  ******************************************************/
 
-#include "./commend.h"
+#include "../headers/commend.h"
+#include "../headers/const.h"
 
-void handle_commend(char *opcmd, int line, _Bool label) {
+void handle_commend(char *opcmd, int line, _Bool is_label) {
 
-    char *op = NULL, *lab = NULL;
+    char *opcode = NULL, *label = NULL;
     char **operands = NULL;
-    unsigned short int flag = 0;
+    unsigned short int mem_allocated = 0;
     signed short int counter = 0;
-    int i, j = 0, size = 1, k = 0;;
+    int i, j = 0, k = 0, size = 1;
 
-    for (i = 0; i < strlen(opcmd) && !flag; ++i) {
-        if (*(opcmd + i) == '/' && op == NULL && operands == NULL) {
-            op = (char *) malloc(sizeof(char));
+    for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
+        if (*(opcmd + i) == SEPARATOR && opcode == NULL && operands == NULL) {
+            opcode = (char *) malloc(sizeof(char));
             operands = (char **) malloc(sizeof(char *));
 
-            if (!op || !operands) {
+            if (!opcode || !operands) {
                 printf(COMMEND_CHECK_FAILURE);
                 exit(0);
             }
-            flag = 1;
+            mem_allocated = 1;
         }
-        if (label && lab == NULL) {
-            lab = (char *) malloc(sizeof(char));
-            if (!lab) {
+        if (is_label && label == NULL) {
+            label = (char *) malloc(sizeof(char));
+            if (!label) {
                 printf(COMMEND_CHECK_FAILURE);
                 exit(0);
             }
         }
     }
 
-    if (op == NULL && !label)
-        op = opcmd;
+    if (opcode == NULL && !is_label)
+        opcode = opcmd;
 
-    if (flag) {
-        flag = 0;
+    if (mem_allocated) {
+
+        mem_allocated = 0;
+
         for (i = 0; i <= strlen(opcmd); ++i) {
-            switch (flag) {
+            switch (mem_allocated) {
                 case 0:
-                    if (label) {
-                        if (*(opcmd + i) != '/') {
-                            lab = (char *) realloc(lab, (size_t) size++);
-                            if (!lab) {
+                    if (is_label) {
+                        if (*(opcmd + i) != SEPARATOR) {
+                            label = (char *) realloc(label, (size_t) size++);
+                            if (!label) {
                                 printf(SPACE_ALLOCATION_FAILED);
                                 exit(0);
                             }
-                            lab[j++] = *(opcmd + i);
+                            label[j++] = *(opcmd + i);
                         } else {
                             size = 1;
-                            lab[j] = '\0';
+                            label[j] = END_OF_INPUT;
                             j = 0;
-                            flag++;
+                            mem_allocated++;
                         }
                     } else {
-                        flag++;
+                        mem_allocated++;
                         i--;
                     }
                     break;
                 case 1:
-                    if (*(opcmd + i) != '/') {
-                        op = (char *) realloc(op, (size_t) ++size);
-                        if (!op) {
+                    if (*(opcmd + i) != SEPARATOR) {
+                        opcode = (char *) realloc(opcode, (size_t) ++size);
+                        if (!opcode) {
                             printf(SPACE_ALLOCATION_FAILED);
                             exit(0);
                         }
-                        op[j++] = *(opcmd + i);
+                        opcode[j++] = *(opcmd + i);
                     } else {
                         size = 1;
-                        op[j] = '\0';
+                        opcode[j] = END_OF_INPUT;
                         j = 0;
-                        flag++;
+                        mem_allocated++;
                         k++;
                     }
                     break;
                 default:
-                    if (*(opcmd + i) != '/') {
+                    if (*(opcmd + i) != SEPARATOR) {
                         if (size == 1) {
                             operands[counter] = (char *) malloc(sizeof(char));
                             size++;
@@ -89,17 +92,17 @@ void handle_commend(char *opcmd, int line, _Bool label) {
                         }
                         operands[counter][j++] = *(opcmd + i);
                     } else {
+                        operands[counter][j++] = END_OF_INPUT;
                         size = 1;
-                        operands[counter][j++] = '\0';
+                        j = 0;
                         counter++;
                         k++;
-                        j = 0;
                     }
                     break;
             }
         }
     }
-    build_data(op, operands, line);
+    build_data(opcode, operands, line);
 }
 
 void build_data(char *op, char **operands, int line) {
