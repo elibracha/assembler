@@ -11,8 +11,22 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     char *opcode = NULL, *label = NULL;
     char **operands = NULL;
     unsigned short int mem_allocated = 0, counter = 0, params = 0;
+    int i, l, j = 0, k = 0, size = 1;
 
-    int i, j = 0, k = 0, size = 1;
+    char last_char = 0;
+    for (l = 0; l <= strlen(opcmd); ++l) {
+        if(opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
+            printf(TOO_MANY_COMMAS, line);
+            return;
+        }
+        last_char = opcmd[l];
+    }
+
+    char c = *(opcmd + strlen(opcmd) - 1);
+    if((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
+        printf(CONNA_AT_THE_END, line);
+        return;
+    }
 
     for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
         if (*(opcmd + i) == SEPARATOR && opcode == NULL && operands == NULL) {
@@ -98,7 +112,6 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
                         j = 0;
                         params++;
                         counter++;
-                        params++;
                         k++;
                     }
                     break;

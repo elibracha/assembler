@@ -8,6 +8,8 @@
 #define COMMEND_SYNTEX_ERROR "Syntex: On Line %d Commend Not Recognized (%s).\n"
 #define COMMEND_CHECK_FAILURE "Error: Not Enough Space To Analyze Commends.\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
+#define CONNA_AT_THE_END "Syntex: Too Many Commas, Missing Parameters. (line - %d)\n"
+#define TOO_MANY_COMMAS "Syntex: Too Many Commas, Missing Parameters. (line - %d)\n"
 
 unsigned int syntex(char *, char **, int);
 void build_data(char *, char **, int);

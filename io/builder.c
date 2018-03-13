@@ -81,12 +81,12 @@ void handle_opcode(signed short int *size, char ch, signed short int *line, _Boo
     forward(size, commend);
 }
 
-_Bool before_after_param = 1, comma_next = 0, comma_error = 0;
+_Bool after_param = 0, before_param = 1, comma_next = 0, comma_error = 0;
 
 void handle_operand(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
                     enum status *pstatus, enum sub_status *psub_status) {
     int result = 0;
-    if (before_after_param) {
+    if (before_param || after_param) {
         if (handle_line(size, ch, line, has_label, &(*commend), pstatus) || ch == SPACE || ch == TAB) {
             return;
         }
@@ -94,7 +94,7 @@ void handle_operand(signed short int *size, char ch, signed short int *line, _Bo
         if (result)
             comma_error = 0;
         else {
-            before_after_param = 1;
+            after_param = 1;
             comma_next = 1;
         }
         return;
@@ -103,15 +103,16 @@ void handle_operand(signed short int *size, char ch, signed short int *line, _Bo
         *psub_status = INSIDE_PARENTHESIS;
     else if (ch == PARENTHESIS_OUT)
         *psub_status = OUTSIDE_PARENTHESIS;
-    if (ch == COMMA && *psub_status != INSIDE_PARENTHESIS) {
+    if (before_param && ch == COMMA && *psub_status != INSIDE_PARENTHESIS) {
         *((*commend) + *size - 1) = SEPARATOR;
         comma_next = 0;
-        before_after_param = 1;
+        before_param = 1;
     } else {
         if (comma_next == 1 && ch != COMMA)
             comma_error = 1;
         *(*(commend) + *size - 1) = ch;
-        before_after_param = 0;
+        after_param = 0;
+        before_param = 1;
     }
     forward(size, commend);
 }
@@ -138,7 +139,8 @@ _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool
         *line += 1;
         *size = 1;
         comma_next = 0;
-        before_after_param = 1;
+        before_param = 1;
+        after_param = 0;
         check_for_label = 1;
         continue_2_operand = 1;
         return 1;
