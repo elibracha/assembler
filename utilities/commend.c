@@ -11,6 +11,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     char *opcode = NULL, *label = NULL;
     char **operands = NULL;
     unsigned short int mem_allocated = 0, counter = 0, params = 0;
+
     int i, j = 0, k = 0, size = 1;
 
     for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
@@ -95,6 +96,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
                         mem_allocated++;
                         size = 1; 
                         j = 0;
+                        params++;
                         counter++;
                         params++;
                         k++;
@@ -104,9 +106,11 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
         }
     }
 
-    printf("%s - ",opcode);
-    while (params - 1) {
-        printf("%s ", *(operands + --params));
+
+    int t = 0;
+    printf("%s -", opcode);
+    for (t = 0; t < params; ++t ) {
+        printf(" %s ", operands[t]);
     }
     printf("%c",NEW_LINE);
 
