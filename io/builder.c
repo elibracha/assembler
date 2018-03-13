@@ -129,7 +129,6 @@ _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool
 
         if(!comma_error) {
             handle_commend(*commend, *line, *label);
-            printf("%s\n", *commend);
         }
 
         free(*commend);

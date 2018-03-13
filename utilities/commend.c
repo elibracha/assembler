@@ -10,8 +10,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
 
     char *opcode = NULL, *label = NULL;
     char **operands = NULL;
-    unsigned short int mem_allocated = 0;
-    signed short int counter = 0;
+    unsigned short int mem_allocated = 0, counter = 0, params = 0;
     int i, j = 0, k = 0, size = 1;
 
     for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
@@ -80,7 +79,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
                     }
                     break;
                 default:
-                    if (*(opcmd + i) != SEPARATOR) {
+                    if (*(opcmd + i) != SEPARATOR && *(opcmd + i) != END_OF_INPUT) {
                         if (size == 1) {
                             operands[counter] = (char *) malloc(sizeof(char));
                             size++;
@@ -93,15 +92,24 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
                         operands[counter][j++] = *(opcmd + i);
                     } else {
                         operands[counter][j++] = END_OF_INPUT;
-                        size = 1;
+                        mem_allocated++;
+                        size = 1; 
                         j = 0;
                         counter++;
+                        params++;
                         k++;
                     }
                     break;
             }
         }
     }
+
+    printf("%s - ",opcode);
+    while (params - 1) {
+        printf("%s ", *(operands + --params));
+    }
+    printf("%c",NEW_LINE);
+
     build_data(opcode, operands, line);
 }
 
