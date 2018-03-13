@@ -54,7 +54,7 @@ void assemble(char *file) {
 
 }
 
-_Bool continue_2_operand = 0, ignore_spacing = 0;
+_Bool continue_2_operand = 0, ignore_spacing = 0, check_for_label = 1;
 
 void handle_opcode(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
                    enum status *pstatus) {
@@ -62,9 +62,10 @@ void handle_opcode(signed short int *size, char ch, signed short int *line, _Boo
         return;
     if (ch == SPACE ||
         ch == TAB || ch == END_OF_FILE || ch == NEW_LINE || ch == WIN_NEW_LINE) {
-        if (!ignore_spacing && *size > MIN_CHARS)
+        if (!ignore_spacing && *size > MIN_CHARS) {
+            check_for_label = 0;
             *((*commend) + *size - 1) = SEPARATOR;
-        else if (ch == SPACE || ch == TAB)
+        } else if (ch == SPACE || ch == TAB)
             return;
         if (handle_line(size, ch, line, has_label, &(*commend), pstatus))
             return;
@@ -80,37 +81,66 @@ void handle_opcode(signed short int *size, char ch, signed short int *line, _Boo
     forward(size, commend);
 }
 
+_Bool before_after_param = 1, comma_next = 0, comma_error = 0;
+
 void handle_operand(signed short int *size, char ch, signed short int *line, _Bool *has_label, char **commend,
                     enum status *pstatus, enum sub_status *psub_status) {
-    if (handle_label(ch, pstatus, has_label) || handle_line(size, ch, line, has_label, &(*commend), pstatus)
-        || ch == SPACE || ch == SEPARATOR)
+    int result = 0;
+    if (before_after_param) {
+        if (handle_line(size, ch, line, has_label, &(*commend), pstatus) || ch == SPACE || ch == TAB) {
+            return;
+        }
+    } else if ((result = handle_line(size, ch, line, has_label, &(*commend), pstatus)) || ch == SPACE || ch == TAB) {
+        if (result)
+            comma_error = 0;
+        else {
+            before_after_param = 1;
+            comma_next = 1;
+        }
         return;
+    }
     if (ch == PARENTHESIS_IN)
         *psub_status = INSIDE_PARENTHESIS;
     else if (ch == PARENTHESIS_OUT)
         *psub_status = OUTSIDE_PARENTHESIS;
-    if (ch == COMMA && *psub_status != INSIDE_PARENTHESIS)
+    if (ch == COMMA && *psub_status != INSIDE_PARENTHESIS) {
         *((*commend) + *size - 1) = SEPARATOR;
-    else if (*pstatus != COMMENT)
+        comma_next = 0;
+        before_after_param = 1;
+    } else {
+        if (comma_next == 1 && ch != COMMA)
+            comma_error = 1;
         *(*(commend) + *size - 1) = ch;
+        before_after_param = 0;
+    }
     forward(size, commend);
 }
 
 _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool *label, char **commend,
                   enum status *pstatus) {
     if (ch == NEW_LINE || ch == END_OF_FILE) {
-        if(*size == MIN_CHARS)
+        if (*size == MIN_CHARS)
             return 1;
 
+        if (comma_error)
+            printf(COMMA_ERROR, *line);
+
         *(*commend + *size - 1) = END_OF_INPUT;
-        printf("%s\n", *commend);
-        handle_commend(*commend, *line, *label);
+
+        if(!comma_error) {
+            handle_commend(*commend, *line, *label);
+            printf("%s\n", *commend);
+        }
+
         free(*commend);
         *commend = (char *) malloc((size_t) sizeof(char));
         *pstatus = OPCODE;
         *label = 0;
         *line += 1;
         *size = 1;
+        comma_next = 0;
+        before_after_param = 1;
+        check_for_label = 1;
         continue_2_operand = 1;
         return 1;
     }
@@ -133,7 +163,7 @@ _Bool check_for_comment(char ch, enum status *pstatus) {
 }
 
 _Bool handle_label(char ch, enum status *state, _Bool *label) {
-    if (ch == TWO_DOTS) {
+    if (check_for_label && ch == TWO_DOTS) {
         *label = 1;
         *state = OPCODE;
         continue_2_operand = 1;

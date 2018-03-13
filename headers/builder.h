@@ -9,6 +9,7 @@
 #define FAILURE_FILE_MESSAGE "Build: File Not Found - %s.\n"
 #define FILE_EXTENSION "Build: File Extenstion Is Incorrect (%s).\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Parse File.\n"
+#define COMMA_ERROR "Syntex: Comma Expected Between Parameters, line - %d\n"
 
 #define failure_open(path)\
     printf(FAILURE_FILE_MESSAGE, path)
