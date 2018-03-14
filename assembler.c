@@ -18,8 +18,10 @@ const char* convert_10bits_to_2(signed int);
 _Bool validate_files(char *);
 void assemble(char *);
 void start_assembler(int, char **);
+void initialize();
 
 int main(int argc, char* argv[]){
+    initialize();
     argc > MINIMUM_ARGUMENTS ? start_assembler(argc, argv): printf(STARTUP_ERROR);
     return 0;
 }

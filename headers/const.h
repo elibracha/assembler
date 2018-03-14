@@ -1,7 +1,7 @@
 #ifndef ASSEMBLER_CONST_H
 #define ASSEMBLER_CONST_H
 
-#define SEPARATOR 47
+#define SEPARATOR -1
 #define END_OF_INPUT 0
 #define TAB 9
 #define SPACE 32
@@ -14,6 +14,8 @@
 #define PARENTHESIS_OUT 41
 #define DOT_COMMA 59
 #define TWO_DOTS 58
+#define NEGATIVE 43
+#define POSITIVE 45
 
 
 #endif
