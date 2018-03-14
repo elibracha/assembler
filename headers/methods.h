@@ -11,7 +11,9 @@
 #define ONE_ARGUMENTS 1
 #define ZERO_ARGUMENTS 0
 
+
 _Bool check_arguments(int, char*, int, int);
+
 
 typedef struct {
     unsigned int _ERA : 2;
