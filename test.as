@@ -1,7 +1,7 @@
 ;file ps.as
 .entry LENGTH
 .extern W
-MAIN:   mov #323235 ,LENGTH
+MAIN:   mov LENGTH, #323235
 LOOP:   prn #-35
         sub r1, r4
         bne L3
