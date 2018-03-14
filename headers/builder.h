@@ -10,6 +10,7 @@
 #define TOO_LOW_ARGUMENTS "Syntex: Commend %s Needs More Arguments (On Line - %d).\n"
 #define INVALID_ADDRASSING_0 "Syntex: Invalid Paramter in line %d (%s).\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
+#define MISSPLACED_ADDRESSING "Syntex: Addressing Operand Number %d , With Addressing Method Number %d (%s) Is Invalid (line - %d).\n"
 
 #define TWO_ARGUMENTS 2
 #define ONE_ARGUMENTS 1

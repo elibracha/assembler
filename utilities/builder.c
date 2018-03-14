@@ -23,50 +23,58 @@ method *JSR = &jsr;
 method *RTS = &rts;
 method *STOP = &stop;
 
-_Bool check_Addressing_0(char *, int, int *);
+_Bool check_Addressing_0(char *, int, int * , _Bool);
 
-_Bool check_Addressing_1(char *, int *);
+_Bool check_Addressing_1(char *, int, int *, _Bool);
 
-_Bool check_Addressing_2(char *, int *);
+_Bool check_Addressing_2(char *, int, int *, _Bool);
 
-_Bool check_Addressing_3(char *, int *);
+_Bool check_Addressing_3(char *, int, int *, _Bool);
 
 _Bool check_arguments(int, char *, int, int);
 
 void mov_handler(char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         commend cmd;
-        cmd._opcode = MOV -> opcode;
+        cmd._opcode = MOV->opcode;
         int i = 0, j, result;
-        _Bool on_p1 = 1, add_check = 0;
+        _Bool on_p1 = 1, addressing = 0;
 
         for (j = 0; j < 4; ++j) {
-            if(on_p1)
-                add_check = MOV -> op1[i];
+            if (on_p1)
+                addressing = MOV->op1[i];
             else
-                add_check = MOV -> op2[i];
+                addressing = MOV->op2[i];
 
-            if (add_check) {
+            if (addressing) {
                 switch (i) {
                     case 0:
-                        if ((result = check_Addressing_0(*(operands + i), line, &result)))
+                        if ((result = check_Addressing_0(*(operands + i), line, &result, on_p1))) {
                             cmd._src_operand = 0;
+                            j = 4;
+                        }
                         break;
                     case 1:
-                        if ((result = check_Addressing_3(*(operands + i), &result)))
+                        if ((result = check_Addressing_3(*(operands + i), line, &result, on_p1))) {
                             cmd._src_operand = 3;
+                            j = 4;
+                        }
                         break;
                     case 2:
-                        if ((result = check_Addressing_2(*(operands + i), &result)))
+                        if ((result = check_Addressing_2(*(operands + i), line, &result, on_p1))) {
                             cmd._src_operand = 2;
+                            j = 4;
+                        }
                         break;
                     case 3:
-                        if ((result = check_Addressing_1(*(operands + i), &result)))
+                        if ((result = check_Addressing_1(*(operands + i), line, &result, on_p1))) {
                             cmd._src_operand = 1;
+                            j = 4;
+                        }
                         break;
                 }
             }
-            if(j == 4 && on_p1){
+            if (j == 4 && on_p1) {
                 on_p1 = 0;
                 j = 0;
             }
@@ -80,43 +88,6 @@ void mov_handler(char *op, char **operands, int line, int n) {
 
 void cmp_handler(char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        commend cmd;
-        cmd._opcode = CMP -> opcode;
-        int i = 0, j, result;
-        _Bool on_p1 = 1, add_check = 0;
-
-        for (j = 0; j < 4; ++j) {
-            if(on_p1)
-                add_check = CMP -> op1[i];
-            else
-                add_check = CMP -> op2[i];
-
-            if (add_check) {
-                switch (i) {
-                    case 0:
-                        if ((result = check_Addressing_0(*(operands + i), line, &result)))
-                            cmd._src_operand = 0;
-                        break;
-                    case 1:
-                        if ((result = check_Addressing_3(*(operands + i), &result)))
-                            cmd._src_operand = 3;
-                        break;
-                    case 2:
-                        if ((result = check_Addressing_2(*(operands + i), &result)))
-                            cmd._src_operand = 2;
-                        break;
-                    case 3:
-                        if ((result = check_Addressing_1(*(operands + i), &result)))
-                            cmd._src_operand = 1;
-                        break;
-                }
-            }
-            if(j == 4 && on_p1){
-                on_p1 = 0;
-                j = 0;
-            }
-            i++;
-        }
 
     } else {
         return;
@@ -250,7 +221,7 @@ void extern_handler(char *op, char **operands, int line, int n) {
 void entry_handler(char *op, char **operands, int line, int n) {
 }
 
-_Bool check_Addressing_0(char *operand, int line, int *num) {
+_Bool check_Addressing_0(char *operand, int line, int *num, _Bool num_operand) {
     if (*operand == ASTRICK) {
         int j = 1;
         if (*(operand + 1) == NEGATIVE || *(operand + 1) == POSITIVE) {
@@ -284,15 +255,23 @@ _Bool check_Addressing_0(char *operand, int line, int *num) {
     return 0;
 }
 
-_Bool check_Addressing_1(char *operand, int *result) {
+_Bool check_Addressing_1(char *operand, int line, int *result, _Bool num_operand) {
 
 }
 
-_Bool check_Addressing_2(char *operand, int *result) {
+_Bool check_Addressing_2(char *operand, int line, int *result, _Bool num_operand) {
 
 }
 
-_Bool check_Addressing_3(char *operand, int *result) {
+_Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand) {
+    int temp_result;
+    _Bool invalid = 0;
+    if((invalid = check_Addressing_0(operand,line, &temp_result, num_operand))) {
+        if (invalid){
+            printf(MISSPLACED_ADDRESSING, num_operand + 1, 3, "Register", line);
+            return 0;
+        }
+    }
     if (strcmp(operand, "r0") == 0 || strcmp(operand, "r1") == 0 || strcmp(operand, "r1") == 0 ||
         strcmp(operand, "r2") == 0 || strcmp(operand, "r3") == 0 || strcmp(operand, "r4") == 0 ||
         strcmp(operand, "5") == 0) {
@@ -332,61 +311,61 @@ _Bool check_arguments(int cargs, char *op, int line, int nargs) {
 
 void initialize() {
 
-    MOV -> opcode = 1;
-    CMP -> opcode = 2;
-    ADD -> opcode = 3;
-    SUB -> opcode = 4;
-    NOT -> opcode = 5;
-    CLR -> opcode = 6;
-    LEA -> opcode = 7;
-    INC -> opcode = 8;
-    DEC -> opcode = 9;
-    JMP -> opcode = 10;
-    BNE -> opcode = 11;
-    RED -> opcode = 12;
-    PRN -> opcode = 13;
-    JSR -> opcode = 14;
-    RTS -> opcode = 15;
-    STOP -> opcode = 16;
+    MOV->opcode = 1;
+    CMP->opcode = 2;
+    ADD->opcode = 3;
+    SUB->opcode = 4;
+    NOT->opcode = 5;
+    CLR->opcode = 6;
+    LEA->opcode = 7;
+    INC->opcode = 8;
+    DEC->opcode = 9;
+    JMP->opcode = 10;
+    BNE->opcode = 11;
+    RED->opcode = 12;
+    PRN->opcode = 13;
+    JSR->opcode = 14;
+    RTS->opcode = 15;
+    STOP->opcode = 16;
 
     int i;
 
     for (i = 0; i < 4; ++i) {
-        MOV -> op1[i] = 1;
-        ADD -> op1[i] = 1;
-        SUB -> op1[i] = 1;
-        CMP -> op1[i] = 1;
-        NOT -> op1[i] = 0;
-        CLR -> op1[i] = 0;
-        INC -> op1[i] = 0;
-        DEC -> op1[i] = 0;
-        JMP -> op1[i] = 0;
-        BNE -> op1[i] = 0;
-        RED -> op1[i] = 0;
-        PRN -> op1[i] = 0;
-        JSR -> op1[i] = 0;
-        RTS -> op1[i] = 0;
-        STOP -> op1[i] = 0;
+        MOV->op1[i] = 1;
+        ADD->op1[i] = 1;
+        SUB->op1[i] = 1;
+        CMP->op1[i] = 1;
+        NOT->op1[i] = 0;
+        CLR->op1[i] = 0;
+        INC->op1[i] = 0;
+        DEC->op1[i] = 0;
+        JMP->op1[i] = 0;
+        BNE->op1[i] = 0;
+        RED->op1[i] = 0;
+        PRN->op1[i] = 0;
+        JSR->op1[i] = 0;
+        RTS->op1[i] = 0;
+        STOP->op1[i] = 0;
 
         i > 0 && i < 3 ? (LEA->op1[i] = 1) : (LEA->op1[i] = 0);
 
-        i > 0 ? (MOV -> op2[i] = 1) : (MOV -> op2[i] = 0);
-        i > 0 ? (JSR -> op2[i] = 1) : (JSR -> op2[i] = 0);
-        i > 0 ? (ADD -> op2[i] = 1) : (ADD -> op2[i] = 0);
-        i > 0 ? (SUB -> op2[i] = 1) : (SUB -> op2[i] = 0);
-        i > 0 ? (NOT -> op2[i] = 1) : (NOT -> op2[i] = 0);
-        i > 0 ? (CLR -> op2[i] = 1) : (CLR -> op2[i] = 0);
-        i > 0 ? (LEA -> op2[i] = 1) : (LEA -> op2[i] = 0);
-        i > 0 ? (INC -> op2[i] = 1) : (INC -> op2[i] = 0);
-        i > 0 ? (DEC -> op2[i] = 1) : (DEC -> op2[i] = 0);
-        i > 0 ? (JMP -> op2[i] = 1) : (JMP -> op2[i] = 0);
-        i > 0 ? (BNE -> op2[i] = 1) : (BNE -> op2[i] = 0);
-        i > 0 ? (RED -> op2[i] = 1) : (RED -> op2[i] = 0);
-        i > 0 ? (JSR -> op2[i] = 1) : (JSR -> op2[i] = 0);
+        i > 0 ? (MOV->op2[i] = 1) : (MOV->op2[i] = 0);
+        i > 0 ? (JSR->op2[i] = 1) : (JSR->op2[i] = 0);
+        i > 0 ? (ADD->op2[i] = 1) : (ADD->op2[i] = 0);
+        i > 0 ? (SUB->op2[i] = 1) : (SUB->op2[i] = 0);
+        i > 0 ? (NOT->op2[i] = 1) : (NOT->op2[i] = 0);
+        i > 0 ? (CLR->op2[i] = 1) : (CLR->op2[i] = 0);
+        i > 0 ? (LEA->op2[i] = 1) : (LEA->op2[i] = 0);
+        i > 0 ? (INC->op2[i] = 1) : (INC->op2[i] = 0);
+        i > 0 ? (DEC->op2[i] = 1) : (DEC->op2[i] = 0);
+        i > 0 ? (JMP->op2[i] = 1) : (JMP->op2[i] = 0);
+        i > 0 ? (BNE->op2[i] = 1) : (BNE->op2[i] = 0);
+        i > 0 ? (RED->op2[i] = 1) : (RED->op2[i] = 0);
+        i > 0 ? (JSR->op2[i] = 1) : (JSR->op2[i] = 0);
 
-        RTS -> op2[i] = 0;
-        STOP -> op2[i] = 0;
-        PRN -> op2[i] = 1;
-        CMP -> op2[i] = 1;
+        RTS->op2[i] = 0;
+        STOP->op2[i] = 0;
+        PRN->op2[i] = 1;
+        CMP->op2[i] = 1;
     }
 }

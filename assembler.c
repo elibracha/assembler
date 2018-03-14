@@ -11,7 +11,7 @@
 #include <stdio.h>
 #define MINIMUM_ARGUMENTS 1
 #define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
-#define SUCCESS_MESSAGE "Build: Success Building Files."
+#define SUCCESS_MESSAGE "Build: Success Building Files.\n"
 
 const char* convert_2bits_to_32(const char*);
 const char* convert_10bits_to_2(signed int);
