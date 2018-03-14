@@ -3,8 +3,9 @@
    This file responsible for commend check and handle.
  ******************************************************/
 
-#include "../headers/commend.h"
+#include "../headers/parser.h"
 #include "../headers/const.h"
+
 
 void handle_commend(char *opcmd, int line, _Bool is_label) {
 
@@ -13,6 +14,12 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     unsigned short int mem_allocated = 0, counter = 0, params = 0;
     int i, l, j = 0, k = 0, size = 1;
 
+    char c = *(opcmd + strlen(opcmd) - 1);
+    if((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
+        printf(CONNA_AT_THE_END, line);
+        return;
+    }
+
     char last_char = 0;
     for (l = 0; l <= strlen(opcmd); ++l) {
         if(opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
@@ -20,12 +27,6 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
             return;
         }
         last_char = opcmd[l];
-    }
-
-    char c = *(opcmd + strlen(opcmd) - 1);
-    if((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
-        printf(CONNA_AT_THE_END, line);
-        return;
     }
 
     for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
@@ -127,56 +128,52 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     }
     printf("%c",NEW_LINE);
 
-    build_data(opcode, operands, line);
+    build_data(opcode, operands, line, params);
 }
 
-void build_data(char *op, char **operands, int line) {
-    syntex(op, operands, line);
-}
-
-unsigned int syntex(char *op, char **operands, int line) {
+unsigned int build_data(char *op, char **operands, int line, int params) {
     if (strcmp(op, "mov") == 0) {
-        return 0;
+        mov_handler(op, operands, line, params);
     } else if (strcmp(op, "cmp") == 0) {
-        return 1;
+        cmp_handler(op, operands, line, params);
     } else if (strcmp(op, "add") == 0) {
-        return 2;
+        add_handler(op, operands, line, params);
     } else if (strcmp(op, "sub") == 0) {
-        return 3;
+        sub_handler(op, operands, line, params);
     } else if (strcmp(op, "not") == 0) {
-        return 4;
+        not_handler(op, operands, line, params);
     } else if (strcmp(op, "clr") == 0) {
-        return 5;
+        clr_handler(op, operands, line, params);
     } else if (strcmp(op, "lea") == 0) {
-        return 6;
+        lea_handler(op, operands, line, params);
     } else if (strcmp(op, "inc") == 0) {
-        return 7;
+        inc_handler(op, operands, line, params);
     } else if (strcmp(op, "dec") == 0) {
-        return 8;
+        dec_handler(op, operands, line, params);
     } else if (strcmp(op, "jmp") == 0) {
-        return 9;
+        jmp_handler(op, operands, line, params);
     } else if (strcmp(op, "bne") == 0) {
-        return 10;
+        bne_handler(op, operands, line, params);
     } else if (strcmp(op, "red") == 0) {
-        return 11;
+        red_handler(op, operands, line, params);
     } else if (strcmp(op, "prn") == 0) {
-        return 12;
+        prn_handler(op, operands, line, params);
     } else if (strcmp(op, "jsr") == 0) {
-        return 13;
+        jsr_handler(op, operands, line, params);
     } else if (strcmp(op, "rts") == 0) {
-        return 14;
+        rts_handler(op, operands, line, params);
     } else if (strcmp(op, "stop") == 0) {
-        return 15;
+        stop_handler(op, operands, line, params);
     } else if (strcmp(op, ".string") == 0) {
-        return 16;
+        string_handler(op, operands, line, params);
     } else if (strcmp(op, ".struct") == 0) {
-        return 18;
+        struct_handler(op, operands, line, params);
     } else if (strcmp(op, ".entry") == 0) {
-        return 19;
+        entry_handler(op, operands, line, params);
     } else if (strcmp(op, ".extern") == 0) {
-        return 20;
+        extern_handler(op, operands, line, params);
     } else if (strcmp(op, ".data") == 0) {
-        return 20;
+        data_handler(op, operands, line, params);
     } else {
         printf(COMMEND_SYNTEX_ERROR, line, op);
     }
