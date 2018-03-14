@@ -6,7 +6,7 @@ LOOP:   jmp L1(#-1,r6)
         prn #-5
         bne W(r4,r5)
         sub r1, r4
-        bne L3
+        bne L3 ,1
 L1:     inc K
         .entry LOOP
         bne LOOP(K,W)

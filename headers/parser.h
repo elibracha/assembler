@@ -11,23 +11,27 @@
 #define CONNA_AT_THE_END "Syntex: Unecpected End Of Input, Comma At The End. (line - %d)\n"
 #define TOO_MANY_COMMAS "Syntex: Too Many Commas, Missing Parameters. (line - %d)\n"
 
-unsigned int syntex(char *, char **, int);
-void build_data(char *, char **, int);
-void mov_handler(char, char**, int);
-void cmp_handler(char, char**, int);
-void add_handler(char, char**, int);
-void sub_handler(char, char**, int);
-void lea_handler(char, char**, int);
-void not_handler(char, char**, int);
-void clr_handler(char, char**, int);
-void inc_handler(char, char**, int);
-void dec_handler(char, char**, int);
-void jmp_handler(char, char**, int);
-void bne_handler(char, char**, int);
-void red_handler(char, char**, int);
-void prn_handler(char, char**, int);
-void jsr_handler(char, char**, int);
-void rts_handler(char, char**, int);
-void stop_handler(char, char**, int);
+unsigned int build_data(char *, char **, int, int);
+void mov_handler(char*, char**, int, int);
+void cmp_handler(char*, char**, int, int);
+void add_handler(char*, char**, int, int);
+void sub_handler(char*, char**, int, int);
+void lea_handler(char*, char**, int, int);
+void not_handler(char*, char**, int, int);
+void clr_handler(char*, char**, int, int);
+void inc_handler(char*, char**, int, int);
+void dec_handler(char*, char**, int, int);
+void jmp_handler(char*, char**, int, int);
+void bne_handler(char*, char**, int, int);
+void red_handler(char*, char**, int, int);
+void prn_handler(char*, char**, int, int);
+void jsr_handler(char*, char**, int, int);
+void rts_handler(char*, char**, int, int);
+void stop_handler(char*, char**, int, int);
+void string_handler(char*, char**, int, int);
+void data_handler(char*, char**, int, int);
+void struct_handler(char*, char**, int, int);
+void extern_handler(char*, char**, int, int);
+void entry_handler(char*, char**, int, int);
 
 #endif //ASSEMBLER_COMMEND_H
