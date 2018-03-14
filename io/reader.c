@@ -3,7 +3,7 @@
    This file responsible for IO management.
  ********************************************/
 
-#include "../headers/builder.h"
+#include "../headers/reader.h"
 #include "../headers/const.h"
 
 _Bool validate_files(char *file) {
@@ -128,7 +128,7 @@ _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool
 
         *(*commend + *size - 1) = END_OF_INPUT;
 
-        if(!comma_error) {
+        if (!comma_error) {
             handle_commend(*commend, *line, *label);
         }
 

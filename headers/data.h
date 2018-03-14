@@ -1,4 +1,4 @@
 
-typedef struct data_row{
+typedef struct data_row {
 
 };

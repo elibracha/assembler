@@ -3,7 +3,7 @@
    This file responsible for commend logic and checking.
  ******************************************************/
 
-#include "../headers/methods.h"
+#include "../headers/builder.h"
 #include "../headers/const.h"
 
 method *MOV = &mov;
@@ -25,7 +25,13 @@ method *STOP = &stop;
 
 _Bool check_Addressing_0(char *, int, int *);
 
+_Bool check_Addressing_1(char *, int *);
+
+_Bool check_Addressing_2(char *, int *);
+
 _Bool check_Addressing_3(char *, int *);
+
+_Bool check_arguments(int, char *, int, int);
 
 void mov_handler(char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
@@ -35,18 +41,27 @@ void mov_handler(char *op, char **operands, int line, int n) {
 
         for (i = 0; i < TWO_ARGUMENTS; ++i) {
             int result;
-            if ((result = check_Addressing_0(*(operands + i), line, &result))) {
-                if (i == 0) {
-                    cmd._src_operand = 0;
-                    break;
-                }
-                cmd._des_operand = 0;
+            if (i != 1 && (result = check_Addressing_0(*(operands + i), line, &result))) {
+                cmd._src_operand = 0;
+                break;
             } else if ((result = check_Addressing_3(*(operands + i), &result))) {
                 if (i == 0) {
                     cmd._src_operand = 3;
                     break;
                 }
                 cmd._des_operand = 3;
+            } else if ((result = check_Addressing_2(*(operands + i), &result))) {
+                if (i == 0) {
+                    cmd._src_operand = 2;
+                    break;
+                }
+                cmd._des_operand = 2;
+            } else if ((result = check_Addressing_1(*(operands + i), &result))) {
+                if (i == 0) {
+                    cmd._src_operand = 1;
+                    break;
+                }
+                cmd._des_operand = 1;
             }
         }
     } else {
@@ -57,9 +72,34 @@ void mov_handler(char *op, char **operands, int line, int n) {
 void cmp_handler(char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         commend cmd;
-        int result;
-        cmd._opcode = CMP->opcode;
-        check_Addressing_0(*operands, line, &result);
+        cmd._opcode = MOV->opcode;
+        int i;
+
+        for (i = 0; i < TWO_ARGUMENTS; ++i) {
+            int result;
+            if (i != 1 && (result = check_Addressing_0(*(operands + i), line, &result))) {
+                cmd._src_operand = 0;
+                break;
+            } else if ((result = check_Addressing_3(*(operands + i), &result))) {
+                if (i == 0) {
+                    cmd._src_operand = 3;
+                    break;
+                }
+                cmd._des_operand = 3;
+            } else if ((result = check_Addressing_2(*(operands + i), &result))) {
+                if (i == 0) {
+                    cmd._src_operand = 2;
+                    break;
+                }
+                cmd._des_operand = 2;
+            } else if ((result = check_Addressing_1(*(operands + i), &result))) {
+                if (i == 0) {
+                    cmd._src_operand = 1;
+                    break;
+                }
+                cmd._des_operand = 1;
+            }
+        }
     } else {
         return;
     }
@@ -226,11 +266,11 @@ _Bool check_Addressing_0(char *operand, int line, int *num) {
     return 0;
 }
 
-_Bool check_Addressing_1(char *operand) {
+_Bool check_Addressing_1(char *operand, int *result) {
 
 }
 
-_Bool check_Addressing_2(char *operand) {
+_Bool check_Addressing_2(char *operand, int *result) {
 
 }
 

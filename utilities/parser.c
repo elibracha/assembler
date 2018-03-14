@@ -15,14 +15,14 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     int i, l, j = 0, k = 0, size = 1;
 
     char c = *(opcmd + strlen(opcmd) - 1);
-    if((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
+    if ((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
         printf(CONNA_AT_THE_END, line);
         return;
     }
 
     char last_char = 0;
     for (l = 0; l <= strlen(opcmd); ++l) {
-        if(opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
+        if (opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
             printf(TOO_MANY_COMMAS, line);
             return;
         }
@@ -109,7 +109,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
                     } else {
                         operands[counter][j++] = END_OF_INPUT;
                         mem_allocated++;
-                        size = 1; 
+                        size = 1;
                         j = 0;
                         params++;
                         counter++;
@@ -123,10 +123,10 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
 
     int t = 0;
     printf("%s -", opcode);
-    for (t = 0; t < params; ++t ) {
+    for (t = 0; t < params; ++t) {
         printf(" %s ", operands[t]);
     }
-    printf("%c",NEW_LINE);
+    printf("%c", NEW_LINE);
 
     build_data(opcode, operands, line, params);
 }

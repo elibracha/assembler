@@ -2,45 +2,43 @@
 /********************************************
    This file responsible for base swapping.
  ********************************************/
-#include "../headers/convertor.h"
+#include "../headers/switch.h"
+
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
 
-const char* convert_2bits_to_32(const char* number_to_convert){
+const char *convert_2bits_to_32(const char *number_to_convert) {
 
-    char BaseChars32[] = { '!','@','#','$','%','^','&'
-            ,'*','<','>','a','b','c','d'
-            ,'e','f','g','h','i','j','k'
-            ,'l','m','n','o','p','q','r'
-            ,'s','t','u','v' };
+    char BaseChars32[] = {'!', '@', '#', '$', '%', '^', '&', '*', '<', '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
+                          'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'};
 
     short int length = (short) strlen(number_to_convert);
-    short int numbers_base_10[length/5];
+    short int numbers_base_10[length / 5];
     short int current_sum = 0;
     short int current_index = 0;
-    short int stages[] = {16,8,4,2,1};
+    short int stages[] = {16, 8, 4, 2, 1};
 
     int i;
 
     for (i = 0; i < length; i++) {
         int temp = number_to_convert[i] - '0';
         if (temp == 1)
-            current_sum += temp*stages[i%5];
-        if((i+1)%5 == 0 && i != 0){
+            current_sum += temp * stages[i % 5];
+        if ((i + 1) % 5 == 0 && i != 0) {
             numbers_base_10[current_index++] = current_sum;
             current_sum = 0;
         }
     }
 
-    int result_length = sizeof(numbers_base_10)/sizeof(short int);
+    int result_length = sizeof(numbers_base_10) / sizeof(short int);
 
-    char* result = (char*) calloc((size_t) result_length + 1, sizeof(char));
+    char *result = (char *) calloc((size_t) result_length + 1, sizeof(char));
 
     int j;
 
-    if(result != NULL)
-        for (j = 0; j < result_length; j++){
+    if (result != NULL)
+        for (j = 0; j < result_length; j++) {
             char convertedLetter = BaseChars32[numbers_base_10[j]];
             result[j] = convertedLetter;
         }
@@ -54,48 +52,48 @@ const char* convert_2bits_to_32(const char* number_to_convert){
  * This function responsible for swapping between number on base 10 to base 2.
  */
 
-const char* convert_10bits_to_2(signed int number_to_convert) {
+const char *convert_10bits_to_2(signed int number_to_convert) {
 
     short int counter = 0;
-    _Bool* binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
+    _Bool *binary_number = (_Bool *) calloc((size_t)(counter + 1), sizeof(_Bool));
 
     while (number_to_convert >= 0) {
 
-        if(number_to_convert == 0){
+        if (number_to_convert == 0) {
             break;
         }
 
         if (binary_number == NULL) {
             exit_program();
-        }else{
+        } else {
             binary_number[counter] = (_Bool) (number_to_convert % 2);
 
-            if (number_to_convert % 2 == 0){
+            if (number_to_convert % 2 == 0) {
                 number_to_convert = number_to_convert / 2;
             } else {
                 number_to_convert = (number_to_convert - 1) / 2;
             }
 
             counter++;
-            if(number_to_convert != 0)
-                binary_number = (_Bool*) realloc(binary_number, (size_t) (counter + 1));
+            if (number_to_convert != 0)
+                binary_number = (_Bool *) realloc(binary_number, (size_t)(counter + 1));
         }
     }
 
     int j, i;
     _Bool flag = 1;
     int length = (5 - (counter % 5)) % 5;
-    char* result = (char*) calloc((size_t) (counter + length + 1), sizeof(char));
+    char *result = (char *) calloc((size_t)(counter + length + 1), sizeof(char));
 
-    for (i = counter-1; i >= 0; --i) {
-        if(counter  %5 != 0 && flag) {
+    for (i = counter - 1; i >= 0; --i) {
+        if (counter % 5 != 0 && flag) {
             for (j = 0; j < length; ++j)
                 *(result + j) = '0';
         }
         flag = 0;
 
-        if(*(binary_number + i) == 1)
-            *(result + length++) = '1' ;
+        if (*(binary_number + i) == 1)
+            *(result + length++) = '1';
         else
             *(result + length++) = '0';
     }
@@ -104,7 +102,7 @@ const char* convert_10bits_to_2(signed int number_to_convert) {
     return result;
 }
 
-void exit_program(){
+void exit_program() {
     printf(MEMORY_OVERFLOW);
     exit(0);
 }
