@@ -36,34 +36,43 @@ _Bool check_arguments(int, char *, int, int);
 void mov_handler(char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         commend cmd;
-        cmd._opcode = MOV->opcode;
-        int i;
+        cmd._opcode = MOV -> opcode;
+        int i = 0, j, result;
+        _Bool on_p1 = 1, add_check = 0;
 
-        for (i = 0; i < TWO_ARGUMENTS; ++i) {
-            int result;
-            if (i != 1 && (result = check_Addressing_0(*(operands + i), line, &result))) {
-                cmd._src_operand = 0;
-                break;
-            } else if ((result = check_Addressing_3(*(operands + i), &result))) {
-                if (i == 0) {
-                    cmd._src_operand = 3;
-                    break;
+        for (j = 0; j < 4; ++j) {
+            if(on_p1)
+                add_check = MOV -> op1[i];
+            else
+                add_check = MOV -> op2[i];
+
+            if (add_check) {
+                switch (i) {
+                    case 0:
+                        if ((result = check_Addressing_0(*(operands + i), line, &result)))
+                            cmd._src_operand = 0;
+                        break;
+                    case 1:
+                        if ((result = check_Addressing_3(*(operands + i), &result)))
+                            cmd._src_operand = 3;
+                        break;
+                    case 2:
+                        if ((result = check_Addressing_2(*(operands + i), &result)))
+                            cmd._src_operand = 2;
+                        break;
+                    case 3:
+                        if ((result = check_Addressing_1(*(operands + i), &result)))
+                            cmd._src_operand = 1;
+                        break;
                 }
-                cmd._des_operand = 3;
-            } else if ((result = check_Addressing_2(*(operands + i), &result))) {
-                if (i == 0) {
-                    cmd._src_operand = 2;
-                    break;
-                }
-                cmd._des_operand = 2;
-            } else if ((result = check_Addressing_1(*(operands + i), &result))) {
-                if (i == 0) {
-                    cmd._src_operand = 1;
-                    break;
-                }
-                cmd._des_operand = 1;
             }
+            if(j == 4 && on_p1){
+                on_p1 = 0;
+                j = 0;
+            }
+            i++;
         }
+
     } else {
         return;
     }
