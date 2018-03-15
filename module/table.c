@@ -33,7 +33,6 @@ void insertFirst(char *label, int line, _Bool ext, _Bool action) {
     link->line = line;
     link->ext = ext;
     link->action = action;
-
     //point it to old first node
     link->next = head;
 
@@ -55,13 +54,14 @@ void insertLast(char *label, int line, _Bool ext, _Bool action) {
     link->line = line;
     link->ext = ext;
     link->action = action;
+    link->next = NULL;
 
+    current = head;
     //if it is last node
     while (current->next != NULL) {
         current = current->next;
     }
 
-    //point it to old first node
     current->next = link;
 }
 

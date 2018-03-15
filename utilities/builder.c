@@ -145,9 +145,9 @@ void cmp_handler(char *label, char *op, char **operands, int line, int n) {
             if (label != NULL) {
                 struct node *head = get_head();
                 if (head == NULL) {
-                    insertFirst(label, line, 0, 1);
+                    insertFirst(label, IC, 0, 1);
                 } else
-                    insertLast(label, line, 0, 1);
+                    insertLast(label, IC, 0, 1);
             }
         }
 
@@ -157,87 +157,87 @@ void cmp_handler(char *label, char *op, char **operands, int line, int n) {
                 printf(SPACE_ALLOCATION_FAILED);
                 return;
             }
-            char *o = convert_10bits_to_2(cmd._opcode,0);
-            char *p1 = convert_10bits_to_2(cmd._src_operand,0);
-            char *p2 = convert_10bits_to_2(cmd._des_operand,0);
-            char *era = convert_10bits_to_2(cmd._ERA,0);
-
-            if (strlen(o) != 4){
-                int length = 4 - strlen(o);
-                char *str = (char*) malloc(5);
-                int l, i = 0;
-                for (l = 0; l < 5; ++l) {
-                    if(l < length)
-                        str[l] = '0';
-                    else{
-                        if(l == 4)
-                            str[l] = '\0';
-                        else
-                            str[l] = o[i++];
-                    }
-                }
-                o = str;
-            }
-            if (strlen(p1) != 2){
-                int length = 2 - strlen(p1);
-                char *str = (char*) malloc(2);
-                int l, i = 0;
-                for (l = 0; l < 3; ++l) {
-                    if(l < length)
-                        str[l] = '0';
-                    else{
-                        if(l == 2)
-                            str[l] = '\0';
-                        else
-                            str[l] = p1[i++];
-                    }
-                }
-                p1 = str;
-            }
-            if (strlen(p2) != 2){
-                int length = 2 - strlen(p2);
-                char *str = (char*) malloc(2);
-                int l, i = 0;
-                for (l = 0; l < 3; ++l) {
-                    if(l < length)
-                        str[l] = '0';
-                    else{
-                        if(l == 2)
-                            str[l] = '\0';
-                        else
-                            str[l] = p2[i++];
-                    }
-                }
-                p2 = str;
-            }
-            if (strlen(era) != 2){
-                int length = 2 - strlen(era);
-                char *str = (char*) malloc(2);
-                int l, i = 0;
-                for (l = 0; l < 3; ++l) {
-                    if(l < length)
-                        str[l] = '0';
-                    else{
-                        if(l == 2)
-                            str[l] = '\0';
-                        else
-                            str[l] = p1[i++];
-                    }
-                }
-                era = str;
-            }
-
-            codes[0] = strcat(o, strcat(p1, strcat(p2,era)));
         } else {
             codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
             if (!codes) {
                 printf(SPACE_ALLOCATION_FAILED);
                 return;
             }
-            codes[IC - 100] = convert_10bits_to_2(result_op1, 0);
         }
 
-        printf("%s - %s\n",  convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
+        char *o = convert_10bits_to_2(cmd._opcode, 0);
+        char *p1 = convert_10bits_to_2(cmd._src_operand, 0);
+        char *p2 = convert_10bits_to_2(cmd._des_operand, 0);
+        char *era = convert_10bits_to_2(cmd._ERA, 0);
+
+        if (strlen(o) != 4) {
+            int length = 4 - strlen(o);
+            char *str = (char *) malloc(5);
+            int l, i = 0;
+            for (l = 0; l < 5; ++l) {
+                if (l < length)
+                    str[l] = '0';
+                else {
+                    if (l == 4)
+                        str[l] = '\0';
+                    else
+                        str[l] = o[i++];
+                }
+            }
+            o = str;
+        }
+        if (strlen(p1) != 2) {
+            int length = 2 - strlen(p1);
+            char *str = (char *) malloc(2);
+            int l, i = 0;
+            for (l = 0; l < 3; ++l) {
+                if (l < length)
+                    str[l] = '0';
+                else {
+                    if (l == 2)
+                        str[l] = '\0';
+                    else
+                        str[l] = p1[i++];
+                }
+            }
+            p1 = str;
+        }
+        if (strlen(p2) != 2) {
+            int length = 2 - strlen(p2);
+            char *str = (char *) malloc(2);
+            int l, i = 0;
+            for (l = 0; l < 3; ++l) {
+                if (l < length)
+                    str[l] = '0';
+                else {
+                    if (l == 2)
+                        str[l] = '\0';
+                    else
+                        str[l] = p2[i++];
+                }
+            }
+            p2 = str;
+        }
+        if (strlen(era) != 2) {
+            int length = 2 - strlen(era);
+            char *str = (char *) malloc(2);
+            int l, i = 0;
+            for (l = 0; l < 3; ++l) {
+                if (l < length)
+                    str[l] = '0';
+                else {
+                    if (l == 2)
+                        str[l] = '\0';
+                    else
+                        str[l] = p1[i++];
+                }
+            }
+            era = str;
+        }
+
+        codes[IC - 100] = strcat(o, strcat(p1, strcat(p2, era)));
+
+        printf("%s - %s\n", convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
         IC++;
 
 
@@ -258,7 +258,7 @@ void cmp_handler(char *label, char *op, char **operands, int line, int n) {
                     }
                     codes[IC - 100] = convert_10bits_to_2(result_op1, 1);
                 }
-                printf("%s - %s\n",  convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
+                printf("%s - %s\n", convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
                 IC++;
                 break;
             case 1:
