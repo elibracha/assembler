@@ -23,15 +23,19 @@ method *JSR = &jsr;
 method *RTS = &rts;
 method *STOP = &stop;
 
-_Bool check_Addressing_0(char *, int, int *, _Bool);
+_Bool check_Addressing_0(char *, int, int *);
 
-_Bool check_Addressing_1(char *, int, int *, _Bool);
+_Bool check_Addressing_1(char *, int, _Bool);
 
-_Bool check_Addressing_2(char *, int, int *, _Bool);
+_Bool check_Addressing_2(char *, int, _Bool);
 
 _Bool check_Addressing_3(char *, int, int *, _Bool);
 
 _Bool check_arguments(int, char *, int, int);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
+char *convert_2bits_to_32(const char *);
 
 void insertFirst(char *label, int line, _Bool ext, _Bool action);
 
@@ -39,48 +43,83 @@ void insertLast(char *label, int line, _Bool ext, _Bool action);
 
 struct node *get_head();
 
-void printList();
+char **codes;
 
-void mov_handler(char *label, char *op, char **operands, int line, int n) {
-
+void cmp_handler(char *label, char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         commend cmd;
-        cmd._opcode = MOV->opcode;
-        int i = 0, k = 0, j, result;
-        _Bool on_p1 = 1, addressing = 0;
+        int i = 0, k = 0, j, result, val_op1, val_op2, result_op1;
+        _Bool on_p1 = 1, addressing = 0, flag1 = 0, flag2 = 0;
+
+        cmd._opcode = CMP->opcode;
 
         for (j = 0; j < 4; ++j) {
             if (on_p1)
-                addressing = MOV->op1[i];
+                addressing = CMP->op1[i];
             else
-                addressing = MOV->op2[i];
+                addressing = CMP->op2[i];
 
             if (addressing) {
                 switch (i) {
                     case 0:
-                        if ((result = check_Addressing_0(*(operands + k), line, &result, on_p1))) {
+                        if (check_Addressing_0(*(operands + k), line, &result)) {
+                            if (on_p1) {
+                                flag1 = 1;
+                                val_op1 = 0;
+                                cmd._src_operand = (unsigned int) val_op1;
+                            } else {
+                                flag2 = 1;
+                                val_op2 = 0;
+                                cmd._des_operand = (unsigned int) val_op2;
+                            }
                             cmd._src_operand = 0;
                             j = 4;
                             k++;
                         }
                         break;
                     case 1:
-                        if ((result = check_Addressing_3(*(operands + k), line, &result, on_p1))) {
+                        if (check_Addressing_3(*(operands + k), line, &result, on_p1)) {
+                            if (on_p1) {
+                                flag1 = 1;
+                                val_op1 = 3;
+                                cmd._src_operand = (unsigned int) val_op1;
+                            } else {
+                                flag2 = 1;
+                                val_op2 = 3;
+                                cmd._des_operand = (unsigned int) val_op2;
+                            }
                             cmd._src_operand = 3;
                             j = 4;
                             k++;
                         }
                         break;
                     case 2:
-                        if ((result = check_Addressing_2(*(operands + k), line, &result, on_p1))) {
+                        if (check_Addressing_2(*(operands + k), line, on_p1)) {
+                            if (on_p1) {
+                                flag1 = 1;
+                                val_op1 = 2;
+                                cmd._src_operand = (unsigned int) val_op1;
+                            } else {
+                                flag2 = 1;
+                                val_op2 = 2;
+                                cmd._des_operand = (unsigned int) val_op2;
+                            }
                             cmd._src_operand = 2;
                             j = 4;
                             k++;
                         }
                         break;
                     case 3:
-                        if ((result = check_Addressing_1(*(operands + k), line, &result, on_p1))) {
-                            cmd._src_operand = 1;
+                        if (check_Addressing_1(*(operands + k), line, on_p1)) {
+                            if (on_p1) {
+                                flag1 = 1;
+                                val_op1 = 1;
+                                cmd._src_operand = (unsigned int) val_op1;
+                            } else {
+                                flag2 = 1;
+                                val_op2 = 1;
+                                cmd._des_operand = (unsigned int) val_op2;
+                            }
                             j = 4;
                             k++;
                         }
@@ -89,19 +128,171 @@ void mov_handler(char *label, char *op, char **operands, int line, int n) {
             }
 
             if (j == 4 && on_p1) {
+                result_op1 = result;
                 on_p1 = 0;
-                j = 0;
+                j = -1;
+                i = -1;
             }
 
             i++;
         }
 
-        if (label != NULL) {
-            struct node *head = get_head();
-            if (head == NULL) {
-                insertFirst(label, line, 0, 1);
-            } else
-                insertLast(label, line, 0, 1);
+        if (flag1 && flag2) {
+            if (label != NULL) {
+                struct node *head = get_head();
+                if (head == NULL) {
+                    insertFirst(label, line, 0, 1);
+                } else
+                    insertLast(label, line, 0, 1);
+            }
+        }
+
+
+        switch (val_op1) {
+            case 0:
+                cmd._ERA = 0;
+                if (codes == NULL) {
+                    codes = (char **) malloc(sizeof(char **));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    char *o = convert_10bits_to_2(cmd._opcode,0);
+                    char *p1 = convert_10bits_to_2(cmd._src_operand,0);
+                    char *p2 = convert_10bits_to_2(cmd._des_operand,0);
+                    char *era = convert_10bits_to_2(cmd._ERA,0);
+
+                    if (strlen(o) != 4){
+                        int length = 4 - strlen(o);
+                        char *str = (char*) malloc(5);
+                        int l, i = 0;
+                        for (l = 0; l < 5; ++l) {
+                            if(l < length)
+                                str[l] = '0';
+                            else{
+                                if(l == 4)
+                                    str[l] = '\0';
+                                else
+                                    str[l] = o[i++];
+                            }
+                        }
+                        o = str;
+                    }
+                    if (strlen(p1) != 2){
+                        int length = 2 - strlen(p1);
+                        char *str = (char*) malloc(2);
+                        int l, i = 0;
+                        for (l = 0; l < 3; ++l) {
+                            if(l < length)
+                                str[l] = '0';
+                            else{
+                                if(l == 2)
+                                    str[l] = '\0';
+                                else
+                                    str[l] = p1[i++];
+                            }
+                        }
+                        p1 = str;
+                    }
+                    if (strlen(p2) != 2){
+                        int length = 2 - strlen(p2);
+                        char *str = (char*) malloc(2);
+                        int l, i = 0;
+                        for (l = 0; l < 3; ++l) {
+                            if(l < length)
+                                str[l] = '0';
+                            else{
+                                if(l == 2)
+                                    str[l] = '\0';
+                                else
+                                    str[l] = p2[i++];
+                            }
+                        }
+                        p2 = str;
+                    }
+                    if (strlen(era) != 2){
+                        int length = 2 - strlen(era);
+                        char *str = (char*) malloc(2);
+                        int l, i = 0;
+                        for (l = 0; l < 3; ++l) {
+                            if(l < length)
+                                str[l] = '0';
+                            else{
+                                if(l == 2)
+                                    str[l] = '\0';
+                                else
+                                    str[l] = p1[i++];
+                            }
+                        }
+                        era = str;
+                    }
+
+                    codes[0] = strcat(o, strcat(p1, strcat(p2,era)));
+                } else {
+                    codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    codes[IC - 100] = convert_10bits_to_2(result_op1, 0);
+                }
+
+                printf("%s - %s\n",  convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
+                IC++;
+
+                if (codes == NULL) {
+                    codes = (char **) malloc(sizeof(char **));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    codes[0] = convert_10bits_to_2(result_op1, 1);
+                } else {
+                    codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    codes[IC - 100] = convert_10bits_to_2(result_op1, 1);
+                }
+                printf("%s - %s\n",  convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
+                IC++;
+                break;
+            case 1:
+                cmd._ERA = 0;
+            case 2:
+                cmd._ERA = 0;
+            case 3:
+                cmd._ERA = 0;
+        }
+
+        switch (val_op2) {
+            case 0:
+                cmd._ERA = 0;
+                if (codes == NULL) {
+                    codes = (char **) malloc(sizeof(char **));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    codes[0] = convert_10bits_to_2(result, 1);
+                } else {
+                    codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
+                    if (!codes) {
+                        printf(SPACE_ALLOCATION_FAILED);
+                        return;
+                    }
+                    codes[IC - 100] = convert_10bits_to_2(result, 1);
+                }
+                printf("%s - %s\n",  convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
+                IC++;
+                break;
+            case 1:
+                cmd._ERA = 0;
+            case 2:
+                cmd._ERA = 0;
+            case 3:
+                cmd._ERA = 0;
         }
 
     } else {
@@ -109,147 +300,7 @@ void mov_handler(char *label, char *op, char **operands, int line, int n) {
     }
 }
 
-void cmp_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void add_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void sub_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void lea_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void not_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void clr_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void inc_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void dec_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void jmp_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void bne_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void red_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void prn_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void jsr_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void rts_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void stop_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-
-    } else {
-        return;
-    }
-}
-
-void string_handler(char *label, char *op, char **operands, int line, int n) {
-
-}
-
-void data_handler(char *label, char *op, char **operands, int line, int n) {
-
-}
-
-void struct_handler(char *label, char *op, char **operands, int line, int n) {
-
-}
-
-void extern_handler(char *label, char *op, char **operands, int line, int n) {
-
-}
-
-void entry_handler(char *label, char *op, char **operands, int line, int n) {
-
-}
-
-_Bool check_Addressing_0(char *operand, int line, int *num, _Bool num_operand) {
+_Bool check_Addressing_0(char *operand, int line, int *num) {
     if (*operand == ASTRICK) {
         int j = 1;
         if (*(operand + 1) == NEGATIVE || *(operand + 1) == POSITIVE) {
@@ -283,10 +334,10 @@ _Bool check_Addressing_0(char *operand, int line, int *num, _Bool num_operand) {
     return 0;
 }
 
-_Bool check_Addressing_1(char *operand, int line, int *result, _Bool num_operand) {
+_Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
     int temp_result;
     _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, &temp_result, num_operand))) {
+    if ((invalid = check_Addressing_0(operand, line, &temp_result))) {
         if (invalid) {
             printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
             return 0;
@@ -329,10 +380,10 @@ _Bool check_Addressing_1(char *operand, int line, int *result, _Bool num_operand
 
 }
 
-_Bool check_Addressing_2(char *operand, int line, int *result, _Bool num_operand) {
+_Bool check_Addressing_2(char *operand, int line, _Bool num_operand) {
     int temp_result;
     _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, &temp_result, num_operand))) {
+    if ((invalid = check_Addressing_0(operand, line, &temp_result))) {
         if (invalid) {
             printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
             return 0;
@@ -342,7 +393,7 @@ _Bool check_Addressing_2(char *operand, int line, int *result, _Bool num_operand
             printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Register", line);
             return 0;
         }
-    } else if ((invalid = check_Addressing_1(operand, line, &temp_result, num_operand))) {
+    } else if ((invalid = check_Addressing_1(operand, line, num_operand))) {
         if (invalid) {
             printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Struct", line);
             return 0;
@@ -356,8 +407,8 @@ _Bool check_Addressing_2(char *operand, int line, int *result, _Bool num_operand
                 return 0;
             }
         } else if ((*(operand + i) < 97 && *(operand + i) > 90) || *(operand + i) > 120 ||
-            (*(operand + i) < 65 && *(operand + i) > 57) ||
-            *(operand + i) < 48 && *(operand + i) != 0 && strlen(operand) <= 32) {
+                   (*(operand + i) < 65 && *(operand + i) > 57) ||
+                   *(operand + i) < 48 && *(operand + i) != 0 && strlen(operand) <= 32) {
             printf("Syntex: Label Can't Contain '%c' Or Too Long, Invalid (line - %d).\n", *(operand + i), line);
             return 0;
         }
@@ -365,9 +416,9 @@ _Bool check_Addressing_2(char *operand, int line, int *result, _Bool num_operand
 }
 
 _Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand) {
-    int temp_result;
+    int *temp;
     _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, &temp_result, num_operand))) {
+    if ((invalid = check_Addressing_0(operand, line, temp))) {
         if (invalid) {
             printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
             return 0;

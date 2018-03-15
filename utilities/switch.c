@@ -4,14 +4,17 @@
  ********************************************/
 #include "../headers/switch.h"
 #include "../headers/const.h"
+
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
 
-const char *convert_2bits_to_32(const char *number_to_convert) {
+void exit_program();
 
-    char BaseChars32[] = {'!', '@', '#', '$', '%', '^', '&', '*', '<', '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i',
-                          'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'};
+char *convert_2bits_to_32(const char *number_to_convert) {
+
+    char BaseChars32[] = {'!', '@', '#', '$', '%', '^', '&', '*', '<', '>', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h',
+                          'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v'};
 
     short int length = (short) strlen(number_to_convert);
     short int numbers_base_10[length / 5];
@@ -22,7 +25,7 @@ const char *convert_2bits_to_32(const char *number_to_convert) {
     int i;
 
     for (i = 0; i < length; i++) {
-        int temp = number_to_convert[i] - END_OF_INPUT;
+        int temp = number_to_convert[i] - '0';
         if (temp == 1)
             current_sum += temp * stages[i % 5];
         if ((i + 1) % 5 == 0 && i != 0) {
@@ -52,16 +55,18 @@ const char *convert_2bits_to_32(const char *number_to_convert) {
  * This function responsible for swapping between number on base 10 to base 2.
  */
 
-const char *convert_10bits_to_2(signed int number_to_convert) {
+char *convert_10bits_to_2(signed int number_to_convert, _Bool adding_zero) {
 
     short int counter = 0;
     _Bool *binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
-
+    _Bool flag = 0;
     while (number_to_convert >= 0) {
 
-        if (number_to_convert == 0) {
+        if (number_to_convert == 0 && flag) {
             break;
         }
+
+        flag = 1;
 
         if (binary_number == NULL) {
             exit_program();
@@ -80,24 +85,41 @@ const char *convert_10bits_to_2(signed int number_to_convert) {
         }
     }
 
-    int j, i;
-    _Bool flag = 1;
-    int length = (5 - (counter % 5)) % 5;
-    char *result = (char *) calloc((size_t) (counter + length + 1), sizeof(char));
+    if (adding_zero) {
+        int j, i;
+        _Bool flag = 1;
+        int length = (5 - (counter % 5)) % 5;
 
-    for (i = counter - 1; i >= 0; --i) {
-        if (counter % 5 != 0 && flag) {
-            for (j = 0; j < length; ++j)
-                *(result + j) = '0';
+        if (counter <= 5) {
+            length = 10 - counter;
         }
-        flag = 0;
 
-        if (*(binary_number + i) == 1)
-            *(result + length++) = '1';
-        else
-            *(result + length++) = '0';
+        char *result = (char *) calloc((size_t) (counter + length + 1), sizeof(char));
+
+        for (i = counter - 1; i >= 0; --i) {
+            if ((counter % 5 != 0 || counter <= 5) && flag) {
+                for (j = 0; j < length; ++j)
+                    *(result + j) = '0';
+            }
+            flag = 0;
+
+            if (*(binary_number + i) == 1)
+                *(result + length++) = '1';
+            else
+                *(result + length++) = '0';
+        }
+
+        free(binary_number);
+        return result;
     }
-
+    char *result = (char *) calloc((size_t) (counter  + 1), sizeof(char));
+    int i;
+    for (i = 0; i < counter ; ++i) {
+        if(*(binary_number+i))
+            result[i] = '1';
+        else
+            result[i] = '0';
+     }
     free(binary_number);
     return result;
 }

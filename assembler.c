@@ -22,6 +22,8 @@ void start_assembler(char **);
 
 void initialize();
 
+void printList();
+
 int main(int argc, char *argv[]) {
     initialize();
     argc > MINIMUM_ARGUMENTS ? start_assembler(argv) : printf(STARTUP_ERROR);
@@ -35,4 +37,5 @@ void start_assembler(char **files) {
             printf(SUCCESS_MESSAGE);
         }
     }
+    printList();
 }

@@ -8,7 +8,7 @@ struct node * get_head(){
 //display the list
 void printList() {
     struct node *ptr = head;
-    printf("\n[ ");
+    printf("[ ");
 
     //start from the beginning
     while (ptr != NULL) {
@@ -16,7 +16,7 @@ void printList() {
         ptr = ptr->next;
     }
 
-    printf(" ]");
+    printf(" ]\n");
 }
 
 //insert link at the first location
