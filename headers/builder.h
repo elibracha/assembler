@@ -24,7 +24,7 @@ typedef struct {
     unsigned int _opcode : 4;
 } commend;
 
-typedef struct node {
+typedef struct item {
     unsigned int opcode;
     _Bool op1[4];
     _Bool op2[4];

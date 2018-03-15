@@ -3,7 +3,7 @@
    This file responsible for base swapping.
  ********************************************/
 #include "../headers/switch.h"
-
+#include "../headers/const.h"
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
@@ -22,7 +22,7 @@ const char *convert_2bits_to_32(const char *number_to_convert) {
     int i;
 
     for (i = 0; i < length; i++) {
-        int temp = number_to_convert[i] - '0';
+        int temp = number_to_convert[i] - END_OF_INPUT;
         if (temp == 1)
             current_sum += temp * stages[i % 5];
         if ((i + 1) % 5 == 0 && i != 0) {
@@ -55,7 +55,7 @@ const char *convert_2bits_to_32(const char *number_to_convert) {
 const char *convert_10bits_to_2(signed int number_to_convert) {
 
     short int counter = 0;
-    _Bool *binary_number = (_Bool *) calloc((size_t)(counter + 1), sizeof(_Bool));
+    _Bool *binary_number = (_Bool *) calloc((size_t) (counter + 1), sizeof(_Bool));
 
     while (number_to_convert >= 0) {
 
@@ -76,14 +76,14 @@ const char *convert_10bits_to_2(signed int number_to_convert) {
 
             counter++;
             if (number_to_convert != 0)
-                binary_number = (_Bool *) realloc(binary_number, (size_t)(counter + 1));
+                binary_number = (_Bool *) realloc(binary_number, (size_t) (counter + 1));
         }
     }
 
     int j, i;
     _Bool flag = 1;
     int length = (5 - (counter % 5)) % 5;
-    char *result = (char *) calloc((size_t)(counter + length + 1), sizeof(char));
+    char *result = (char *) calloc((size_t) (counter + length + 1), sizeof(char));
 
     for (i = counter - 1; i >= 0; --i) {
         if (counter % 5 != 0 && flag) {

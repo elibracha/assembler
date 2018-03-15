@@ -128,52 +128,52 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     }
     printf("%c", NEW_LINE);
 
-    build_data(opcode, operands, line, params);
+    build_data(label, opcode, operands, line, params);
 }
 
-unsigned int build_data(char *op, char **operands, int line, int params) {
+unsigned int build_data(char* label, char *op, char **operands, int line, int params) {
     if (strcmp(op, "mov") == 0) {
-        mov_handler(op, operands, line, params);
+        mov_handler(label, op, operands, line, params);
     } else if (strcmp(op, "cmp") == 0) {
-        cmp_handler(op, operands, line, params);
+        cmp_handler(label, op, operands, line, params);
     } else if (strcmp(op, "add") == 0) {
-        add_handler(op, operands, line, params);
+        add_handler(label, op, operands, line, params);
     } else if (strcmp(op, "sub") == 0) {
-        sub_handler(op, operands, line, params);
+        sub_handler(label, op, operands, line, params);
     } else if (strcmp(op, "not") == 0) {
-        not_handler(op, operands, line, params);
+        not_handler(label, op, operands, line, params);
     } else if (strcmp(op, "clr") == 0) {
-        clr_handler(op, operands, line, params);
+        clr_handler(label, op, operands, line, params);
     } else if (strcmp(op, "lea") == 0) {
-        lea_handler(op, operands, line, params);
+        lea_handler(label, op, operands, line, params);
     } else if (strcmp(op, "inc") == 0) {
-        inc_handler(op, operands, line, params);
+        inc_handler(label, op, operands, line, params);
     } else if (strcmp(op, "dec") == 0) {
-        dec_handler(op, operands, line, params);
+        dec_handler(label, op, operands, line, params);
     } else if (strcmp(op, "jmp") == 0) {
-        jmp_handler(op, operands, line, params);
+        jmp_handler(label, op, operands, line, params);
     } else if (strcmp(op, "bne") == 0) {
-        bne_handler(op, operands, line, params);
+        bne_handler(label, op, operands, line, params);
     } else if (strcmp(op, "red") == 0) {
-        red_handler(op, operands, line, params);
+        red_handler(label, op, operands, line, params);
     } else if (strcmp(op, "prn") == 0) {
-        prn_handler(op, operands, line, params);
+        prn_handler(label, op, operands, line, params);
     } else if (strcmp(op, "jsr") == 0) {
-        jsr_handler(op, operands, line, params);
+        jsr_handler(label, op, operands, line, params);
     } else if (strcmp(op, "rts") == 0) {
-        rts_handler(op, operands, line, params);
+        rts_handler(label, op, operands, line, params);
     } else if (strcmp(op, "stop") == 0) {
-        stop_handler(op, operands, line, params);
+        stop_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".string") == 0) {
-        string_handler(op, operands, line, params);
+        string_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".struct") == 0) {
-        struct_handler(op, operands, line, params);
+        struct_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".entry") == 0) {
-        entry_handler(op, operands, line, params);
+        entry_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".extern") == 0) {
-        extern_handler(op, operands, line, params);
+        extern_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".data") == 0) {
-        data_handler(op, operands, line, params);
+        data_handler(label, op, operands, line, params);
     } else {
         printf(COMMEND_SYNTEX_ERROR, line, op);
     }
