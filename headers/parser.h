@@ -45,11 +45,11 @@ void rts_handler(char*, char *, char **, int, int);
 
 void stop_handler(char*, char *, char **, int, int);
 
-void string_handler(char*, char *, char **, int, int);
+void string_handler(char*, char **, int, int);
 
-void data_handler(char*, char *, char **, int, int);
+void data_handler(char*, char **, int, int);
 
-void struct_handler(char*, char *, char **, int, int);
+void struct_handler(char*, char **, int, int);
 
 void extern_handler(char*, char *, char **, int, int);
 

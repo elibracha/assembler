@@ -14,15 +14,19 @@
 #define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
 #define SUCCESS_MESSAGE "Build: Success Building Files.\n"
 
-_Bool validate_files(char *);
+void initialize();
 
 void assemble(char *);
 
+_Bool validate_files(char *);
+
 void start_assembler(char **);
 
-void initialize();
+void print_label_list();
 
-void printList();
+void print_code_list();
+
+void print_data_list();
 
 int main(int argc, char *argv[]) {
     initialize();
@@ -37,5 +41,10 @@ void start_assembler(char **files) {
             printf(SUCCESS_MESSAGE);
         }
     }
-    printList();
+    printf("LABELS - ");
+    print_label_list();
+    printf("CODE - ");
+    print_code_list();
+    printf("DATA - ");
+    print_data_list();
 }

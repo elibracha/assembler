@@ -5,13 +5,13 @@
 
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Enough Memory To Program To Parse.\n"
 
-struct node {
+struct label {
     char *label;
     int line;
     _Bool ext;
     _Bool action;
-    struct node *next;
+    struct label *next;
 };
 
-struct node *head = NULL;
-struct node *current = NULL;
+struct label *head_label = NULL;
+struct label *current_label = NULL;

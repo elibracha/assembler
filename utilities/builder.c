@@ -23,6 +23,7 @@ method *JSR = &jsr;
 method *RTS = &rts;
 method *STOP = &stop;
 
+void print_label_list();
 _Bool check_Addressing_0(char *, int, int *);
 
 _Bool check_Addressing_1(char *, int, _Bool);
@@ -37,270 +38,251 @@ char *convert_10bits_to_2(signed int, _Bool);
 
 char *convert_2bits_to_32(const char *);
 
-void insertFirst(char *label, int line, _Bool ext, _Bool action);
+void insert_first_label(char *, int, _Bool, _Bool);
 
-void insertLast(char *label, int line, _Bool ext, _Bool action);
+void insert_last_label(char *, int, _Bool, _Bool);
 
-struct node *get_head();
+void insert_last_data(int, int, char *);
 
-char **codes;
+void insert_first_data(int, int, char *);
+
+void insert_last_code(int, char *);
+
+void insert_first_code(int, char *);
+
+struct code *get_head_code();
+
+struct data *get_head_data();
+
+struct label *get_head_label();
+
+void handle_cmd(char *, char *, char **, int, int, method *, int);
 
 void cmp_handler(char *label, char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        commend cmd;
-        int i = 0, k = 0, j, result, val_op1, val_op2, result_op1;
-        _Bool on_p1 = 1, addressing = 0, flag1 = 0, flag2 = 0;
-
-        cmd._opcode = CMP->opcode;
-
-        for (j = 0; j < 4; ++j) {
-            if (on_p1)
-                addressing = CMP->op1[i];
-            else
-                addressing = CMP->op2[i];
-
-            if (addressing) {
-                switch (i) {
-                    case 0:
-                        if (check_Addressing_0(*(operands + k), line, &result)) {
-                            cmd._ERA = 0;
-                            if (on_p1) {
-                                flag1 = 1;
-                                val_op1 = 0;
-                                cmd._src_operand = (unsigned int) val_op1;
-                            } else {
-                                flag2 = 1;
-                                val_op2 = 0;
-                                cmd._des_operand = (unsigned int) val_op2;
-                            }
-                            cmd._src_operand = 0;
-                            j = 4;
-                            k++;
-                        }
-                        break;
-                    case 1:
-                        if (check_Addressing_3(*(operands + k), line, &result, on_p1)) {
-                            cmd._ERA = 0;
-                            if (on_p1) {
-                                flag1 = 1;
-                                val_op1 = 3;
-                                cmd._src_operand = (unsigned int) val_op1;
-                            } else {
-                                flag2 = 1;
-                                val_op2 = 3;
-                                cmd._des_operand = (unsigned int) val_op2;
-                            }
-                            cmd._src_operand = 3;
-                            j = 4;
-                            k++;
-                        }
-                        break;
-                    case 2:
-                        if (check_Addressing_2(*(operands + k), line, on_p1)) {
-                            cmd._ERA = 0;
-                            if (on_p1) {
-                                flag1 = 1;
-                                val_op1 = 2;
-                                cmd._src_operand = (unsigned int) val_op1;
-                            } else {
-                                flag2 = 1;
-                                val_op2 = 2;
-                                cmd._des_operand = (unsigned int) val_op2;
-                            }
-                            cmd._src_operand = 2;
-                            j = 4;
-                            k++;
-                        }
-                        break;
-                    case 3:
-                        if (check_Addressing_1(*(operands + k), line, on_p1)) {
-                            cmd._ERA = 0;
-                            if (on_p1) {
-                                flag1 = 1;
-                                val_op1 = 1;
-                                cmd._src_operand = (unsigned int) val_op1;
-                            } else {
-                                flag2 = 1;
-                                val_op2 = 1;
-                                cmd._des_operand = (unsigned int) val_op2;
-                            }
-                            j = 4;
-                            k++;
-                        }
-                        break;
-                }
-            }
-
-            if (j == 4 && on_p1) {
-                result_op1 = result;
-                on_p1 = 0;
-                j = -1;
-                i = -1;
-            }
-
-            i++;
-        }
-
-        if (flag1 && flag2) {
-            if (label != NULL) {
-                struct node *head = get_head();
-                if (head == NULL) {
-                    insertFirst(label, IC, 0, 1);
-                } else
-                    insertLast(label, IC, 0, 1);
-            }
-        }
-
-        if (codes == NULL) {
-            codes = (char **) malloc(sizeof(char **));
-            if (!codes) {
-                printf(SPACE_ALLOCATION_FAILED);
-                return;
-            }
-        } else {
-            codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
-            if (!codes) {
-                printf(SPACE_ALLOCATION_FAILED);
-                return;
-            }
-        }
-
-        char *o = convert_10bits_to_2(cmd._opcode, 0);
-        char *p1 = convert_10bits_to_2(cmd._src_operand, 0);
-        char *p2 = convert_10bits_to_2(cmd._des_operand, 0);
-        char *era = convert_10bits_to_2(cmd._ERA, 0);
-
-        if (strlen(o) != 4) {
-            int length = 4 - strlen(o);
-            char *str = (char *) malloc(5);
-            int l, i = 0;
-            for (l = 0; l < 5; ++l) {
-                if (l < length)
-                    str[l] = '0';
-                else {
-                    if (l == 4)
-                        str[l] = '\0';
-                    else
-                        str[l] = o[i++];
-                }
-            }
-            o = str;
-        }
-        if (strlen(p1) != 2) {
-            int length = 2 - strlen(p1);
-            char *str = (char *) malloc(2);
-            int l, i = 0;
-            for (l = 0; l < 3; ++l) {
-                if (l < length)
-                    str[l] = '0';
-                else {
-                    if (l == 2)
-                        str[l] = '\0';
-                    else
-                        str[l] = p1[i++];
-                }
-            }
-            p1 = str;
-        }
-        if (strlen(p2) != 2) {
-            int length = 2 - strlen(p2);
-            char *str = (char *) malloc(2);
-            int l, i = 0;
-            for (l = 0; l < 3; ++l) {
-                if (l < length)
-                    str[l] = '0';
-                else {
-                    if (l == 2)
-                        str[l] = '\0';
-                    else
-                        str[l] = p2[i++];
-                }
-            }
-            p2 = str;
-        }
-        if (strlen(era) != 2) {
-            int length = 2 - strlen(era);
-            char *str = (char *) malloc(2);
-            int l, i = 0;
-            for (l = 0; l < 3; ++l) {
-                if (l < length)
-                    str[l] = '0';
-                else {
-                    if (l == 2)
-                        str[l] = '\0';
-                    else
-                        str[l] = p1[i++];
-                }
-            }
-            era = str;
-        }
-
-        codes[IC - 100] = strcat(o, strcat(p1, strcat(p2, era)));
-
-        printf("%s - %s\n", convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
-        IC++;
-
-
-        switch (val_op1) {
-            case 0:
-                if (codes == NULL) {
-                    codes = (char **) malloc(sizeof(char **));
-                    if (!codes) {
-                        printf(SPACE_ALLOCATION_FAILED);
-                        return;
-                    }
-                    codes[0] = convert_10bits_to_2(result_op1, 1);
-                } else {
-                    codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
-                    if (!codes) {
-                        printf(SPACE_ALLOCATION_FAILED);
-                        return;
-                    }
-                    codes[IC - 100] = convert_10bits_to_2(result_op1, 1);
-                }
-                printf("%s - %s\n", convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
-                IC++;
-                break;
-            case 1:
-
-            case 2:
-
-            case 3:
-                break;
-        }
-
-        switch (val_op2) {
-            case 0:
-                if (codes == NULL) {
-                    codes = (char **) malloc(sizeof(char **));
-                    if (!codes) {
-                        printf(SPACE_ALLOCATION_FAILED);
-                        return;
-                    }
-                    codes[0] = convert_10bits_to_2(result, 1);
-                } else {
-                    codes = (char **) realloc(codes, sizeof(char **) * (IC - 99));
-                    if (!codes) {
-                        printf(SPACE_ALLOCATION_FAILED);
-                        return;
-                    }
-                    codes[IC - 100] = convert_10bits_to_2(result, 1);
-                }
-                printf("%s - %s\n", convert_2bits_to_32(convert_10bits_to_2(IC, 1)), codes[IC - 100]);
-                IC++;
-                break;
-            case 1:
-
-            case 2:
-
-            case 3:
-                break;
-        }
-
+        handle_cmd(label, op, operands, line, n, CMP, TWO_ARGUMENTS);
     } else {
         return;
     }
 }
+
+void mov_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, MOV, TWO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void add_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, ADD, TWO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void sub_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, SUB, TWO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void lea_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, LEA, TWO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void inc_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, INC, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void clr_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, CLR, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void not_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, NOT, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void dec_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, DEC, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void jmp_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, NOT, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void bne_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, BNE, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void red_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, RED, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void prn_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, PRN, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void jsr_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, JSR, ONE_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void rts_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, RTS, ZERO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void stop_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, STOP, ZERO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void data_handler(char *label, char **operands, int params, int line) {
+    if (label != NULL) {
+        struct label *head = get_head_label();
+        if (head == NULL) {
+            insert_first_label(label, IC, 0, 0);
+        } else
+            insert_last_label(label, IC, 0, 0);
+    }
+    while (params) {
+        int i = 0;
+        for (i = 0; i != '\0'; ++i) {
+            if (*(*(operands + i)) <= 57 && *(*(operands + i)) >= 48) {
+                continue;
+            } else {
+                printf("Syntex: Invalid Char In Middle O f A Number.");
+                return;
+            }
+        }
+        int number = atoi(*operands);
+        if (get_head_data() == NULL) {
+            insert_first_data(DC++, line, convert_10bits_to_2(number, 1));
+        } else {
+            insert_last_data(DC++, line, convert_10bits_to_2(number, 1));
+        }
+        operands++;
+        params--;
+    }
+}
+
+void string_handler(char *label, char **operands, int params, int line) {
+    if (params > 1) {
+        printf("Syntex: To Many Aruments For String.");
+        return;
+    }
+
+    if (label != NULL) {
+        struct label *head = get_head_label();
+        if (head == NULL) {
+            insert_first_label(label, IC, 0, 0);
+        } else
+            insert_last_label(label, IC, 0, 0);
+    }
+
+    int i;
+    for (i = 0; i < strlen(*operands); ++i) {
+        if (i == 0) {
+            if (**operands == '\"') {
+                continue;
+            } else {
+                printf("Syntex: String Data Most start With ' \" '.");
+                return;
+            }
+        }
+
+        if (i + 1 == strlen(*operands)) {
+            if (*((*operands) + i) == '\"') {
+                continue;
+            } else {
+                printf("Syntex: String Data Most End With ' \" '.");
+                return;
+            }
+        }
+
+        if (get_head_data() == NULL) {
+            insert_first_data(DC++, line, convert_10bits_to_2((int) *((*operands) + i), 1));
+        } else {
+            insert_last_data(DC++, line, convert_10bits_to_2((int) *((*operands) + i), 1));
+        }
+    }
+
+}
+
+void struct_handler(char *label, char **operands, int params, int line) {
+    if (params == 2) {
+        data_handler(label, operands, 1, line);
+        string_handler(NULL, (operands + 1), 1, line);
+    } else {
+        return;
+    }
+}
+
+void extern_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, STOP, ZERO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
+void entry_handler(char *label, char *op, char **operands, int line, int n) {
+    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
+        handle_cmd(label, op, operands, line, n, STOP, ZERO_ARGUMENTS);
+    } else {
+        return;
+    }
+}
+
 
 _Bool check_Addressing_0(char *operand, int line, int *num) {
     if (*operand == ASTRICK) {
@@ -338,17 +320,12 @@ _Bool check_Addressing_0(char *operand, int line, int *num) {
 
 _Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
     int temp_result;
-    _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, &temp_result))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
-            return 0;
-        }
-    } else if ((invalid = check_Addressing_3(operand, line, &temp_result, num_operand))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Register", line);
-            return 0;
-        }
+    if (check_Addressing_0(operand, line, &temp_result)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
+        return 0;
+    } else if (check_Addressing_3(operand, line, &temp_result, num_operand)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Register", line);
+        return 0;
     }
 
     char *field = NULL;
@@ -384,22 +361,15 @@ _Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
 
 _Bool check_Addressing_2(char *operand, int line, _Bool num_operand) {
     int temp_result;
-    _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, &temp_result))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
-            return 0;
-        }
-    } else if ((invalid = check_Addressing_3(operand, line, &temp_result, num_operand))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Register", line);
-            return 0;
-        }
-    } else if ((invalid = check_Addressing_1(operand, line, num_operand))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Struct", line);
-            return 0;
-        }
+    if (check_Addressing_0(operand, line, &temp_result)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
+        return 0;
+    } else if (check_Addressing_3(operand, line, &temp_result, num_operand)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Register", line);
+        return 0;
+    } else if (check_Addressing_1(operand, line, num_operand)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Struct", line);
+        return 0;
     }
     int i;
     for (i = 0; i < strlen(operand); ++i) {
@@ -419,12 +389,9 @@ _Bool check_Addressing_2(char *operand, int line, _Bool num_operand) {
 
 _Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand) {
     int *temp;
-    _Bool invalid = 0;
-    if ((invalid = check_Addressing_0(operand, line, temp))) {
-        if (invalid) {
-            printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
-            return 0;
-        }
+    if (check_Addressing_0(operand, line, temp)) {
+        printf(MISSPLACED_ADDRESSING, num_operand + 1, 1, "Immediate Number", line);
+        return 0;
     }
     if (strcmp(operand, "r0") == 0 || strcmp(operand, "r1") == 0 || strcmp(operand, "r2") == 0 ||
         strcmp(operand, "r3") == 0 || strcmp(operand, "r4") == 0 || strcmp(operand, "r5") == 0 ||
@@ -452,6 +419,215 @@ _Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand
     return 0;
 }
 
+void handle_cmd(char *label, char *op, char **operands, int line, int n, method *md, int args) {
+    commend cmd;
+    int i = 0, k = 0, j, val_op1 = 0, val_op2 = 0, result_op1 = 0, result = 0;
+    _Bool on_p1 = 1, addressing = 0;
+
+    cmd._opcode = md->opcode;
+
+    for (j = 1; j < 5; ++j) {
+        if (on_p1 && args == 2)
+            addressing = md->op1[i];
+        else if (args == 1)
+            addressing = md->op2[i];
+        else
+            break;
+
+        if (addressing) {
+            switch (i) {
+                case 1:
+                    if (check_Addressing_0(*(operands + k), line, &result)) {
+                        cmd._ERA = 0;
+                        if (on_p1) {
+                            val_op1 = 0;
+                            cmd._src_operand = (unsigned int) val_op1;
+                        } else {
+                            val_op2 = 0;
+                            cmd._des_operand = (unsigned int) val_op2;
+                        }
+                        j = 4;
+                        k++;
+                    }
+                    break;
+                case 2:
+                    if (check_Addressing_3(*(operands + k), line, &result, on_p1)) {
+                        cmd._ERA = 1;
+                        if (on_p1) {
+                            val_op1 = 3;
+                            cmd._src_operand = (unsigned int) val_op1;
+                        } else {
+                            val_op2 = 3;
+                            cmd._des_operand = (unsigned int) val_op2;
+                        }
+                        j = 4;
+                        k++;
+                    }
+                    break;
+                case 3:
+                    if (check_Addressing_2(*(operands + k), line, on_p1)) {
+                        cmd._ERA = 1;
+                        if (on_p1) {
+                            val_op1 = 2;
+                            cmd._src_operand = (unsigned int) val_op1;
+                        } else {
+                            val_op2 = 2;
+                            cmd._des_operand = (unsigned int) val_op2;
+                        }
+                        j = 4;
+                        k++;
+                    }
+                    break;
+                case 4:
+                    if (check_Addressing_1(*(operands + k), line, on_p1)) {
+                        cmd._ERA = 0;
+                        if (on_p1) {
+                            val_op1 = 1;
+                            cmd._src_operand = (unsigned int) val_op1;
+                        } else {
+                            val_op2 = 1;
+                            cmd._des_operand = (unsigned int) val_op2;
+                        }
+                        j = 4;
+                        k++;
+                    }
+                    break;
+            }
+        }
+
+        if (j == 4 && on_p1) {
+            result_op1 = result;
+            args--;
+            on_p1 = 0;
+            j = -1;
+            i = -1;
+        }
+
+        i++;
+    }
+
+
+    if (label != NULL) {
+        struct label *head = get_head_label();
+        if (head == NULL) {
+            insert_first_label(label, IC, 0, 1);
+        } else
+            insert_last_label(label, IC, 0, 1);
+    }
+
+    print_label_list();
+    char *o = convert_10bits_to_2(cmd._opcode, 0);
+    char *p1 = convert_10bits_to_2(cmd._src_operand, 0);
+    char *p2 = convert_10bits_to_2(cmd._des_operand, 0);
+    char *era = convert_10bits_to_2(cmd._ERA, 0);
+
+    if (strlen(o) != 4) {
+        int length = 4 - strlen(o);
+        char *str = (char *) malloc(5);
+        int l, q = 0;
+        for (l = 0; l < 5; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == 4)
+                    str[l] = '\0';
+                else
+                    str[l] = o[q++];
+            }
+        }
+        o = str;
+    }
+    if (strlen(p1) != 2) {
+        int length = 2 - strlen(p1);
+        char *str = (char *) malloc(2);
+        int l, q = 0;
+        for (l = 0; l < 3; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == 2)
+                    str[l] = '\0';
+                else
+                    str[l] = p1[q++];
+            }
+        }
+        p1 = str;
+    }
+    if (strlen(p2) != 2) {
+        int length = 2 - strlen(p2);
+        char *str = (char *) malloc(2);
+        int l, q = 0;
+        for (l = 0; l < 3; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == 2)
+                    str[l] = '\0';
+                else
+                    str[l] = p2[q++];
+            }
+        }
+        p2 = str;
+    }
+    if (strlen(era) != 2) {
+        int length = 2 - strlen(era);
+        char *str = (char *) malloc(2);
+        int l, q = 0;
+        for (l = 0; l < 3; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == 2)
+                    str[l] = '\0';
+                else
+                    str[l] = p1[q++];
+            }
+        }
+        era = str;
+    }
+
+    struct code *codes = get_head_code();
+
+    if (codes == NULL) {
+        insert_first_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
+    } else {
+        insert_last_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
+    }
+
+    switch (val_op1) {
+        case 0:
+            if (codes == NULL) {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            } else {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            }
+            break;
+        case 1:
+
+        case 2:
+
+        case 3:
+            break;
+    }
+
+    switch (val_op2) {
+        case 0:
+            if (codes == NULL) {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            } else {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            }
+            break;
+        case 1:
+
+        case 2:
+
+        case 3:
+            break;
+    }
+
+}
+
 _Bool check_arguments(int cargs, char *op, int line, int nargs) {
     if (cargs == nargs) {
         return 1;
@@ -465,22 +641,22 @@ _Bool check_arguments(int cargs, char *op, int line, int nargs) {
 
 void initialize() {
 
-    MOV->opcode = 1;
-    CMP->opcode = 2;
-    ADD->opcode = 3;
-    SUB->opcode = 4;
-    NOT->opcode = 5;
-    CLR->opcode = 6;
-    LEA->opcode = 7;
-    INC->opcode = 8;
-    DEC->opcode = 9;
-    JMP->opcode = 10;
-    BNE->opcode = 11;
-    RED->opcode = 12;
-    PRN->opcode = 13;
-    JSR->opcode = 14;
-    RTS->opcode = 15;
-    STOP->opcode = 16;
+    MOV->opcode = 0;
+    CMP->opcode = 1;
+    ADD->opcode = 2;
+    SUB->opcode = 3;
+    NOT->opcode = 4;
+    CLR->opcode = 5;
+    LEA->opcode = 6;
+    INC->opcode = 7;
+    DEC->opcode = 8;
+    JMP->opcode = 9;
+    BNE->opcode = 10;
+    RED->opcode = 11;
+    PRN->opcode = 12;
+    JSR->opcode = 13;
+    RTS->opcode = 14;
+    STOP->opcode = 15;
 
     int i;
 

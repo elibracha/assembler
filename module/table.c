@@ -1,13 +1,21 @@
 
+/******************************************************
+
+ This file responsible for tracking after code section.
+
+ *******************************************************/
+
+
 #include "../headers/table.h"
 
-struct node * get_head(){
-    return head;
+
+struct label * get_head_label(){
+    return head_label;
 }
 
 //display the list
-void printList() {
-    struct node *ptr = head;
+void print_label_list() {
+    struct label *ptr = head_label;
     printf("[ ");
 
     //start from the beginning
@@ -20,9 +28,9 @@ void printList() {
 }
 
 //insert link at the first location
-void insertFirst(char *label, int line, _Bool ext, _Bool action) {
+void insert_first_label(char *label, int line, _Bool ext, _Bool action) {
     //create a link
-    struct node *link = (struct node *) malloc(sizeof(struct node));
+    struct label *link = (struct label *) malloc(sizeof(struct label));
 
     if (!line) {
         printf(ERROR_ALLOCATION);
@@ -33,17 +41,17 @@ void insertFirst(char *label, int line, _Bool ext, _Bool action) {
     link->line = line;
     link->ext = ext;
     link->action = action;
-    //point it to old first node
-    link->next = head;
+    //point it to old first label
+    link->next = head_label;
 
-    //point first to new first node
-    head = link;
+    //point first to new first label
+    head_label = link;
 }
 
 //insert link at the end location
-void insertLast(char *label, int line, _Bool ext, _Bool action) {
+void insert_last_label(char *label, int line, _Bool ext, _Bool action) {
     //create a link
-    struct node *link = (struct node *) malloc(sizeof(struct node));
+    struct label *link = (struct label *) malloc(sizeof(struct label));
 
     if (!line) {
         printf(ERROR_ALLOCATION);
@@ -56,38 +64,38 @@ void insertLast(char *label, int line, _Bool ext, _Bool action) {
     link->action = action;
     link->next = NULL;
 
-    current = head;
-    //if it is last node
-    while (current->next != NULL) {
-        current = current->next;
+    current_label = head_label;
+    //if it is last label
+    while (current_label->next != NULL) {
+        current_label = current_label->next;
     }
 
-    current->next = link;
+    current_label->next = link;
 }
 
 //delete first item
-struct node *deleteFirst() {
+struct label *delete_first_label() {
 
     //save reference to first link
-    struct node *tempLink = head;
+    struct label *tempLink = head_label;
 
     //mark next to first link as first
-    head = head->next;
+    head_label = head_label->next;
 
     //return the deleted link
     return tempLink;
 }
 
 //is list empty
-bool isEmpty() {
-    return head == NULL;
+bool is_empty_label() {
+    return head_label == NULL;
 }
 
 int length() {
     int length = 0;
-    struct node *current;
+    struct label *current;
 
-    for (current = head; current != NULL; current = current->next) {
+    for (current = head_label; current != NULL; current = current->next) {
         length++;
     }
 
@@ -95,20 +103,20 @@ int length() {
 }
 
 //find a link with given key
-struct node *find(char *label) {
+struct label *find_label(char *label) {
 
     //start from the first link
-    struct node *current = head;
+    struct label *current = head_label;
 
     //if list is empty
-    if (head == NULL) {
+    if (head_label == NULL) {
         return NULL;
     }
 
     //navigate through list
     while (strcmp(current->label, label) != 0) {
 
-        //if it is last node
+        //if it is last label
         if (current->next == NULL) {
             return NULL;
         } else {
@@ -122,21 +130,21 @@ struct node *find(char *label) {
 }
 
 //delete a link with given key
-struct node *delete(char *label) {
+struct label *delete_label(char *label) {
 
     //start from the first link
-    struct node *current = head;
-    struct node *previous = NULL;
+    struct label *current = head_label;
+    struct label *previous = NULL;
 
     //if list is empty
-    if (head == NULL) {
+    if (head_label == NULL) {
         return NULL;
     }
 
     //navigate through list
     while (strcmp(current->label, label) != 0) {
 
-        //if it is last node
+        //if it is last label
         if (current->next == NULL) {
             return NULL;
         } else {
@@ -148,9 +156,9 @@ struct node *delete(char *label) {
     }
 
     //found a match, update the link
-    if (current == head) {
+    if (current == head_label) {
         //change first to point to next link
-        head = head->next;
+        head_label = head_label->next;
     } else {
         //bypass the current link
         previous->next = current->next;
@@ -159,20 +167,20 @@ struct node *delete(char *label) {
     return current;
 }
 
-void sort() {
+void sort_label() {
 
     int i, j, k, tempLine;
     char *tempLab;
     _Bool tempExt, tempAction;
-    struct node *current;
-    struct node *next;
+    struct label *current;
+    struct label *next;
 
     int size = length();
     k = size;
 
     for (i = 0; i < size - 1; i++, k--) {
-        current = head;
-        next = head->next;
+        current = head_label;
+        next = head_label->next;
 
         for (j = 1; j < k; j++) {
 
