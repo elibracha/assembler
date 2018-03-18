@@ -51,7 +51,7 @@ void data_handler(char*, char **, int, int);
 
 void struct_handler(char*, char **, int, int);
 
-void extern_handler(char*, char *, char **, int, int);
+void extern_handler(char*, char **, int);
 
 void entry_handler(char*, char *, char **, int, int);
 

@@ -33,7 +33,7 @@ void print_data_list() {
 
     //start from the beginning
     while (ptr != NULL) {
-        printf("(line in file - %d, line in data -  %d, value -%s) ", ptr->line_in_file, ptr->line_in_data, ptr->data);
+        printf("(%d, %d, %s) ", ptr->line_in_file, ptr->line_in_data, ptr->data);
         ptr = ptr->next;
     }
 

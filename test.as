@@ -3,7 +3,7 @@
 .entry LENGTH
 .extern W
 
-MAIN:   mov #40, LENGTH
+MAIN:   mov r3, LENGTH
         prn #35
 LOOP:   cmp #45, #23
         inc K

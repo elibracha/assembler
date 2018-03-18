@@ -23,7 +23,6 @@ method *JSR = &jsr;
 method *RTS = &rts;
 method *STOP = &stop;
 
-void print_label_list();
 _Bool check_Addressing_0(char *, int, int *);
 
 _Bool check_Addressing_1(char *, int, _Bool);
@@ -267,12 +266,16 @@ void struct_handler(char *label, char **operands, int params, int line) {
     }
 }
 
-void extern_handler(char *label, char *op, char **operands, int line, int n) {
-    if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-        handle_cmd(label, op, operands, line, n, STOP, ZERO_ARGUMENTS);
-    } else {
+void extern_handler(char *label, char **operands, int params) {
+    if (params != 1) {
+        printf("Syntex: To Many Aruments For Extern Or No Arguments.");
         return;
     }
+    struct label *head = get_head_label();
+    if (head == NULL) {
+        insert_first_label(*operands, IC, 0, 0);
+    } else
+        insert_last_label(label, IC, 0, 0);
 }
 
 void entry_handler(char *label, char *op, char **operands, int line, int n) {
@@ -452,7 +455,7 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
                     break;
                 case 2:
                     if (check_Addressing_3(*(operands + k), line, &result, on_p1)) {
-                        cmd._ERA = 1;
+                        cmd._ERA = 0;
                         if (on_p1) {
                             val_op1 = 3;
                             cmd._src_operand = (unsigned int) val_op1;
@@ -466,7 +469,7 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
                     break;
                 case 3:
                     if (check_Addressing_2(*(operands + k), line, on_p1)) {
-                        cmd._ERA = 1;
+                        cmd._ERA = 0;
                         if (on_p1) {
                             val_op1 = 2;
                             cmd._src_operand = (unsigned int) val_op1;
@@ -515,7 +518,6 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
             insert_last_label(label, IC, 0, 1);
     }
 
-    print_label_list();
     char *o = convert_10bits_to_2(cmd._opcode, 0);
     char *p1 = convert_10bits_to_2(cmd._src_operand, 0);
     char *p2 = convert_10bits_to_2(cmd._des_operand, 0);
@@ -603,10 +605,17 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
             }
             break;
         case 1:
-
+            IC++;
+            break;
         case 2:
-
+            IC = IC + 2;
+            break;
         case 3:
+            if (codes == NULL) {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            } else {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            }
             break;
     }
 
@@ -619,10 +628,17 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
             }
             break;
         case 1:
-
+            IC++;
+            break;
         case 2:
-
+            IC = IC + 2;
+            break;
         case 3:
+            if (codes == NULL) {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            } else {
+                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+            }
             break;
     }
 
