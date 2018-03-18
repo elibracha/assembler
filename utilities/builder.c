@@ -37,17 +37,17 @@ char *convert_10bits_to_2(signed int, _Bool);
 
 char *convert_2bits_to_32(const char *);
 
-void insert_first_label(char *, int, _Bool, _Bool);
+void insert_first_label(char *, int, _Bool, int);
 
-void insert_last_label(char *, int, _Bool, _Bool);
+void insert_last_label(char *, int, _Bool, int);
 
 void insert_last_data(int, int, char *);
 
 void insert_first_data(int, int, char *);
 
-void insert_last_code(int, char *);
+void insert_last_code(int, int, char *);
 
-void insert_first_code(int, char *);
+void insert_first_code(int, int, char *);
 
 struct code *get_head_code();
 
@@ -189,9 +189,9 @@ void data_handler(char *label, char **operands, int params, int line) {
     if (label != NULL) {
         struct label *head = get_head_label();
         if (head == NULL) {
-            insert_first_label(label, IC, 0, 0);
+            insert_first_label(label, DC, 0, 0);
         } else
-            insert_last_label(label, IC, 0, 0);
+            insert_last_label(label, DC, 0, 0);
     }
     while (params) {
         int i = 0;
@@ -223,9 +223,9 @@ void string_handler(char *label, char **operands, int params, int line) {
     if (label != NULL) {
         struct label *head = get_head_label();
         if (head == NULL) {
-            insert_first_label(label, IC, 0, 0);
+            insert_first_label(label, DC, 0, 0);
         } else
-            insert_last_label(label, IC, 0, 0);
+            insert_last_label(label, DC, 0, 0);
     }
 
     int i;
@@ -273,9 +273,9 @@ void extern_handler(char *label, char **operands, int params) {
     }
     struct label *head = get_head_label();
     if (head == NULL) {
-        insert_first_label(*operands, IC, 0, 0);
+        insert_first_label(*operands, 0, 1, -1);
     } else
-        insert_last_label(label, IC, 0, 0);
+        insert_last_label(*operands, 0, 1, -1);
 }
 
 void entry_handler(char *label, char *op, char **operands, int line, int n) {
@@ -424,10 +424,13 @@ _Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand
 
 void handle_cmd(char *label, char *op, char **operands, int line, int n, method *md, int args) {
     commend cmd;
-    int i = 0, k = 0, j, val_op1 = 0, val_op2 = 0, result_op1 = 0, result = 0;
+    int i = 0, k = 0, j, val_op1 = -1, val_op2 = -1, result_op1 = 0, result = 0;
     _Bool on_p1 = 1, addressing = 0;
 
     cmd._opcode = md->opcode;
+    cmd._src_operand = 0;
+    cmd._des_operand = 0;
+    cmd._ERA = 0;
 
     for (j = 1; j < 5; ++j) {
         if (on_p1 && args == 2)
@@ -582,7 +585,7 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
                 if (l == 2)
                     str[l] = '\0';
                 else
-                    str[l] = p1[q++];
+                    str[l] = era[q++];
             }
         }
         era = str;
@@ -591,17 +594,17 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
     struct code *codes = get_head_code();
 
     if (codes == NULL) {
-        insert_first_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
+        insert_first_code(IC++, line, strcat(o, strcat(p1, strcat(p2, era))));
     } else {
-        insert_last_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
+        insert_last_code(IC++, line, strcat(o, strcat(p1, strcat(p2, era))));
     }
 
     switch (val_op1) {
         case 0:
             if (codes == NULL) {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             }
             break;
         case 1:
@@ -612,9 +615,9 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
             break;
         case 3:
             if (codes == NULL) {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             }
             break;
     }
@@ -622,9 +625,9 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
     switch (val_op2) {
         case 0:
             if (codes == NULL) {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             }
             break;
         case 1:
@@ -635,9 +638,9 @@ void handle_cmd(char *label, char *op, char **operands, int line, int n, method 
             break;
         case 3:
             if (codes == NULL) {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                insert_last_code(IC++, line, convert_10bits_to_2(result_op1, 1));
             }
             break;
     }

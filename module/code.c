@@ -14,8 +14,9 @@
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
 
 struct code {
-    char* data;
-    int line;
+    char *data;
+    int line_in_code;
+    int line_in_file;
     struct code *next;
 };
 
@@ -33,7 +34,7 @@ void print_code_list() {
 
     //start from the beginning
     while(ptr != NULL) {
-        printf("(%d,%s) ",ptr->line,ptr->data);
+        printf("(%d,%d,%s) ",ptr->line_in_file,ptr->line_in_code,ptr->data);
         ptr = ptr->next;
     }
 
@@ -41,7 +42,7 @@ void print_code_list() {
 }
 
 //insert link at the end location
-void insert_last_code(int line, char* number) {
+void insert_last_code(int ic, int line, char* number) {
     //create a link
     struct code *link = (struct code *) malloc(sizeof(struct code));
 
@@ -50,7 +51,8 @@ void insert_last_code(int line, char* number) {
         exit(0);
     }
 
-    link->line = line;
+    link->line_in_code = ic;
+    link->line_in_file = line;
     link->data = number;
     link->next = NULL;
 
@@ -64,12 +66,14 @@ void insert_last_code(int line, char* number) {
 }
 
 //insert link at the first location
-void insert_first_code(int key, char* data) {
+void insert_first_code(int ic, int line, char* number) {
     //create a link
     struct code *link = (struct code*) malloc(sizeof(struct code));
 
-    link->line = key;
-    link->data = data;
+
+    link->line_in_code = ic;
+    link->line_in_file = line;
+    link->data = number;
 
     //point it to old first code
     link->next = head_code;
@@ -89,11 +93,6 @@ struct code* delete_first_code() {
 
     //return the deleted link
     return tempLink;
-}
-
-//is list empty
-bool is_empty_code() {
-    return head_code == NULL;
 }
 
 int length_code() {
@@ -119,7 +118,7 @@ struct code* find_code(int key) {
     }
 
     //navigate through list
-    while(current->line != key) {
+    while(current->line_in_file != key) {
 
         //if it is last code
         if(current->next == NULL) {
@@ -147,7 +146,7 @@ struct code* delete_code(int key) {
     }
 
     //navigate through list
-    while(current->line != key) {
+    while(current->line_in_file != key) {
 
         //if it is last code
         if(current->next == NULL) {
@@ -170,51 +169,4 @@ struct code* delete_code(int key) {
     }
 
     return current;
-}
-
-void sort_code() {
-
-    int i, j, k, tempKey;
-    char *tempData;
-    struct code *current;
-    struct code *next;
-
-    int size = length_code();
-    k = size ;
-
-    for ( i = 0 ; i < size - 1 ; i++, k-- ) {
-        current = head_code;
-        next = head_code->next;
-
-        for ( j = 1 ; j < k ; j++ ) {
-
-            if ( current->data > next->data ) {
-                tempData = current->data;
-                current->data = next->data;
-                next->data = tempData;
-
-                tempKey = current->line;
-                current->line = next->line;
-                next->line = tempKey;
-            }
-
-            current = current->next;
-            next = next->next;
-        }
-    }
-}
-
-void reverse_code(struct code** head_ref) {
-    struct code* prev   = NULL;
-    struct code* current = *head_ref;
-    struct code* next;
-
-    while (current != NULL) {
-        next  = current->next;
-        current->next = prev;
-        prev = current;
-        current = next;
-    }
-
-    *head_ref = prev;
 }

@@ -16,7 +16,7 @@ struct label * get_head_label(){
 //display the list
 void print_label_list() {
     struct label *ptr = head_label;
-    printf("[ ");
+    printf("\n[ ");
 
     //start from the beginning
     while (ptr != NULL) {
@@ -28,11 +28,11 @@ void print_label_list() {
 }
 
 //insert link at the first location
-void insert_first_label(char *label, int line, _Bool ext, _Bool action) {
+void insert_first_label(char *label, int line, _Bool ext, int action) {
     //create a link
     struct label *link = (struct label *) malloc(sizeof(struct label));
 
-    if (!line) {
+    if (!link) {
         printf(ERROR_ALLOCATION);
         exit(0);
     }
@@ -49,11 +49,11 @@ void insert_first_label(char *label, int line, _Bool ext, _Bool action) {
 }
 
 //insert link at the end location
-void insert_last_label(char *label, int line, _Bool ext, _Bool action) {
+void insert_last_label(char *label, int line, _Bool ext, int action) {
     //create a link
     struct label *link = (struct label *) malloc(sizeof(struct label));
 
-    if (!line) {
+    if (!link) {
         printf(ERROR_ALLOCATION);
         exit(0);
     }
@@ -71,6 +71,18 @@ void insert_last_label(char *label, int line, _Bool ext, _Bool action) {
     }
 
     current_label->next = link;
+}
+
+void update_label(int number) {
+    //create a link
+    current_label = head_label;
+    //if it is last data
+    while (current_label->next != NULL) {
+        if(current_label->action == 0)
+            current_label->line += number;
+        current_label = current_label->next;
+    }
+
 }
 
 //delete first item

@@ -9,7 +9,7 @@ struct label {
     char *label;
     int line;
     _Bool ext;
-    _Bool action;
+    int action;
     struct label *next;
 };
 

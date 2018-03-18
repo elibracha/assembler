@@ -64,6 +64,18 @@ void insert_last_data(int dc, int line, char *data) {
     current_data->next = link;
 }
 
+
+void update_data(int number) {
+    //create a link
+    current_data = head;
+    //if it is last data
+    while (current_data->next != NULL) {
+        current_data->line_in_data += number;
+        current_data = current_data->next;
+    }
+
+}
+
 //insert link at the first location
 void insert_first_data(int dc, int line, char *data) {
     //create a link
@@ -91,11 +103,6 @@ struct data *delete_first_data() {
 
     //return the deleted link
     return tempLink;
-}
-
-//is list empty
-bool is_empty_data() {
-    return head == NULL;
 }
 
 int length_data() {
@@ -172,51 +179,4 @@ struct data *delete_data(int key) {
     }
 
     return current_data;
-}
-
-void sort_data() {
-
-    int i, j, k, tempKey;
-    char *tempData;
-    struct data *current_data;
-    struct data *next;
-
-    int size = length_data();
-    k = size;
-
-    for (i = 0; i < size - 1; i++, k--) {
-        current_data = head;
-        next = head->next;
-
-        for (j = 1; j < k; j++) {
-
-            if (current_data->data > next->data) {
-                tempData = current_data->data;
-                current_data->data = next->data;
-                next->data = tempData;
-
-                tempKey = current_data->line_in_data;
-                current_data->line_in_data = next->line_in_data;
-                next->line_in_data = tempKey;
-            }
-
-            current_data = current_data->next;
-            next = next->next;
-        }
-    }
-}
-
-void reverse_data(struct data **head_ref) {
-    struct data *prev = NULL;
-    struct data *current_data = *head_ref;
-    struct data *next;
-
-    while (current_data != NULL) {
-        next = current_data->next;
-        current_data->next = prev;
-        prev = current_data;
-        current_data = next;
-    }
-
-    *head_ref = prev;
 }

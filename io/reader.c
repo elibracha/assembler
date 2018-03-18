@@ -120,8 +120,10 @@ void handle_operand(signed short int *size, char ch, signed short int *line, _Bo
 _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool *label, char **commend,
                   enum status *pstatus) {
     if (ch == NEW_LINE || ch == END_OF_FILE) {
-        if (*size == MIN_CHARS)
+        if (*size == MIN_CHARS) {
+            (*line)++;
             return 1;
+        }
 
         if (comma_error)
             printf(COMMA_ERROR, *line);
