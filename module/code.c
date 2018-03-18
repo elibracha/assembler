@@ -9,14 +9,16 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
 
-struct code {
+const char* convert_2bits_to_32(const char *);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
+        struct code {
     char *data;
     int addressing_code;
-    int line_in_file;
     struct code *next;
 };
 
@@ -34,7 +36,7 @@ void print_code_list() {
 
     //start from the beginning
     while(ptr != NULL) {
-        printf("(%d,%s) ",ptr->addressing_code,ptr->data);
+        printf("(%s,%s) ",convert_2bits_to_32(convert_10bits_to_2(ptr->addressing_code,1)),ptr->data);
         ptr = ptr->next;
     }
 
@@ -84,91 +86,45 @@ void insert_first_code(int ic, char* number) {
     head_code = link;
 }
 
-//delete first item
-struct code* delete_first_code() {
-
-    //save reference to first link
-    struct code *tempLink = head_code;
-
-    //mark next to first link as first
-    head_code = head_code->next;
-
-    //return the deleted link
-    return tempLink;
-}
-
-int length_code() {
+int length() {
     int length = 0;
     struct code *current;
 
-    for(current = head_code; current != NULL; current = current->next) {
+    for (current = head_code; current != NULL; current = current->next) {
         length++;
     }
 
     return length;
 }
 
-//find a link with given line
-struct code* find_code(int key) {
+void sort() {
 
-    //start from the first link
-    struct code* current = head_code;
+    int i, j, k, tempKey;
+    char  *tempData;
+    struct code *current;
+    struct code *next;
 
-    //if list is empty
-    if(head_code == NULL) {
-        return NULL;
-    }
+    int size = length();
+    k = size ;
 
-    //navigate through list
-    while(current->line_in_file != key) {
+    for ( i = 0 ; i < size - 1 ; i++, k-- ) {
+        current = head_code;
+        next = head_code->next;
 
-        //if it is last code
-        if(current->next == NULL) {
-            return NULL;
-        } else {
-            //go to next link
+        for ( j = 1 ; j < k ; j++ ) {
+
+            if ( current->addressing_code > next->addressing_code ) {
+                tempData = current->data;
+                current->data = next->data;
+                next->data = tempData;
+
+                tempKey = current->addressing_code;
+                current->addressing_code = next->addressing_code;
+                next->addressing_code = tempKey;
+            }
+
             current = current->next;
+            next = next->next;
         }
     }
-
-    //if data found, return the current Link
-    return current;
-}
-
-//delete a link with given line
-struct code* delete_code(int key) {
-
-    //start from the first link
-    struct code* current = head_code;
-    struct code* previous = NULL;
-
-    //if list is empty
-    if(head_code == NULL) {
-        return NULL;
-    }
-
-    //navigate through list
-    while(current->line_in_file != key) {
-
-        //if it is last code
-        if(current->next == NULL) {
-            return NULL;
-        } else {
-            //store reference to current link
-            previous = current;
-            //move to next link
-            current = current->next;
-        }
-    }
-
-    //found a match, update the link
-    if(current == head_code) {
-        //change first to point to next link
-        head_code = head_code->next;
-    } else {
-        //bypass the current link
-        previous->next = current->next;
-    }
-
-    return current;
 }

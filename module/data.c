@@ -66,8 +66,11 @@ void insert_last_data(int dc, char *data) {
 void update_data(int number) {
     //create a link
     current_data = head;
+    struct data *link = current_data;
+    if(current_data == NULL)
+        return;
     //if it is last data
-    while (current_data->next != NULL) {
+    while  (current_data->next != NULL) {
         current_data->addressing_data += number;
         current_data = current_data->next;
     }
@@ -94,91 +97,3 @@ void insert_first_data(int dc, char *data) {
     head = link;
 }
 
-//delete first item
-struct data *delete_first_data() {
-
-    //save reference to first link
-    struct data *tempLink = head;
-
-    //mark next to first link as first
-    head = head->next;
-
-    //return the deleted link
-    return tempLink;
-}
-
-int length_data() {
-    int length = 0;
-    struct data *current_data;
-
-    for (current_data = head; current_data != NULL; current_data = current_data->next) {
-        length++;
-    }
-
-    return length;
-}
-
-//find a link with given line
-struct data *find_data(int key) {
-
-    //start from the first link
-    struct data *current_data = head;
-
-    //if list is empty
-    if (head == NULL) {
-        return NULL;
-    }
-
-    //navigate through list
-    while (current_data->addressing_data != key) {
-
-        //if it is last data
-        if (current_data->next == NULL) {
-            return NULL;
-        } else {
-            //go to next link
-            current_data = current_data->next;
-        }
-    }
-
-    //if data found, return the current Link
-    return current_data;
-}
-
-//delete a link with given line
-struct data *delete_data(int key) {
-
-    //start from the first link
-    struct data *current_data = head;
-    struct data *previous = NULL;
-
-    //if list is empty
-    if (head == NULL) {
-        return NULL;
-    }
-
-    //navigate through list
-    while (current_data->addressing_data != key) {
-
-        //if it is last data
-        if (current_data->next == NULL) {
-            return NULL;
-        } else {
-            //store reference to current link
-            previous = current_data;
-            //move to next link
-            current_data = current_data->next;
-        }
-    }
-
-    //found a match, update the link
-    if (current_data == head) {
-        //change first to point to next link
-        head = head->next;
-    } else {
-        //bypass the current link
-        previous->next = current_data->next;
-    }
-
-    return current_data;
-}

@@ -5,6 +5,8 @@
 
 #include "../headers/builder.h"
 #include "../headers/const.h"
+#include "../headers/table.h"
+
 
 method *MOV = &mov;
 method *CMP = &cmp;
@@ -35,8 +37,6 @@ _Bool check_arguments(int, char *, int, int);
 
 char *convert_10bits_to_2(signed int, _Bool);
 
-char *convert_2bits_to_32(const char *);
-
 void insert_first_label(char *, int, _Bool, int);
 
 void insert_last_label(char *, int, _Bool, int);
@@ -49,141 +49,147 @@ void insert_last_code(int, char *);
 
 void insert_first_code(int, char *);
 
+struct label *find_label(char *);
+
 struct code *get_head_code();
 
 struct data *get_head_data();
 
 struct label *get_head_label();
 
-void handle_case(int);
+void handle_case(int, int);
 
 char *completing_number(char *, int);
 
-void handle_cmd(char *, char **, int, int, method *, int);
+void handle_round2_c1(int, int, char **, int);
 
-void cmp_handler(char *label, char *op, char **operands, int line, int n) {
+void handle_round2_c2(int, int, char **, int, int);
+
+void handle_cmd(char *, char **, int, int, method *, int, int);
+
+void cmp_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, CMP, TWO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, CMP, TWO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void mov_handler(char *label, char *op, char **operands, int line, int n) {
+void mov_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, MOV, TWO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, MOV, TWO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void add_handler(char *label, char *op, char **operands, int line, int n) {
+void add_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, ADD, TWO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, ADD, TWO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void sub_handler(char *label, char *op, char **operands, int line, int n) {
+void sub_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, SUB, TWO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, SUB, TWO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void lea_handler(char *label, char *op, char **operands, int line, int n) {
+void lea_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, LEA, TWO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, LEA, TWO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void inc_handler(char *label, char *op, char **operands, int line, int n) {
+void inc_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, INC, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, INC, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void clr_handler(char *label, char *op, char **operands, int line, int n) {
+void clr_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, CLR, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, CLR, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void not_handler(char *label, char *op, char **operands, int line, int n) {
+void not_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, NOT, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, NOT, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void dec_handler(char *label, char *op, char **operands, int line, int n) {
+void dec_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, DEC, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, DEC, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void jmp_handler(char *label, char *op, char **operands, int line, int n) {
+void jmp_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, NOT, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, JMP, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void bne_handler(char *label, char *op, char **operands, int line, int n) {
+void bne_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, BNE, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, BNE, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void red_handler(char *label, char *op, char **operands, int line, int n) {
+void red_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, RED, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, RED, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void prn_handler(char *label, char *op, char **operands, int line, int n) {
+void prn_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, PRN, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, PRN, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void jsr_handler(char *label, char *op, char **operands, int line, int n) {
+void jsr_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, JSR, ONE_ARGUMENTS);
+        handle_cmd(label, operands, line, n, JSR, ONE_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void rts_handler(char *label, char *op, char **operands, int line, int n) {
+void rts_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, RTS, ZERO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, RTS, ZERO_ARGUMENTS, round);
     } else {
         return;
     }
 }
 
-void stop_handler(char *label, char *op, char **operands, int line, int n) {
+void stop_handler(char *label, char *op, char **operands, int line, int n, int round) {
     if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, STOP, ZERO_ARGUMENTS);
+        handle_cmd(label, operands, line, n, STOP, ZERO_ARGUMENTS, round);
     } else {
         return;
     }
@@ -200,10 +206,12 @@ void data_handler(char *label, char **operands, int params, int line) {
     while (params) {
         int i = 0;
         for (i = 0; *((*operands) + i) != '\0'; ++i) {
+            if (i == 0 && *((*operands) + i) == '-' || *((*operands) + i) == '+')
+                continue;
             if (*((*operands) + i) <= 57 && *((*operands) + i) >= 48) {
                 continue;
             } else {
-                printf("Syntex: Invalid Char In Middle O f A Number.");
+                printf("Syntex: Invalid Char In Middle Of A Number.\n");
                 return;
             }
         }
@@ -245,6 +253,7 @@ void string_handler(char *label, char **operands, int params, int line) {
 
         if (i + 1 == strlen(*operands)) {
             if (*((*operands) + i) == '\"') {
+                insert_last_data(DC++, convert_10bits_to_2(0, 1));
                 continue;
             } else {
                 printf("Syntex: String Data Most End With ' \" '.");
@@ -284,7 +293,7 @@ void extern_handler(char *label, char **operands, int params) {
 
 void entry_handler(char *label, char *op, char **operands, int line, int n) {
     if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
-        handle_cmd(label, operands, line, n, STOP, ZERO_ARGUMENTS);
+
     } else {
         return;
     }
@@ -420,7 +429,7 @@ _Bool check_Addressing_3(char *operand, int line, int *result, _Bool num_operand
     return 0;
 }
 
-void handle_cmd(char *label, char **operands, int line, int n, method *md, int args) {
+void handle_cmd(char *label, char **operands, int line, int n, method *md, int args, int round) {
     commend cmd;
     int i = 0, k = 0, j, val_op1 = -1, val_op2 = -1, result_op1 = 0, result = 0;
     _Bool on_p1 = 1, addressing = 0;
@@ -513,6 +522,51 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
         i++;
     }
 
+    if (round == 2) {
+        IC++;
+        if (val_op1 == 3 && val_op2 == 3) {
+            IC++;
+            return;
+        }
+        int t = IC;
+
+        switch (val_op1) {
+            case 0:
+                IC++;
+                break;
+            case 1:
+                handle_round2_c1(val_op1, val_op2, operands, line);
+                break;
+            case 2:
+                handle_round2_c2(val_op1, val_op2, operands, line, 1);
+                IC++;
+                break;
+            case 3:
+                IC++;
+            default:
+                break;
+        }
+
+        t = IC;
+        switch (val_op2) {
+            case 0:
+                IC++;
+                break;
+            case 1:
+                handle_round2_c1(val_op1, val_op2, operands, line);
+                break;
+            case 2:
+                handle_round2_c2(val_op1, val_op2, operands, line, 2);
+                IC++;
+                break;
+            case 3:
+                IC++;
+            default:
+                break;
+        }
+        return;
+    }
+
     if (label != NULL) {
         struct label *head = get_head_label();
         if (head == NULL) {
@@ -553,34 +607,34 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
     } else {
         switch (val_op1) {
             case 0:
-                handle_case(result_op1);
+                handle_case(result_op1,0);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                handle_case(result_op1);
+                handle_case(result_op1,0);
                 break;
             case 3:
-                handle_case(result_op1);
+                handle_case(result_op1,1);
             default:
                 break;
         }
 
         switch (val_op2) {
             case 0:
-                handle_case(result);
+                handle_case(result,0);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                handle_case(result);
+                handle_case(result,0);
                 break;
             case 3:
-                handle_case(result);
+                handle_case(result,2);
                 break;
             default:
                 break;
@@ -608,23 +662,90 @@ char *completing_number(char *s, int n) {
     return s;
 }
 
-void handle_case(int result) {
-    char *number = convert_10bits_to_2(result, 0);
-    int length3 = 8 - strlen(number);
-    char *str3 = (char *) malloc(8);
-    int r, t = 0;
-    for (r = 0; r < 9; ++r) {
-        if (r < length3)
-            str3[r] = '0';
-        else {
-            if (r == 8)
-                str3[r] = '\0';
-            else
-                str3[r] = number[t++];
+void handle_round2_c2(int val_op1, int val_op2, char **operands, int line, int param) {
+    char *m1 = NULL;
+    if (val_op1 == 2 && param == 1) {
+        int size = (strlen(*(operands)) - 2);
+        m1 = (char *) malloc((size_t) size);
+        memcpy(m1, *(operands), (size_t) size);
+        m1[size] = '\0';
+    }
+
+    if (val_op2 == 2 && param == 2) {
+        int size = (strlen(*(operands)) - 2);
+        m1 = (char *) malloc((size_t) size);
+        memcpy(m1, *(operands), (size_t) size);
+        m1[size] = '\0';
+    }
+
+    if (m1 != NULL) {
+        struct label *lab = find_label(m1);
+        if (lab != NULL) {
+            char *ln = convert_10bits_to_2(lab->line, 0);
+            ln = completing_number(ln, 8);
+            if (get_head_code() == NULL) {
+                insert_first_code(IC++, strcat(ln, "10"));
+            } else {
+                insert_last_code(IC++, strcat(ln, "10"));
+            }
+        } else {
+            printf("Syntex: Label Not Found Or Not Declared Please Fix Line - %d.\n", line);
+            return;
         }
     }
-    number = str3;
-    strcat(number, "00");
+}
+
+void handle_round2_c1(int val_op1, int val_op2, char **operands, int line) {
+    struct label *lab;
+    if (val_op1 != -1 && val_op2 != -1)
+        lab = find_label(*(operands + 1));
+    else
+        lab = find_label(*operands);
+
+    if (lab != NULL) {
+        char *ln = convert_10bits_to_2(lab->line, 0);
+        ln = completing_number(ln, 8);
+        if (get_head_code() == NULL) {
+            if (lab->ext == 1)
+                insert_first_code(IC++, strcat(ln, "01"));
+            else
+                insert_first_code(IC++, strcat(ln, "10"));
+        } else {
+            if (lab->ext == 1)
+                insert_last_code(IC++, strcat(ln, "01"));
+            else
+                insert_last_code(IC++, strcat(ln, "10"));
+        }
+    } else {
+        printf("Syntex: Label Not Found Or Not Declared Please Fix Line - %d", line);
+        return;
+    }
+}
+
+void handle_case(int result, int pos) {
+    char *number = convert_10bits_to_2(result, 0);
+    if(pos == 1) {
+        number = completing_number(number, 4);
+        strcat(number, "000000");
+    } else if(pos == 2){
+        number = completing_number(number, 4);
+        char *temp = (char*) calloc((size_t) temp, 11);
+        if(!temp){
+            printf("Syntex: Not Enough Space In Memory To parse");
+            return;
+        }
+        int k;
+        for (k = 0; k < 4; ++k) {
+            temp[k] = '0';
+        }
+        strcat(temp, number);
+        strcat(temp,"00");
+        number = temp;
+    }
+    else{
+        number = completing_number(number, 8);
+        strcat(number, "00");
+    }
     if (get_head_code() == NULL) {
         insert_first_code(IC++, number);
     } else {

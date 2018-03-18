@@ -20,10 +20,6 @@ void assemble(char *);
 
 _Bool validate_files(char *);
 
-void update_data(int);
-
-void update_label(int);
-
 void start_assembler(char **);
 
 void print_label_list();
@@ -31,8 +27,6 @@ void print_label_list();
 void print_code_list();
 
 void print_data_list();
-
-extern int IC;
 
 int main(int argc, char *argv[]) {
     initialize();
@@ -48,8 +42,6 @@ void start_assembler(char **files) {
         }
     }
 
-    update_data(IC);
-    update_label(IC);
     printf("LABELS - ");
     print_label_list();
     printf("CODE - ");

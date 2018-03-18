@@ -6,6 +6,9 @@
 #include "../headers/reader.h"
 #include "../headers/const.h"
 
+int cround = 1;
+extern int IC;
+
 _Bool validate_files(char *file) {
     _Bool exist_or_not = 0;
     _Bool _valid = 1;
@@ -52,6 +55,37 @@ void assemble(char *file) {
         }
     }
 
+    update_data(IC);
+    update_label(IC);
+    size = 1;
+    free(cmd);
+    cmd = (char *) malloc((size_t) sizeof(char));
+    state = OPCODE;
+    sub_state = OUTSIDE_PARENTHESIS;
+    has_label = 0;
+    line = 1;
+    IC = 100;
+    cround++;
+    rewind(fd);
+
+    while (!feof(fd)) {
+        mem_check(&cmd);
+
+        char ch = (char) fgetc(fd);
+
+        switch (state) {
+            case OPCODE:
+                handle_opcode(&size, ch, &line, &has_label, &cmd, &state);
+                break;
+            case OPRAND:
+                handle_operand(&size, ch, &line, &has_label, &cmd, &state, &sub_state);
+                break;
+            case COMMENT:
+                handle_comment(ch, &line, &state);
+        }
+    }
+
+    sort();
 }
 
 _Bool continue_2_operand = 0, ignore_spacing = 0, check_for_label = 1;
@@ -131,7 +165,7 @@ _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool
         *(*commend + *size - 1) = END_OF_INPUT;
 
         if (!comma_error) {
-            handle_commend(*commend, *line, *label);
+            handle_commend(*commend, *line, *label, cround);
         }
 
         free(*commend);

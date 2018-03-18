@@ -46,7 +46,13 @@ enum sub_status {
     INSIDE_PARENTHESIS, OUTSIDE_PARENTHESIS
 };
 
-void handle_commend(char *, int, _Bool);
+void update_data(int);
+
+void update_label(int);
+
+void sort();
+
+void handle_commend(char *, int, _Bool, int);
 
 void forward(signed short int *, char **);
 

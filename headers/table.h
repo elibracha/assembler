@@ -1,3 +1,6 @@
+
+#ifndef ASSEMBLER_TABLE_H
+#define ASSEMBLER_TABLE_H
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -13,5 +16,4 @@ struct label {
     struct label *next;
 };
 
-struct label *head_label = NULL;
-struct label *current_label = NULL;
+#endif //ASSEMBLER_TABLE_H

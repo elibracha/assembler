@@ -5,17 +5,18 @@
 
  *******************************************************/
 
-
 #include "../headers/table.h"
 
+struct label *head_lab = NULL;
+struct label *current_lab = NULL;
 
 struct label * get_head_label(){
-    return head_label;
+    return head_lab;
 }
 
 //display the list
 void print_label_list() {
-    struct label *ptr = head_label;
+    struct label *ptr = head_lab;
     printf("\n[ ");
 
     //start from the beginning
@@ -42,10 +43,10 @@ void insert_first_label(char *label, int line, _Bool ext, int action) {
     link->ext = ext;
     link->action = action;
     //point it to old first label
-    link->next = head_label;
+    link->next = head_lab;
 
     //point first to new first label
-    head_label = link;
+    head_lab = link;
 }
 
 //insert link at the end location
@@ -64,67 +65,40 @@ void insert_last_label(char *label, int line, _Bool ext, int action) {
     link->action = action;
     link->next = NULL;
 
-    current_label = head_label;
+    current_lab = head_lab;
     //if it is last label
-    while (current_label->next != NULL) {
-        current_label = current_label->next;
+    while (current_lab->next != NULL) {
+        current_lab = current_lab->next;
     }
 
-    current_label->next = link;
+    current_lab->next = link;
 }
 
 void update_label(int number) {
     //create a link
-    current_label = head_label;
+    current_lab = head_lab;
     //if it is last data
-    while (current_label->next != NULL) {
-        if(current_label->action == 0)
-            current_label->line += number;
-        current_label = current_label->next;
+    while (current_lab->next != NULL) {
+        if(current_lab->action == 0)
+            current_lab->line += number;
+        current_lab = current_lab->next;
     }
-    if(current_label->action == 0)
-        current_label->line += number;
-}
-
-//delete first item
-struct label *delete_first_label() {
-
-    //save reference to first link
-    struct label *tempLink = head_label;
-
-    //mark next to first link as first
-    head_label = head_label->next;
-
-    //return the deleted link
-    return tempLink;
-}
-
-//is list empty
-bool is_empty_label() {
-    return head_label == NULL;
-}
-
-int length() {
-    int length = 0;
-    struct label *current;
-
-    for (current = head_label; current != NULL; current = current->next) {
-        length++;
-    }
-
-    return length;
+    if(current_lab->action == 0)
+        current_lab->line += number;
 }
 
 //find a link with given key
 struct label *find_label(char *label) {
 
     //start from the first link
-    struct label *current = head_label;
+    struct label *current = head_lab;
 
     //if list is empty
-    if (head_label == NULL) {
+    if (head_lab == NULL) {
         return NULL;
     }
+
+    struct label *l = current;
 
     //navigate through list
     while (strcmp(current->label, label) != 0) {
@@ -140,84 +114,4 @@ struct label *find_label(char *label) {
 
     //if data found, return the current Link
     return current;
-}
-
-//delete a link with given key
-struct label *delete_label(char *label) {
-
-    //start from the first link
-    struct label *current = head_label;
-    struct label *previous = NULL;
-
-    //if list is empty
-    if (head_label == NULL) {
-        return NULL;
-    }
-
-    //navigate through list
-    while (strcmp(current->label, label) != 0) {
-
-        //if it is last label
-        if (current->next == NULL) {
-            return NULL;
-        } else {
-            //store reference to current link
-            previous = current;
-            //move to next link
-            current = current->next;
-        }
-    }
-
-    //found a match, update the link
-    if (current == head_label) {
-        //change first to point to next link
-        head_label = head_label->next;
-    } else {
-        //bypass the current link
-        previous->next = current->next;
-    }
-
-    return current;
-}
-
-void sort_label() {
-
-    int i, j, k, tempLine;
-    char *tempLab;
-    _Bool tempExt, tempAction;
-    struct label *current;
-    struct label *next;
-
-    int size = length();
-    k = size;
-
-    for (i = 0; i < size - 1; i++, k--) {
-        current = head_label;
-        next = head_label->next;
-
-        for (j = 1; j < k; j++) {
-
-            if (current->label > next->label) {
-                tempLab = current->label;
-                current->label = next->label;
-                next->label = tempLab;
-
-                tempLine = current->line;
-                current->line = next->line;
-                next->line = tempLine;
-
-                tempExt = current->ext;
-                current->ext = next->ext;
-                next->ext = tempExt;
-
-                tempAction = current->action;
-                current->action = next->action;
-                next->action = tempAction;
-
-            }
-
-            current = current->next;
-            next = next->next;
-        }
-    }
 }

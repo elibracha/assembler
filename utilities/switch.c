@@ -2,14 +2,19 @@
 /********************************************
    This file responsible for base swapping.
  ********************************************/
-#include "../headers/switch.h"
-#include "../headers/const.h"
+
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+#define MEMORY_OVERFLOW "Error: Noty Enoug Memory To Execute Convertion Between Bases.\n"
+
+void exit_program();
+
 
 /*
  * This function responsible for swapping between number on base 2 to base 32.
  */
-
-void exit_program();
 
 char *convert_2bits_to_32(const char *number_to_convert) {
 
