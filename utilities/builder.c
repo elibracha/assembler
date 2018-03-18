@@ -593,66 +593,107 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
         insert_last_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
     }
 
-    switch (val_op1) {
-        case 0:
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-            }
-            break;
-        case 1:
-            IC++;
-            break;
-        case 2:
-            IC++;
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-            }
-            break;
-        case 3:
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-            }
-            break;
-        default:
-            break;
-    }
+    if(val_op1 == 3 && val_op2 == 3){
+        char* pv1 = convert_10bits_to_2(result_op1, 0);
+        char* pv2 = convert_10bits_to_2(result_op1, 0);
 
-    switch (val_op2) {
-        case 0:
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result, 1));
+        int length = 4 - strlen(pv1);
+        char *str = (char *) malloc(4);
+        int l, q = 0;
+        for (l = 0; l < 5; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == 4)
+                    str[l] = '\0';
+                else
+                    str[l] = pv1[q++];
             }
-            break;
-        case 1:
-           IC++;
-            break;
-        case 2:
-            IC++;
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result, 1));
-            }
-            break;
-        case 3:
-            if (get_head_code() == NULL) {
-                insert_first_code(IC++, convert_10bits_to_2(result, 1));
-            } else {
-                insert_last_code(IC++, convert_10bits_to_2(result, 1));
-            }
-            break;
-        default:
-            break;
-    }
+        }
+        pv1 = str;
 
+        int length2 = 4 - strlen(pv2);
+        char *str2 = (char *) malloc(4);
+        int l2, q2 = 0;
+        for (l2 = 0; l2 < 5; ++l2) {
+            if (l < length2)
+                str2[l2] = '0';
+            else {
+                if (l == 4)
+                    str2[l2] = '\0';
+                else
+                    str2[l2] = pv1[q2++];
+            }
+        }
+        pv2 = str2;
+
+        if (get_head_code() == NULL) {
+            insert_first_code(IC++, strcat(strcat(pv1,pv2),"00"));
+        } else {
+            insert_last_code(IC++, strcat(strcat(pv1,pv2),"00"));
+        }
+
+    } else {
+        switch (val_op1) {
+            case 0:
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                }
+                break;
+            case 1:
+                IC++;
+                break;
+            case 2:
+                IC++;
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                }
+                break;
+            case 3:
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
+                }
+                break;
+            default:
+                break;
+        }
+
+        switch (val_op2) {
+            case 0:
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
+                }
+                break;
+            case 1:
+                IC++;
+                break;
+            case 2:
+                IC++;
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
+                }
+                break;
+            case 3:
+                if (get_head_code() == NULL) {
+                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
+                } else {
+                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
+                }
+                break;
+            default:
+                break;
+        }
+    }
 }
 
 _Bool check_arguments(int cargs, char *op, int line, int nargs) {
