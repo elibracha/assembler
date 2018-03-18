@@ -32,7 +32,7 @@ void print_code_list();
 
 void print_data_list();
 
-extern IC;
+extern int IC;
 
 int main(int argc, char *argv[]) {
     initialize();

@@ -14,7 +14,6 @@ void handle_commend(char *opcmd, int line, _Bool is_label) {
     unsigned short int mem_allocated = 0, counter = 0, params = 0;
     int i, l, j = 0, k = 0, size = 1;
 
-    char c = *(opcmd + strlen(opcmd) - 1);
     if ((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
         printf(CONNA_AT_THE_END, line);
         return;

@@ -14,8 +14,7 @@
 
 struct data {
     char *data;
-    int line_in_data;
-    int line_in_file;
+    int addressing_data;
     struct data *next;
 };
 
@@ -33,7 +32,7 @@ void print_data_list() {
 
     //start from the beginning
     while (ptr != NULL) {
-        printf("(%d, %d, %s) ", ptr->line_in_file, ptr->line_in_data, ptr->data);
+        printf("(%d, %s) ",ptr->addressing_data, ptr->data);
         ptr = ptr->next;
     }
 
@@ -41,17 +40,16 @@ void print_data_list() {
 }
 
 //insert link at the end location
-void insert_last_data(int dc, int line, char *data) {
+void insert_last_data(int dc, char *data) {
     //create a link
     struct data *link = (struct data *) malloc(sizeof(struct data));
 
-    if (!dc) {
+    if (!link) {
         printf(ERROR_ALLOCATION);
         exit(0);
     }
 
-    link->line_in_data = dc;
-    link->line_in_file = line;
+    link->addressing_data = dc;
     link->data = data;
     link->next = NULL;
 
@@ -70,19 +68,23 @@ void update_data(int number) {
     current_data = head;
     //if it is last data
     while (current_data->next != NULL) {
-        current_data->line_in_data += number;
+        current_data->addressing_data += number;
         current_data = current_data->next;
     }
-
+    current_data->addressing_data += number;
 }
 
 //insert link at the first location
-void insert_first_data(int dc, int line, char *data) {
+void insert_first_data(int dc, char *data) {
     //create a link
     struct data *link = (struct data *) malloc(sizeof(struct data));
 
-    link->line_in_data = dc;
-    link->line_in_file = line;
+    if (!link) {
+        printf(ERROR_ALLOCATION);
+        exit(0);
+    }
+
+    link->addressing_data = dc;
     link->data = data;
 
     //point it to old first data
@@ -128,7 +130,7 @@ struct data *find_data(int key) {
     }
 
     //navigate through list
-    while (current_data->line_in_data != key) {
+    while (current_data->addressing_data != key) {
 
         //if it is last data
         if (current_data->next == NULL) {
@@ -156,7 +158,7 @@ struct data *delete_data(int key) {
     }
 
     //navigate through list
-    while (current_data->line_in_data != key) {
+    while (current_data->addressing_data != key) {
 
         //if it is last data
         if (current_data->next == NULL) {

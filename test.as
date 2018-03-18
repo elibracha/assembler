@@ -3,7 +3,7 @@
 .entry LENGTH
 .extern W
 
-MAIN:   mov r3, LENGTH
+MAIN:   mov r2, r2
         prn #35
 LOOP:   cmp #45, #23
         inc K
@@ -14,4 +14,4 @@ STR:    .string "abcdef"
 LENGTH: .data 6,9,15
 K:      .data 22
         .extern L3
-P:      .struct 6, "3242"
+P:      .struct 6, "32422a"

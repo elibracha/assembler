@@ -15,7 +15,7 @@
 
 struct code {
     char *data;
-    int line_in_code;
+    int addressing_code;
     int line_in_file;
     struct code *next;
 };
@@ -34,7 +34,7 @@ void print_code_list() {
 
     //start from the beginning
     while(ptr != NULL) {
-        printf("(%d,%d,%s) ",ptr->line_in_file,ptr->line_in_code,ptr->data);
+        printf("(%d,%s) ",ptr->addressing_code,ptr->data);
         ptr = ptr->next;
     }
 
@@ -42,17 +42,16 @@ void print_code_list() {
 }
 
 //insert link at the end location
-void insert_last_code(int ic, int line, char* number) {
+void insert_last_code(int ic, char* number) {
     //create a link
     struct code *link = (struct code *) malloc(sizeof(struct code));
 
-    if (!line) {
+    if (!link) {
         printf(ERROR_ALLOCATION);
         exit(0);
     }
 
-    link->line_in_code = ic;
-    link->line_in_file = line;
+    link->addressing_code = ic;
     link->data = number;
     link->next = NULL;
 
@@ -66,13 +65,16 @@ void insert_last_code(int ic, int line, char* number) {
 }
 
 //insert link at the first location
-void insert_first_code(int ic, int line, char* number) {
+void insert_first_code(int ic, char* number) {
     //create a link
     struct code *link = (struct code*) malloc(sizeof(struct code));
 
+    if (!link) {
+        printf(ERROR_ALLOCATION);
+        exit(0);
+    }
 
-    link->line_in_code = ic;
-    link->line_in_file = line;
+    link->addressing_code = ic;
     link->data = number;
 
     //point it to old first code

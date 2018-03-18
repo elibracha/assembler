@@ -96,7 +96,7 @@ char *convert_10bits_to_2(signed int number_to_convert, _Bool adding_zero) {
 
         char *result = (char *) calloc((size_t) (counter + length + 1), sizeof(char));
 
-        for (i = counter - 1; i >= 0; --i) {
+        for (i = counter-1; i >= 0; --i) {
             if ((counter % 5 != 0 || counter <= 5) && flag) {
                 for (j = 0; j < length; ++j)
                     *(result + j) = '0';
@@ -113,12 +113,12 @@ char *convert_10bits_to_2(signed int number_to_convert, _Bool adding_zero) {
         return result;
     }
     char *result = (char *) calloc((size_t) (counter  + 1), sizeof(char));
-    int i;
-    for (i = 0; i < counter ; ++i) {
+    int i, j = 0;
+    for (i = counter - 1; i >= 0 ; --i) {
         if(*(binary_number+i))
-            result[i] = '1';
+            result[j++] = '1';
         else
-            result[i] = '0';
+            result[j++] = '0';
      }
     free(binary_number);
     return result;

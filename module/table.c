@@ -82,7 +82,8 @@ void update_label(int number) {
             current_label->line += number;
         current_label = current_label->next;
     }
-
+    if(current_label->action == 0)
+        current_label->line += number;
 }
 
 //delete first item
