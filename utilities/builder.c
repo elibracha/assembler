@@ -55,6 +55,10 @@ struct data *get_head_data();
 
 struct label *get_head_label();
 
+void handle_case(int);
+
+char *completing_number(char *, int);
+
 void handle_cmd(char *, char **, int, int, method *, int);
 
 void cmp_handler(char *label, char *op, char **operands, int line, int n) {
@@ -195,7 +199,7 @@ void data_handler(char *label, char **operands, int params, int line) {
     }
     while (params) {
         int i = 0;
-        for (i = 0;  *((*operands) + i) != '\0'; ++i) {
+        for (i = 0; *((*operands) + i) != '\0'; ++i) {
             if (*((*operands) + i) <= 57 && *((*operands) + i) >= 48) {
                 continue;
             } else {
@@ -324,8 +328,8 @@ _Bool check_Addressing_0(char *operand, int line, int *num) {
 _Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
     int temp_result;
     if (check_Addressing_0(operand, line, &temp_result)) {
-        if(num_operand == 0)
-             printf(MISSPLACED_ADDRESSING, 2, 1, "Immediate Number", line);
+        if (num_operand == 0)
+            printf(MISSPLACED_ADDRESSING, 2, 1, "Immediate Number", line);
         else
             printf(MISSPLACED_ADDRESSING, 1, 1, "Immediate Number", line);
         return 0;
@@ -359,7 +363,7 @@ _Bool check_Addressing_2(char *operand, int line, int *num, _Bool num_operand) {
     char *field = NULL;
     if ((field = strchr(operand, '.'))) {
         if (strcmp(field + 1, "1") == 0 || strcmp(field + 1, "2") == 0) {
-             *num = atoi(field + 1);
+            *num = atoi(field + 1);
             _Bool begin = 1;
             while (*(operand + 2) != '\0') {
                 if (begin) {
@@ -522,70 +526,10 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
     char *p2 = convert_10bits_to_2(cmd._des_operand, 0);
     char *era = convert_10bits_to_2(cmd._ERA, 0);
 
-    if (strlen(o) != 4) {
-        int length = 4 - strlen(o);
-        char *str = (char *) malloc(5);
-        int l, q = 0;
-        for (l = 0; l < 5; ++l) {
-            if (l < length)
-                str[l] = '0';
-            else {
-                if (l == 4)
-                    str[l] = '\0';
-                else
-                    str[l] = o[q++];
-            }
-        }
-        o = str;
-    }
-    if (strlen(p1) != 2) {
-        int length = 2 - strlen(p1);
-        char *str = (char *) malloc(2);
-        int l, q = 0;
-        for (l = 0; l < 3; ++l) {
-            if (l < length)
-                str[l] = '0';
-            else {
-                if (l == 2)
-                    str[l] = '\0';
-                else
-                    str[l] = p1[q++];
-            }
-        }
-        p1 = str;
-    }
-    if (strlen(p2) != 2) {
-        int length = 2 - strlen(p2);
-        char *str = (char *) malloc(2);
-        int l, q = 0;
-        for (l = 0; l < 3; ++l) {
-            if (l < length)
-                str[l] = '0';
-            else {
-                if (l == 2)
-                    str[l] = '\0';
-                else
-                    str[l] = p2[q++];
-            }
-        }
-        p2 = str;
-    }
-    if (strlen(era) != 2) {
-        int length = 2 - strlen(era);
-        char *str = (char *) malloc(2);
-        int l, q = 0;
-        for (l = 0; l < 3; ++l) {
-            if (l < length)
-                str[l] = '0';
-            else {
-                if (l == 2)
-                    str[l] = '\0';
-                else
-                    str[l] = era[q++];
-            }
-        }
-        era = str;
-    }
+    o = completing_number(o, 4);
+    p1 = completing_number(p1, 2);
+    p2 = completing_number(p2, 2);
+    era = completing_number(era, 2);
 
     if (get_head_code() == NULL) {
         insert_first_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
@@ -593,106 +537,98 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
         insert_last_code(IC++, strcat(o, strcat(p1, strcat(p2, era))));
     }
 
-    if(val_op1 == 3 && val_op2 == 3){
-        char* pv1 = convert_10bits_to_2(result_op1, 0);
-        char* pv2 = convert_10bits_to_2(result_op1, 0);
+    if (val_op1 == 3 && val_op2 == 3) {
+        char *pv1 = convert_10bits_to_2(result_op1, 0);
+        char *pv2 = convert_10bits_to_2(result, 0);
 
-        int length = 4 - strlen(pv1);
-        char *str = (char *) malloc(4);
-        int l, q = 0;
-        for (l = 0; l < 5; ++l) {
-            if (l < length)
-                str[l] = '0';
-            else {
-                if (l == 4)
-                    str[l] = '\0';
-                else
-                    str[l] = pv1[q++];
-            }
-        }
-        pv1 = str;
-
-        int length2 = 4 - strlen(pv2);
-        char *str2 = (char *) malloc(4);
-        int l2, q2 = 0;
-        for (l2 = 0; l2 < 5; ++l2) {
-            if (l < length2)
-                str2[l2] = '0';
-            else {
-                if (l == 4)
-                    str2[l2] = '\0';
-                else
-                    str2[l2] = pv1[q2++];
-            }
-        }
-        pv2 = str2;
+        pv1 = completing_number(pv1, 4);
+        pv2 = completing_number(pv2, 4);
 
         if (get_head_code() == NULL) {
-            insert_first_code(IC++, strcat(strcat(pv1,pv2),"00"));
+            insert_first_code(IC++, strcat(strcat(pv1, pv2), "00"));
         } else {
-            insert_last_code(IC++, strcat(strcat(pv1,pv2),"00"));
+            insert_last_code(IC++, strcat(strcat(pv1, pv2), "00"));
         }
 
     } else {
         switch (val_op1) {
             case 0:
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-                }
+                handle_case(result_op1);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-                }
+                handle_case(result_op1);
                 break;
             case 3:
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result_op1, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result_op1, 1));
-                }
-                break;
+                handle_case(result_op1);
             default:
                 break;
         }
 
         switch (val_op2) {
             case 0:
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
-                }
+                handle_case(result);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
-                }
+                handle_case(result);
                 break;
             case 3:
-                if (get_head_code() == NULL) {
-                    insert_first_code(IC++, convert_10bits_to_2(result, 1));
-                } else {
-                    insert_last_code(IC++, convert_10bits_to_2(result, 1));
-                }
+                handle_case(result);
                 break;
             default:
                 break;
         }
+    }
+}
+
+char *completing_number(char *s, int n) {
+    if (strlen(s) != n) {
+        int length = n - strlen(s);
+        char *str = (char *) malloc(2);
+        int l, q = 0;
+        for (l = 0; l < n + 1; ++l) {
+            if (l < length)
+                str[l] = '0';
+            else {
+                if (l == n)
+                    str[l] = '\0';
+                else
+                    str[l] = s[q++];
+            }
+        }
+        return str;
+    }
+    return s;
+}
+
+void handle_case(int result) {
+    char *number = convert_10bits_to_2(result, 0);
+    int length3 = 8 - strlen(number);
+    char *str3 = (char *) malloc(8);
+    int r, t = 0;
+    for (r = 0; r < 9; ++r) {
+        if (r < length3)
+            str3[r] = '0';
+        else {
+            if (r == 8)
+                str3[r] = '\0';
+            else
+                str3[r] = number[t++];
+        }
+    }
+    number = str3;
+    strcat(number, "00");
+    if (get_head_code() == NULL) {
+        insert_first_code(IC++, number);
+    } else {
+        insert_last_code(IC++, number);
     }
 }
 
