@@ -29,22 +29,23 @@
 #define ASTRICK '#'
 
 typedef struct {
-    unsigned int _ERA : 2;
-    unsigned int _des_operand : 2;
-    unsigned int _src_operand : 2;
-    unsigned int _opcode : 4;
+	unsigned int _ERA :2;
+	unsigned int _des_operand :2;
+	unsigned int _src_operand :2;
+	unsigned int _opcode :4;
 } commend;
 
 typedef struct item {
-    unsigned int opcode;
-    _Bool op1[4];
-    _Bool op2[4];
+	unsigned int opcode;
+	_Bool op1[4];
+	_Bool op2[4];
 } method;
 
 struct row *code = NULL;
 int IC = 100, DC = 0;
 
-method mov, add, sub, cmp, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop;
+method mov, add, sub, cmp, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr,
+		rts, stop;
 
 _Bool check_Addressing_0(char *, int, int *);
 

@@ -6,8 +6,8 @@
 #define TAB 9
 #define SPACE 32
 #define END_OF_FILE -1
-#define NEW_LINE 10
-#define WIN_NEW_LINE 13
+#define NEW_LINE 13
+#define WIN_NEW_LINE 10
 #define MIN_CHARS 1
 #define COMMA 44
 #define PARENTHESIS_IN 40

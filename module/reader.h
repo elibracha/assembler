@@ -40,10 +40,10 @@
 }
 
 enum status {
-    OPCODE, OPRAND, COMMENT
+	OPCODE, OPRAND, COMMENT
 };
 enum sub_status {
-    INSIDE_PARENTHESIS, OUTSIDE_PARENTHESIS
+	INSIDE_PARENTHESIS, OUTSIDE_PARENTHESIS
 };
 
 void update_data(int);
@@ -62,10 +62,13 @@ _Bool handle_label(char, enum status *, _Bool *);
 
 void handle_comment(char, signed short int *, enum status *);
 
-_Bool handle_line(signed short int *, char, signed short int *, _Bool *, char **, enum status *);
+_Bool handle_line(signed short int *, char, signed short int *, _Bool *,
+		char **, enum status *);
 
-void handle_operand(signed short int *, char, signed short int *, _Bool *, char **, enum status *, enum sub_status *);
+void handle_operand(signed short int *, char, signed short int *, _Bool *,
+		char **, enum status *, enum sub_status *);
 
-void handle_opcode(signed short int *, char, signed short int *, _Bool *, char **, enum status *);
+void handle_opcode(signed short int *, char, signed short int *, _Bool *,
+		char **, enum status *);
 
-#endif //ASSEMBLER_BUILDER_H
+#endif //ASSEMBLER_BUILDER_H

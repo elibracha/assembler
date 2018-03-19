@@ -1,4 +1,3 @@
-
 #ifndef ASSEMBLER_TABLE_H
 #define ASSEMBLER_TABLE_H
 
@@ -16,24 +15,24 @@ char *convert_10bits_to_2(signed int, _Bool);
 struct label *find_label(char *, int);
 
 struct label {
-    char *label;
-    int line;
-    _Bool ext;
-    int action;
-    struct label *next;
+	char *label;
+	int line;
+	_Bool ext;
+	int action;
+	struct label *next;
 };
 
 struct ex_label {
-    char *label;
-    int line;
-    struct ex_label *next;
+	char *label;
+	int line;
+	struct ex_label *next;
 };
 
 struct ent_label {
-    char *label;
-    int line;
-    _Bool checked;
-    struct ent_label *next;
+	char *label;
+	int line;
+	_Bool checked;
+	struct ent_label *next;
 };
 
 #endif

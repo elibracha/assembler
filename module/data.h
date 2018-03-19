@@ -1,4 +1,3 @@
-
 #ifndef ASSEMBLER_DATA_H
 #define ASSEMBLER_DATA_H
 
@@ -10,9 +9,9 @@
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
 
 struct data {
-    char *data;
-    int addressing_data;
-    struct data *next;
+	char *data;
+	int addressing_data;
+	struct data *next;
 };
 
 const char *convert_2bits_to_32(const char *);
