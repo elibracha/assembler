@@ -216,7 +216,7 @@ void data_handler(char *label, char **operands, int params) {
 	while (params) { //building the clean string number without any unknown chars.
 		int i = 0;
 		for (i = 0; *((*operands) + i) != '\0'; ++i) {
-			if (i == 0 && *((*operands) + i) == '-'
+			if ((i == 0 && *((*operands) + i) == '-')
 					|| *((*operands) + i) == '+') {
 				flag = 1;
 				continue;
@@ -424,7 +424,7 @@ _Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
 	int i;
 	for (i = 0; i < strlen(operand); ++i) {
 		if (i == 0) {
-			if (*operand < 97 && *operand > 90 || *operand > 120
+			if ((*operand < 97 && *operand > 90) || *operand > 120
 					|| *operand < 65) { // checking start char is valid.
 				printf(INVALID_LABEL_START, *operand, line);
 				ERRORS++;
@@ -434,14 +434,15 @@ _Bool check_Addressing_1(char *operand, int line, _Bool num_operand) {
 				|| *(operand + i) > 120
 				||
 				//checking middle chars are valid.
-				(*(operand + i) < 65 && *(operand + i) > 57)
-				|| *(operand + i) < 48 && *(operand + i) != 0
-						&& strlen(operand) <= 32) {
+				((*(operand + i) < 65) &&(*(operand + i) > 57))
+				|| (*(operand + i) < 48) && (*(operand + i) != 0)
+						&& (strlen(operand) <= 32)) {
 			printf(INVALID_LABEL_MIDDLE, *(operand + i), line);
 			ERRORS++;
 			return 0;
 		}
 	}
+	return 1;
 }
 
 // This Function Checks Addressing Method 2 (struct).
@@ -454,7 +455,7 @@ _Bool check_Addressing_2(char *operand, int line, int *num) {
 			_Bool begin = 1;
 			while (*(operand + 2) != '\0') {
 				if (begin) {
-					if (*operand < 97 && *operand > 90 || *operand > 120
+					if ((*operand < 97 && *operand > 90) || *operand > 120
 							|| *operand < 65 || strlen(field) != 2) { // checks that struct starts with valid char.
 						printf(INVALID_STRUCT_START, *operand, line);
 						ERRORS++;
@@ -632,6 +633,7 @@ void handle_cmd(char *label, char **operands, int line, method *md, int args,
 			break;
 		case 3:
 			IC++; // IC increse to follow up
+			break;
 		default:
 			break;
 		}
@@ -649,6 +651,7 @@ void handle_cmd(char *label, char **operands, int line, method *md, int args,
 			break;
 		case 3:
 			IC++; // IC increse to follow up
+			break;
 		default:
 			break;
 		}
@@ -711,6 +714,7 @@ void handle_cmd(char *label, char **operands, int line, method *md, int args,
 			break;
 		case 3:
 			handle_case(result_op1, 1);
+			break;
 		default:
 			break;
 		}
@@ -789,6 +793,7 @@ void handle_round2_c2(int val_op1, int val_op2, char **operands, int line,
 			}
 		} else {
 			printf(LABEL_NOT_FOUND, line); // label not found
+			ERRORS++;
 			return;
 		}
 	}
@@ -819,6 +824,7 @@ void handle_round2_c1(int val_op1, int val_op2, char **operands, int line) {
 		}
 	} else {
 		printf(LABEL_NOT_FOUND, line); // label not found
+		ERRORS++;
 		return;
 	}
 }
@@ -879,9 +885,11 @@ _Bool check_arguments(int cargs, char *op, int line, int nargs, int round) {
 		return 1;
 	} else if (cargs > nargs) {
 		if (round != 2)
-			printf(TOO_MANY_ARGUMENTS, op, line);
+			if(round != 2)
+				printf(TOO_MANY_ARGUMENTS, op, line);
 	} else {
-		printf(TOO_LOW_ARGUMENTS, op, line);
+		if(round != 2)
+			printf(TOO_LOW_ARGUMENTS, op, line);
 	}
 	return 0;
 }

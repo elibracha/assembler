@@ -20,17 +20,6 @@
 #define _log(path, found)\
     found ? success_open (path) : failure_open(path)
 
-#define extension(file, result)\
-{\
-    char *extension = NULL;\
-    if((extension = strrchr(file,'.')) != NULL ) {\
-        if(strcmp(extension,".as") != 0) {\
-            printf(FILE_EXTENSION, extension);\
-            result = 0;\
-        }\
-    }\
-}
-
 #define mem_check(commend)\
 {\
     if (!(*commend)) {\

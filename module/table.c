@@ -6,18 +6,46 @@
 
 #include "table.h"
 
+struct label *find_label(char *, int);
+
 struct label *head_lab = NULL;
 struct label *current_lab = NULL;
 struct ex_label *head_ex = NULL;
 struct ex_label *current_ex = NULL;
 struct ent_label *head_en = NULL;
 struct ent_label *current_en = NULL;
-extern int IC;
+
+extern int ERRORS;
 
 struct label *get_head_label() {
 	return head_lab;
 }
 
+
+//this method checks all entry label and validate that all entries defined.
+void check_labels() {
+	struct ent_label *ptr = head_en;
+
+	while (ptr != NULL) {
+		if(ptr->checked == 0){
+			struct label * t;
+			if((t = find_label(ptr->label, ptr->line))){
+				if(t->ext == 1){
+					printf("Syntex: Entry Label %s Can't Be WIth Same Name As Existing one, Line %d.\n", ptr->label, ptr->line);
+					ERRORS++;
+				}
+				ptr = ptr->next;
+				continue;
+			}else{
+				printf("Syntex: Label %s Wasn't Found Check Line %d.\n", ptr->label, ptr->line);
+				ERRORS++;
+			}
+		}
+		ptr = ptr->next;
+	}
+}
+
+//writing externs to a file
 void write_ext_list(char *name) {
 	struct ex_label *ptr = head_ex;
 
@@ -29,7 +57,7 @@ void write_ext_list(char *name) {
 
 			if (!fptr) {
 				printf("Build: Error Writing Files.");
-				exit(1);
+				exit(0);
 			}
 
 		}
@@ -42,6 +70,7 @@ void write_ext_list(char *name) {
 
 }
 
+//writing entries to a file
 void write_ent_list(char *name) {
 	struct ent_label *ptr = head_en;
 
@@ -68,6 +97,7 @@ void write_ent_list(char *name) {
 
 }
 
+//handling entry label when encountered
 void insert_ent_label(char *label, int line) {
 
 	current_en = head_en;
@@ -121,8 +151,10 @@ void insert_ent_label(char *label, int line) {
 	}
 }
 
+//checking label in the list
 void check_entry(char *lab, int line) {
 	current_en = head_en;
+
 	if (current_en == NULL)
 		return;
 
@@ -136,7 +168,13 @@ void check_entry(char *lab, int line) {
 	}
 }
 
+//inserting first label
 void insert_first_label(char *label, int line, _Bool ext, int action) {
+
+	if(find_label(label, line)){
+		printf("Syntex: Label '%s' ALready Exist line - %d.\n",label, line);
+		ERRORS++;
+	}
 
 	check_entry(label, line);
 
@@ -157,7 +195,13 @@ void insert_first_label(char *label, int line, _Bool ext, int action) {
 	head_lab = link;
 }
 
+//inserting label at the end
 void insert_last_label(char *label, int line, _Bool ext, int action) {
+
+	if(find_label(label, line) != NULL){
+		printf("Syntex: Label '%s' ALready Exist line - %d.\n",label, line);
+		ERRORS++;
+	}
 
 	check_entry(label, line);
 
@@ -184,6 +228,7 @@ void insert_last_label(char *label, int line, _Bool ext, int action) {
 	current_lab->next = link;
 }
 
+//updating labels after first round
 void update_label(int number) {
 
 	current_lab = head_lab;
@@ -199,6 +244,7 @@ void update_label(int number) {
 		current_lab->line += number;
 }
 
+//finding label that passsed as param
 struct label *find_label(char *label, int line) {
 
 	struct label *current = head_lab;

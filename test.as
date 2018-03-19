@@ -1,11 +1,11 @@
 ; file ps.as
 
-    .entry LOOP
-    .entry LENGTH
-    .extern L3
-    .extern W
+.entry LOOP
+.entry LENGTH
+.extern L3
+.extern W7
 
-MAIN:   mov     S1.1, W
+MAIN:   mov S1.1, W
 add     r2, STR
 LOOP:   jmp     W
 prn     #-5

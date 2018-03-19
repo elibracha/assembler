@@ -12,10 +12,8 @@ _Bool validate_files(char *file) {
 	_Bool exist_or_not = 0;
 	_Bool _valid = 1;
 
-	FILE *fd = fopen(file, "r");
+	FILE *fd = fopen(strcat(file, ".as"), "r");
 	fd ? _log(file, ++exist_or_not) : _log(file, exist_or_not);
-
-	extension(file, _valid);
 
 	if (fd != NULL) {
 		fclose(fd);
@@ -97,7 +95,7 @@ void handle_opcode(signed short int *size, char ch, signed short int *line,
 		return;
 	if (ch == SPACE || ch == TAB || ch == END_OF_FILE || ch == NEW_LINE
 			|| ch == WIN_NEW_LINE) {
-		if(*size == 1 && ch == WIN_NEW_LINE){
+		if (*size == 1 && ch == WIN_NEW_LINE) {
 			return;
 		}
 		if (!ignore_spacing && *size > MIN_CHARS) {
@@ -140,11 +138,7 @@ void handle_operand(signed short int *size, char ch, signed short int *line,
 		}
 		return;
 	}
-	if (ch == PARENTHESIS_IN)
-		*psub_status = INSIDE_PARENTHESIS;
-	else if (ch == PARENTHESIS_OUT)
-		*psub_status = OUTSIDE_PARENTHESIS;
-	if (before_param && ch == COMMA && *psub_status != INSIDE_PARENTHESIS) {
+	if (before_param && ch == COMMA) {
 		*((*commend) + *size - 1) = SEPARATOR;
 		comma_next = 0;
 		before_param = 1;

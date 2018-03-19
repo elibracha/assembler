@@ -21,6 +21,8 @@ void initialize();
 
 void assemble(char *);
 
+void check_labels();
+
 _Bool validate_files(char *);
 
 void start_assembler(char **);
@@ -53,6 +55,7 @@ void start_assembler(char **files) {
 
             // Checking If No Error Found And Files Can Be Produced.
             if (ERRORS == 0) {
+            	check_labels();
                 char *code_data = (char *) malloc(sizeof(char) * strlen(*files));
                 char *ext = (char *) malloc(sizeof(char) * strlen(*files));
                 char *ent = (char *) malloc(sizeof(char) * strlen(*files));
