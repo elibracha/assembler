@@ -8,7 +8,7 @@
 #define COMMEND_SYNTEX_ERROR "Syntex: On Line %d Commend Not Recognized (%s).\n"
 #define COMMEND_CHECK_FAILURE "Error: Not Enough Space To Analyze Commends.\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
-#define CONNA_AT_THE_END "Syntex: Unecpected End Of Input, Comma At The End. (line - %d)\n"
+#define CONNA_AT_THE_END "Syntex: Unexpected End Of Input, Comma At The End. (line - %d)\n"
 #define TOO_MANY_COMMAS "Syntex: Too Many Commas, Missing Parameters. (line - %d)\n"
 
 unsigned int build_data(char*, char *, char **, int, int, int);
@@ -53,6 +53,6 @@ void struct_handler(char*, char **, int);
 
 void extern_handler(char **, int);
 
-void entry_handler(char*, char *, char **, int, int);
+void entry_handler(char *, char **, int, int);
 
 #endif //ASSEMBLER_COMMEND_H

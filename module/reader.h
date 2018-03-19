@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <mem.h>
+#include <string.h>
 
 #define SUCCESS_FILE_MESSAGE "Build: File Was Found - %s.\n"
 #define FAILURE_FILE_MESSAGE "Build: File Not Found - %s.\n"

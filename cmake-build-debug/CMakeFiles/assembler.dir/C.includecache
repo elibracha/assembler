@@ -85,7 +85,7 @@ stdio.h
 -
 stdlib.h
 -
-mem.h
+string.h
 -
 
 C:/Users/Admin/GitHub/assembler/module/switch.c

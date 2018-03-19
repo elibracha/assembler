@@ -54,7 +54,7 @@ _Bool check_Addressing_1(char *, int, _Bool);
 
 _Bool check_Addressing_3(char *, int *);
 
-_Bool check_arguments(int, char *, int, int);
+_Bool check_arguments(int, char *, int, int, int);
 
 char *convert_10bits_to_2(signed int, _Bool);
 
@@ -77,6 +77,8 @@ struct code *get_head_code();
 struct data *get_head_data();
 
 struct label *get_head_label();
+
+void insert_ent_label(char *, int);
 
 void handle_case(int, int);
 

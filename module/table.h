@@ -1,6 +1,7 @@
 
 #ifndef ASSEMBLER_TABLE_H
 #define ASSEMBLER_TABLE_H
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -11,6 +12,8 @@
 const char *convert_2bits_to_32(const char *);
 
 char *convert_10bits_to_2(signed int, _Bool);
+
+struct label *find_label(char *, int);
 
 struct label {
     char *label;
@@ -24,6 +27,13 @@ struct ex_label {
     char *label;
     int line;
     struct ex_label *next;
+};
+
+struct ent_label {
+    char *label;
+    int line;
+    _Bool checked;
+    struct ent_label *next;
 };
 
 #endif

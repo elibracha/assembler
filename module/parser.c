@@ -19,7 +19,8 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
 
     //checking for comma at the end
     if ((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
-        printf(CONNA_AT_THE_END, line);
+        if(round != 2)
+            printf(CONNA_AT_THE_END, line);
         ERRORS++;
         return;
     }
@@ -28,7 +29,8 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
     char last_char = 0;
     for (l = 0; l <= strlen(opcmd); ++l) {
         if (opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
-            printf(TOO_MANY_COMMAS, line);
+            if(round != 2)
+                printf(TOO_MANY_COMMAS, line);
             ERRORS++;
             return;
         }
@@ -174,7 +176,7 @@ unsigned int build_data(char *label, char *op, char **operands, int line, int pa
     } else if (strcmp(op, ".struct") == 0 && round != 2) {
         struct_handler(label, operands, params);
     } else if (strcmp(op, ".entry") == 0) {
-        //  entry_handler(label, op, operands, line, params);
+        entry_handler(op, operands, line, params);
     } else if (strcmp(op, ".extern") == 0 && round != 2) {
         extern_handler(operands, params);
     } else if (strcmp(op, ".data") == 0 && round != 2) {

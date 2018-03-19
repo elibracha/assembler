@@ -160,7 +160,8 @@ _Bool handle_line(signed short int *size, char ch, signed short int *line, _Bool
         }
 
         if (comma_error)
-            printf(COMMA_ERROR, *line);
+            if(cround != 2)
+                 printf(COMMA_ERROR, *line);
 
         *(*commend + *size - 1) = END_OF_INPUT;
 

@@ -15,6 +15,7 @@
 #define MINIMUM_ARGUMENTS 1
 #define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
 #define SUCCESS_MESSAGE "Build: Success Building Files.\n"
+#define ERRROS_MESSAGE "Build: Failed Building Files Errors Count - %d.\n"
 
 void initialize();
 
@@ -28,7 +29,9 @@ void write_code_list(char *);
 
 void write_data_list(char *);
 
-void write_label_list(char *);
+void write_ext_list(char *);
+
+void write_ent_list(char *);
 
 int main(int argc, char *argv[]) {
 
@@ -49,7 +52,7 @@ void start_assembler(char **files) {
             assemble(*files);
 
             // Checking If No Error Found And Files Can Be Produced.
-            if(ERRORS == 0) {
+            if (ERRORS == 0) {
                 char *code_data = (char *) malloc(sizeof(char) * strlen(*files));
                 char *ext = (char *) malloc(sizeof(char) * strlen(*files));
                 char *ent = (char *) malloc(sizeof(char) * strlen(*files));
@@ -62,8 +65,13 @@ void start_assembler(char **files) {
                 write_code_list(code_data); // Creating The Obj File (Code & Data).
                 write_data_list(code_data);
                 strcat(ext, ".ext");
-                write_label_list(ext); // Creating The Ext File (extern).
-                printf(SUCCESS_MESSAGE);  //Printing A Success Message.
+                write_ext_list(ext); // Creating The Ext File (extern).
+                strcat(ent, ".ent");
+                write_ent_list(ent);
+                if(ERRORS == 0)
+                    printf(SUCCESS_MESSAGE);  //Printing A Success Message.
+            }else{
+                printf(ERRROS_MESSAGE, ERRORS);
             }
         }
     }
