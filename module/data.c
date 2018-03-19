@@ -18,25 +18,38 @@ struct data {
     struct data *next;
 };
 
+const char *convert_2bits_to_32(const char *);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
 struct data *head = NULL;
 struct data *current_data = NULL;
+
+extern int DC;
 
 struct data *get_head_data() {
     return head;
 }
 
 //display the list
-void print_data_list() {
+void write_data_list(char *name) {
     struct data *ptr = head;
-    printf("\n[ ");
 
-    //start from the beginning
+    FILE *fptr = fopen(name, "a");
+
+    if (!fptr) {
+        printf("Error!");
+        exit(1);
+    }
+
     while (ptr != NULL) {
-        printf("(%d, %s) ",ptr->addressing_data, ptr->data);
+        const char *t =  convert_2bits_to_32(convert_10bits_to_2(ptr->addressing_data, 1));
+        fprintf(fptr, "%s\t%s \n", convert_2bits_to_32(convert_10bits_to_2(ptr->addressing_data, 1)),
+                convert_2bits_to_32(ptr->data));
         ptr = ptr->next;
     }
 
-    printf(" ]");
+    fclose(fptr);
 }
 
 //insert link at the end location
@@ -67,10 +80,10 @@ void update_data(int number) {
     //create a link
     current_data = head;
     struct data *link = current_data;
-    if(current_data == NULL)
+    if (current_data == NULL)
         return;
     //if it is last data
-    while  (current_data->next != NULL) {
+    while (current_data->next != NULL) {
         current_data->addressing_data += number;
         current_data = current_data->next;
     }

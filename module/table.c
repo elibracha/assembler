@@ -5,7 +5,7 @@
 
  *******************************************************/
 
-#include "../headers/table.h"
+#include "table.h"
 
 struct label *head_lab = NULL;
 struct label *current_lab = NULL;

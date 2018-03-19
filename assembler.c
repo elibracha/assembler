@@ -9,6 +9,8 @@
 
 
 #include <stdio.h>
+#include <malloc.h>
+#include <string.h>
 
 #define MINIMUM_ARGUMENTS 1
 #define STARTUP_ERROR "Error: No File Paths Specified As Arguments.\n"
@@ -22,11 +24,9 @@ _Bool validate_files(char *);
 
 void start_assembler(char **);
 
-void print_label_list();
+void write_code_list(char*);
 
-void print_code_list();
-
-void print_data_list();
+void write_data_list(char *);
 
 int main(int argc, char *argv[]) {
     initialize();
@@ -38,14 +38,14 @@ void start_assembler(char **files) {
     while (*++files) {
         if (validate_files(*files)) {
             assemble(*files);
+            char *name = (char*) malloc(sizeof(char) * strlen(*files));
+            strcpy(name, *files);
+            name[strlen(name)-1] = 0;
+            name[strlen(name)-2] = 0;
+            strcat(name, ".txt");
+            write_code_list("prog.txt");
+            write_data_list("prog.txt");
             printf(SUCCESS_MESSAGE);
         }
     }
-
-    printf("LABELS - ");
-    print_label_list();
-    printf("CODE - ");
-    print_code_list();
-    printf("DATA - ");
-    print_data_list();
 }

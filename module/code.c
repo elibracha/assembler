@@ -12,11 +12,11 @@
 
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
 
-const char* convert_2bits_to_32(const char *);
+const char *convert_2bits_to_32(const char *);
 
 char *convert_10bits_to_2(signed int, _Bool);
 
-        struct code {
+struct code {
     char *data;
     int addressing_code;
     struct code *next;
@@ -25,27 +25,35 @@ char *convert_10bits_to_2(signed int, _Bool);
 struct code *head_code = NULL;
 struct code *current_code = NULL;
 
-struct code * get_head_code(){
+extern int IC, DC;
+
+struct code *get_head_code() {
     return head_code;
 }
 
-//display the list
-void print_code_list() {
+void write_code_list(char* name) {
     struct code *ptr = head_code;
-    printf("\n[ ");
 
-    //start from the beginning
-    while(ptr != NULL) {
-        printf("(%s,%s) ",convert_2bits_to_32(convert_10bits_to_2(ptr->addressing_code,1)),ptr->data);
+    FILE *fptr = fopen(name, "w");
+
+    if (!fptr) {
+        printf("Error!");
+        exit(1);
+    }
+
+    fprintf(fptr, "%s\t%s \n", convert_2bits_to_32(convert_10bits_to_2(IC - 100, 1)),
+            convert_2bits_to_32(convert_10bits_to_2(DC, 1)));
+
+    while (ptr != NULL) {
+        fprintf(fptr, "%s\t%s \n", convert_2bits_to_32(convert_10bits_to_2(ptr->addressing_code, 1)),
+                convert_2bits_to_32(ptr->data));
         ptr = ptr->next;
     }
 
-    printf(" ]\n");
+    fclose(fptr);
 }
 
-//insert link at the end location
-void insert_last_code(int ic, char* number) {
-    //create a link
+void insert_last_code(int ic, char *number) {
     struct code *link = (struct code *) malloc(sizeof(struct code));
 
     if (!link) {
@@ -58,7 +66,7 @@ void insert_last_code(int ic, char* number) {
     link->next = NULL;
 
     current_code = head_code;
-    //if it is last code
+
     while (current_code->next != NULL) {
         current_code = current_code->next;
     }
@@ -66,10 +74,8 @@ void insert_last_code(int ic, char* number) {
     current_code->next = link;
 }
 
-//insert link at the first location
-void insert_first_code(int ic, char* number) {
-    //create a link
-    struct code *link = (struct code*) malloc(sizeof(struct code));
+void insert_first_code(int ic, char *number) {
+    struct code *link = (struct code *) malloc(sizeof(struct code));
 
     if (!link) {
         printf(ERROR_ALLOCATION);
@@ -79,10 +85,8 @@ void insert_first_code(int ic, char* number) {
     link->addressing_code = ic;
     link->data = number;
 
-    //point it to old first code
     link->next = head_code;
 
-    //point first to new first code
     head_code = link;
 }
 
@@ -100,20 +104,20 @@ int length() {
 void sort() {
 
     int i, j, k, tempKey;
-    char  *tempData;
+    char *tempData;
     struct code *current;
     struct code *next;
 
     int size = length();
-    k = size ;
+    k = size;
 
-    for ( i = 0 ; i < size - 1 ; i++, k-- ) {
+    for (i = 0; i < size - 1; i++, k--) {
         current = head_code;
         next = head_code->next;
 
-        for ( j = 1 ; j < k ; j++ ) {
+        for (j = 1; j < k; j++) {
 
-            if ( current->addressing_code > next->addressing_code ) {
+            if (current->addressing_code > next->addressing_code) {
                 tempData = current->data;
                 current->data = next->data;
                 next->data = tempData;

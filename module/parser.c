@@ -3,8 +3,8 @@
    This file responsible for commend check and handle.
  ******************************************************/
 
-#include "../headers/parser.h"
-#include "../headers/const.h"
+#include "parser.h"
+#include "const.h"
 
 
 void handle_commend(char *opcmd, int line, _Bool is_label, int round) {

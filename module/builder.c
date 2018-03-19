@@ -3,9 +3,9 @@
    This file responsible for commend logic and checking.
  ******************************************************/
 
-#include "../headers/builder.h"
-#include "../headers/const.h"
-#include "../headers/table.h"
+#include "builder.h"
+#include "const.h"
+#include "table.h"
 
 
 method *MOV = &mov;

@@ -3,8 +3,8 @@
    This file responsible for IO management.
  ********************************************/
 
-#include "../headers/reader.h"
-#include "../headers/const.h"
+#include "reader.h"
+#include "const.h"
 
 int cround = 1;
 extern int IC;
