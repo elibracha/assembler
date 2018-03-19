@@ -16,6 +16,6 @@
 #define TWO_DOTS 58
 #define NEGATIVE 45
 #define POSITIVE 43
-
+#define MARKS 34
 
 #endif

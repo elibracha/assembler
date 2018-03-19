@@ -103,8 +103,6 @@ struct label *find_label(char *label, int line) {
         return NULL;
     }
 
-    struct label *l = current;
-
     while (strcmp(current->label, label) != 0) {
 
         if (current->next == NULL) {

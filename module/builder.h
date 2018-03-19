@@ -11,6 +11,10 @@
 #define INVALID_ADDRASSING_0 "Syntex: Invalid Paramter in line %d (%s).\n"
 #define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
 #define MISSPLACED_ADDRESSING "Syntex: Addressing Operand Number %d , With Addressing Method Number %d (%s) Is Invalid (line - %d).\n"
+#define UNKNOWN_CHAR_MIDDLE "Syntex: Invalid Char In Middle Of A Number.\n"
+#define TOO_MANY_STRINGS "Syntex: To Many Aruments For String.\n"
+#define NO_MARKS_AT_BEGINING "Syntex: String Data Most start With ' \" ' .\n"
+#define NO_MARKS_AT_END "Syntex: String Data Most End With ' \" ' .\n"
 
 #define TWO_ARGUMENTS 2
 #define ONE_ARGUMENTS 1
@@ -34,5 +38,49 @@ struct row * code = NULL;
 int IC = 100, DC = 0;
 
 method mov, add, sub, cmp, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop;
+
+_Bool check_Addressing_0(char *, int, int *);
+
+_Bool check_Addressing_2(char *, int, int *, _Bool);
+
+_Bool check_Addressing_1(char *, int, _Bool);
+
+_Bool check_Addressing_3(char *, int, int *, _Bool);
+
+_Bool check_arguments(int, char *, int, int);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
+void insert_first_label(char *, int, _Bool, int);
+
+void insert_last_label(char *, int, _Bool, int);
+
+void insert_last_data(int, char *);
+
+void insert_first_data(int, char *);
+
+void insert_last_code(int, char *);
+
+void insert_first_code(int, char *);
+
+struct label *find_label(char *, int);
+
+struct code *get_head_code();
+
+struct data *get_head_data();
+
+struct label *get_head_label();
+
+void handle_case(int, int);
+
+char *plus_to_minus(char *);
+
+char *completing_number(char *, int);
+
+void handle_round2_c1(int, int, char **, int);
+
+void handle_round2_c2(int, int, char **, int, int);
+
+void handle_cmd(char *, char **, int, int, method *, int, int);
 
 #endif

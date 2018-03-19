@@ -1,12 +1,11 @@
 
 /*******************************************************
-   This file responsible for commend logic and checking.
+   This file responsible for commend logic and management.
  ******************************************************/
 
 #include "builder.h"
 #include "const.h"
 #include "table.h"
-
 
 method *MOV = &mov;
 method *CMP = &cmp;
@@ -25,51 +24,12 @@ method *JSR = &jsr;
 method *RTS = &rts;
 method *STOP = &stop;
 
-_Bool check_Addressing_0(char *, int, int *);
+// Variable To Share Errors And Decide If To Produce Files.
+int ERRORS = 0;
 
-_Bool check_Addressing_2(char *, int, int *, _Bool);
-
-_Bool check_Addressing_1(char *, int, _Bool);
-
-_Bool check_Addressing_3(char *, int, int *, _Bool);
-
-_Bool check_arguments(int, char *, int, int);
-
-char *convert_10bits_to_2(signed int, _Bool);
-
-void insert_first_label(char *, int, _Bool, int);
-
-void insert_last_label(char *, int, _Bool, int);
-
-void insert_last_data(int, char *);
-
-void insert_first_data(int, char *);
-
-void insert_last_code(int, char *);
-
-void insert_first_code(int, char *);
-
-struct label *find_label(char *, int);
-
-struct code *get_head_code();
-
-struct data *get_head_data();
-
-struct label *get_head_label();
-
-void handle_case(int, int);
-
-char *plus_to_minus(char *);
-
-char *completing_number(char *, int);
-
-void handle_round2_c1(int, int, char **, int);
-
-void handle_round2_c2(int, int, char **, int, int);
-
-void handle_cmd(char *, char **, int, int, method *, int, int);
-
+// This Function Responsable For Handling The CMP OPCODE And Commend.
 void cmp_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, CMP, TWO_ARGUMENTS, round);
     } else {
@@ -77,7 +37,9 @@ void cmp_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The MOV OPCODE And Commend.
 void mov_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, MOV, TWO_ARGUMENTS, round);
     } else {
@@ -85,7 +47,9 @@ void mov_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The ADD OPCODE And Commend.
 void add_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, ADD, TWO_ARGUMENTS, round);
     } else {
@@ -93,7 +57,9 @@ void add_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The SUB OPCODE And Commend.
 void sub_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, SUB, TWO_ARGUMENTS, round);
     } else {
@@ -101,7 +67,9 @@ void sub_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The LEA OPCODE And Commend.
 void lea_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, TWO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, LEA, TWO_ARGUMENTS, round);
     } else {
@@ -109,7 +77,9 @@ void lea_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The INC OPCODE And Commend.
 void inc_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, INC, ONE_ARGUMENTS, round);
     } else {
@@ -117,7 +87,9 @@ void inc_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The CLR OPCODE And Commend.
 void clr_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, CLR, ONE_ARGUMENTS, round);
     } else {
@@ -125,7 +97,9 @@ void clr_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The NOT OPCODE And Commend.
 void not_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, NOT, ONE_ARGUMENTS, round);
     } else {
@@ -133,7 +107,9 @@ void not_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The DEC OPCODE And Commend.
 void dec_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, DEC, ONE_ARGUMENTS, round);
     } else {
@@ -141,7 +117,9 @@ void dec_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The JMP OPCODE And Commend.
 void jmp_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, JMP, ONE_ARGUMENTS, round);
     } else {
@@ -149,7 +127,9 @@ void jmp_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The BNE OPCODE And Commend.
 void bne_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, BNE, ONE_ARGUMENTS, round);
     } else {
@@ -157,7 +137,9 @@ void bne_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The RED OPCODE And Commend.
 void red_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, RED, ONE_ARGUMENTS, round);
     } else {
@@ -165,7 +147,9 @@ void red_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The PRN OPCODE And Commend.
 void prn_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, PRN, ONE_ARGUMENTS, round);
     } else {
@@ -173,7 +157,9 @@ void prn_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The JSR OPCODE And Commend.
 void jsr_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ONE_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, JSR, ONE_ARGUMENTS, round);
     } else {
@@ -181,7 +167,9 @@ void jsr_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The RTS OPCODE And Commend.
 void rts_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, RTS, ZERO_ARGUMENTS, round);
     } else {
@@ -189,7 +177,9 @@ void rts_handler(char *label, char *op, char **operands, int line, int n, int ro
     }
 }
 
+// This Function Responsable For Handling The STOP OPCODE And Commend.
 void stop_handler(char *label, char *op, char **operands, int line, int n, int round) {
+    //Checking Minimum Arguments Passed.
     if (check_arguments(n, op, line, ZERO_ARGUMENTS)) {
         handle_cmd(label, operands, line, n, STOP, ZERO_ARGUMENTS, round);
     } else {
@@ -197,16 +187,17 @@ void stop_handler(char *label, char *op, char **operands, int line, int n, int r
     }
 }
 
-void data_handler(char *label, char **operands, int params, int line) {
-    _Bool flag = 0;
-    if (label != NULL) {
+//Data Function Hnadler, Checking And Responding To .data Defined.
+void data_handler(char *label, char **operands, int params) {
+    _Bool flag = 0; // flag to notice minus or plus.
+    if (label != NULL) { // handling new label if label not Null.
         struct label *head = get_head_label();
         if (head == NULL) {
             insert_first_label(label, DC, 0, 0);
         } else
             insert_last_label(label, DC, 0, 0);
     }
-    while (params) {
+    while (params) { //building the clean string number without any unknown chars.
         int i = 0;
         for (i = 0; *((*operands) + i) != '\0'; ++i) {
             if (i == 0 && *((*operands) + i) == '-' || *((*operands) + i) == '+') {
@@ -215,26 +206,29 @@ void data_handler(char *label, char **operands, int params, int line) {
             }if (*((*operands) + i) <= 57 && *((*operands) + i) >= 48) {
                 continue;
             } else {
-                printf("Syntex: Invalid Char In Middle Of A Number.\n");
+                printf(UNKNOWN_CHAR_MIDDLE); // handling unknown char in middle of number.
+                ERRORS++;
                 return;
             }
         }
         int number;
-        if(flag)
+        if(flag) // responding to minus or plus
             number = atoi((*operands)+1);
         else
             number = atoi(*operands);
+
+        //handling the number if its the frist number and also if it is not.
         if (get_head_data() == NULL) {
             if(flag){
-                insert_first_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1)));
+                insert_first_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1))); // handling first data and also minus number.
             }else {
-                insert_first_data(DC++, convert_10bits_to_2(number, 1));
+                insert_first_data(DC++, convert_10bits_to_2(number, 1)); // normal positive number at the beginning.
             }
         } else {
             if(flag){
-                insert_last_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1)));
+                insert_last_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1))); // handling minus number.
             }else {
-                insert_last_data(DC++, convert_10bits_to_2(number, 1));
+                insert_last_data(DC++, convert_10bits_to_2(number, 1)); // normal positive number at the end.
             }
         }
         operands++;
@@ -243,42 +237,48 @@ void data_handler(char *label, char **operands, int params, int line) {
     }
 }
 
-void string_handler(char *label, char **operands, int params, int line) {
+//String Function Hnadler, Checking And Responding To .string Defined.
+void string_handler(char *label, char **operands, int params) {
+    //checking if more then 1 string was passed.
     if (params > 1) {
-        printf("Syntex: To Many Aruments For String.");
+        printf(TOO_MANY_STRINGS); // handling too many strings passed.
+        ERRORS++;
         return;
     }
 
+    //handling new labal in the string.
     if (label != NULL) {
-        struct label *head = get_head_label();
-        if (head == NULL) {
+        if (get_head_label()) {
             insert_first_label(label, DC, 0, 0);
         } else
             insert_last_label(label, DC, 0, 0);
     }
 
+
     int i;
-    for (i = 0; i < strlen(*operands); ++i) {
+    for (i = 0; i < strlen(*operands); ++i) { // running on each char in the string to asign a "byte".
         if (i == 0) {
-            if (**operands == '\"') {
+            if (**operands == MARKS) { // ignoring first quotation mark.
                 continue;
             } else {
-                printf("Syntex: String Data Most start With ' \" '.");
+                printf(NO_MARKS_AT_BEGINING); //showing error if no quotation mark is at the begining.
+                ERRORS++;
                 return;
             }
         }
 
-        if (i + 1 == strlen(*operands)) {
+        if (i + 1 == strlen(*operands)) { // handling end of a string.
             if (*((*operands) + i) == '\"') {
-                insert_last_data(DC++, convert_10bits_to_2(0, 1));
+                insert_last_data(DC++, convert_10bits_to_2(0, 1)); // adding null char.
                 continue;
             } else {
-                printf("Syntex: String Data Most End With ' \" '.");
+                printf(NO_MARKS_AT_END); // show error if no quotation mark at the end.
+                ERRORS++;
                 return;
             }
         }
 
-        if (get_head_data() == NULL) {
+        if (get_head_data() == NULL) { // defualt add to a char after passing all tests above for valid char.
             insert_first_data(DC++, convert_10bits_to_2((int) *((*operands) + i), 1));
         } else {
             insert_last_data(DC++, convert_10bits_to_2((int) *((*operands) + i), 1));
@@ -287,10 +287,10 @@ void string_handler(char *label, char **operands, int params, int line) {
 
 }
 
-void struct_handler(char *label, char **operands, int params, int line) {
+void struct_handler(char *label, char **operands, int params) {
     if (params == 2) {
-        data_handler(label, operands, 1, line);
-        string_handler(NULL, (operands + 1), 1, line);
+        data_handler(label, operands, 1);
+        string_handler(NULL, (operands + 1), 1);
     } else {
         return;
     }
