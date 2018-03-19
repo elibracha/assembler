@@ -129,6 +129,10 @@ char *convert_10bits_to_2(signed int number_to_convert, _Bool adding_zero) {
     return result;
 }
 
+/*
+ using 2 completion to handle minus numbers
+ */
+
 char * plus_to_minus(char * binry_number){
     int number = strlen(binry_number);
     char *result = (char*) malloc(number);

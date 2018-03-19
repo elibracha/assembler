@@ -88,10 +88,16 @@
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/code.c">
 			<Option target="assembler"/>
 		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/code.h">
+			<Option target="assembler"/>
+		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/const.h">
 			<Option target="assembler"/>
 		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/data.c">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/data.h">
 			<Option target="assembler"/>
 		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/parser.c">

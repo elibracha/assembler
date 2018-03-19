@@ -816,7 +816,7 @@ void handle_case(int result, int pos) {
         strcat(temp, number);
         strcat(temp, "00");
         number = temp;
-        
+
     } else {
         if (flag)
             number = plus_to_minus(completing_number(number, 8)); // 2 completion flag minus

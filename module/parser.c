@@ -6,28 +6,36 @@
 #include "parser.h"
 #include "const.h"
 
+extern int ERRORS;
 
+//each commend set up before processing
 void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
 
+    //setting up
     char *opcode = NULL, *label = NULL;
     char **operands = NULL;
     unsigned short int mem_allocated = 0, counter = 0, params = 0;
     int i, l, j = 0, k = 0, size = 1;
 
+    //checking for comma at the end
     if ((*(opcmd + strlen(opcmd) - 1)) == SEPARATOR) {
         printf(CONNA_AT_THE_END, line);
+        ERRORS++;
         return;
     }
 
+    //checking for too many commas in commend
     char last_char = 0;
     for (l = 0; l <= strlen(opcmd); ++l) {
         if (opcmd[l] - last_char == 0 && last_char == SEPARATOR) {
             printf(TOO_MANY_COMMAS, line);
+            ERRORS++;
             return;
         }
         last_char = opcmd[l];
     }
 
+    //setting all needed variables for each commend
     for (i = 0; i < strlen(opcmd) && !mem_allocated; ++i) {
         if (*(opcmd + i) == SEPARATOR && opcode == NULL && operands == NULL) {
             opcode = (char *) malloc(sizeof(char));
@@ -58,6 +66,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
         for (i = 0; i <= strlen(opcmd); ++i) {
             switch (mem_allocated) {
                 case 0:
+                    //extracting label from string
                     if (is_label) {
                         if (*(opcmd + i) != SEPARATOR) {
                             label = (char *) realloc(label, (size_t) size++);
@@ -78,6 +87,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
                     }
                     break;
                 case 1:
+                    //extracting commend from string
                     if (*(opcmd + i) != SEPARATOR) {
                         opcode = (char *) realloc(opcode, (size_t) ++size);
                         if (!opcode) {
@@ -94,6 +104,7 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
                     }
                     break;
                 default:
+                    //extracting params from string
                     if (*(opcmd + i) != SEPARATOR && *(opcmd + i) != END_OF_INPUT) {
                         if (size == 1) {
                             operands[counter] = (char *) malloc(sizeof(char));
@@ -119,9 +130,12 @@ void handle_commend(char *opcmd, int line, _Bool is_label, int round) {
         }
     }
 
+    //build data and moving to next commend
     build_data(label, opcode, operands, line, params, round);
 }
 
+
+//This Function Just Pointing Each Method TO the Correct Handler.
 unsigned int build_data(char *label, char *op, char **operands, int line, int params, int round) {
     if (strcmp(op, "mov") == 0) {
         mov_handler(label, op, operands, line, params, round);
@@ -166,7 +180,7 @@ unsigned int build_data(char *label, char *op, char **operands, int line, int pa
     } else if (strcmp(op, ".data") == 0 && round != 2) {
         data_handler(label, operands, params);
     } else if(round != 2) {
-        printf(COMMEND_SYNTEX_ERROR, line, op);
+        printf(COMMEND_SYNTEX_ERROR, line, op); // syntex error  handler
     }
 }
 

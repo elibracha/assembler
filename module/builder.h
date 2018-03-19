@@ -41,7 +41,7 @@ typedef struct item {
     _Bool op2[4];
 } method;
 
-struct row * code = NULL;
+struct row *code = NULL;
 int IC = 100, DC = 0;
 
 method mov, add, sub, cmp, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts, stop;

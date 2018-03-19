@@ -9,8 +9,10 @@ CMakeFiles/assembler.dir/module/builder.c.obj
  C:/Users/Admin/GitHub/assembler/module/const.h
  C:/Users/Admin/GitHub/assembler/module/table.h
 CMakeFiles/assembler.dir/module/code.c.obj
+ C:/Users/Admin/GitHub/assembler/module/./code.h
  C:/Users/Admin/GitHub/assembler/module/code.c
 CMakeFiles/assembler.dir/module/data.c.obj
+ C:/Users/Admin/GitHub/assembler/module/./data.h
  C:/Users/Admin/GitHub/assembler/module/data.c
 CMakeFiles/assembler.dir/module/parser.c.obj
  C:/Users/Admin/GitHub/assembler/module/const.h

@@ -5,33 +5,13 @@
 
  *******************************************************/
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-#define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
-
-struct data {
-    char *data;
-    int addressing_data;
-    struct data *next;
-};
-
-const char *convert_2bits_to_32(const char *);
-
-char *convert_10bits_to_2(signed int, _Bool);
-
-struct data *head = NULL;
-struct data *current_data = NULL;
-
-extern int DC;
+#include "./data.h"
 
 struct data *get_head_data() {
     return head;
 }
 
-//display the list
+//writing data to the file
 void write_data_list(char *name) {
     struct data *ptr = head;
 
@@ -75,7 +55,7 @@ void insert_last_data(int dc, char *data) {
     current_data->next = link;
 }
 
-
+//updating data and addresses after first round
 void update_data(int number) {
     //create a link
     current_data = head;

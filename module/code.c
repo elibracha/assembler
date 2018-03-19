@@ -6,15 +6,7 @@
 
  *******************************************************/
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-
-#define ERROR_ALLOCATION "Error: Couldn't Allocate Memory To Parse Program."
-
-const char *convert_2bits_to_32(const char *);
-
-char *convert_10bits_to_2(signed int, _Bool);
+#include "./code.h"
 
 struct code {
     char *data;
@@ -31,7 +23,8 @@ struct code *get_head_code() {
     return head_code;
 }
 
-void write_code_list(char* name) {
+//writing code to a file
+void write_code_list(char *name) {
     struct code *ptr = head_code;
 
     FILE *fptr = fopen(name, "w");
@@ -53,6 +46,7 @@ void write_code_list(char* name) {
     fclose(fptr);
 }
 
+//insetting code to the end of the list
 void insert_last_code(int ic, char *number) {
     struct code *link = (struct code *) malloc(sizeof(struct code));
 
@@ -74,6 +68,7 @@ void insert_last_code(int ic, char *number) {
     current_code->next = link;
 }
 
+//insetting code to the beginning of the list
 void insert_first_code(int ic, char *number) {
     struct code *link = (struct code *) malloc(sizeof(struct code));
 
@@ -90,6 +85,7 @@ void insert_first_code(int ic, char *number) {
     head_code = link;
 }
 
+//getting the length of the list
 int length() {
     int length = 0;
     struct code *current;
@@ -101,6 +97,8 @@ int length() {
     return length;
 }
 
+
+//sortting the list by address
 void sort() {
 
     int i, j, k, tempKey;
