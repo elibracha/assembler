@@ -79,43 +79,43 @@
 		<Unit filename="C:/Users/Admin/GitHub/assembler/assembler.c">
 			<Option target="assembler"/>
 		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/builder.h">
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/builder.c">
 			<Option target="assembler"/>
 		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/const.h">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/parser.h">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/reader.h">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/switch.h">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/headers/table.h">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/io/reader.c">
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/builder.h">
 			<Option target="assembler"/>
 		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/code.c">
 			<Option target="assembler"/>
 		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/const.h">
+			<Option target="assembler"/>
+		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/data.c">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/parser.c">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/parser.h">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/reader.c">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/reader.h">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/switch.c">
+			<Option target="assembler"/>
+		</Unit>
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/switch.h">
 			<Option target="assembler"/>
 		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/module/table.c">
 			<Option target="assembler"/>
 		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/utilities/builder.c">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/utilities/parser.c">
-			<Option target="assembler"/>
-		</Unit>
-		<Unit filename="C:/Users/Admin/GitHub/assembler/utilities/switch.c">
+		<Unit filename="C:/Users/Admin/GitHub/assembler/module/table.h">
 			<Option target="assembler"/>
 		</Unit>
 		<Unit filename="C:/Users/Admin/GitHub/assembler/CMakeLists.txt">

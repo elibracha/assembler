@@ -129,6 +129,39 @@ char *convert_10bits_to_2(signed int number_to_convert, _Bool adding_zero) {
     return result;
 }
 
+char * plus_to_minus(char * binry_number){
+    int number = strlen(binry_number);
+    char *result = (char*) malloc(number);
+    _Bool flag = 0;
+
+    if(!result){
+        exit_program();
+    }
+
+    while(number-- > 0){
+        if(flag == 0){
+            result[number] = binry_number[number];
+        }
+        if(flag == 0 && binry_number[number] == '1'){
+            result[number] = binry_number[number];
+            flag = 1;
+            continue;
+        }
+        if(flag == 1){
+            if(binry_number[number] == '1'){
+                result[number] = '0';
+            } else {
+                result[number] = '1';
+            }
+        }
+        else{
+            result[number] = binry_number[number];
+        }
+    }
+    result[strlen(binry_number)] = '\0';
+    return result;
+};
+
 void exit_program() {
     printf(MEMORY_OVERFLOW);
     exit(0);

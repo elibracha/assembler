@@ -149,32 +149,32 @@ assembler.c.s:
 	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/assembler.c.s
 .PHONY : assembler.c.s
 
-io/reader.obj: io/reader.c.obj
+module/builder.obj: module/builder.c.obj
 
-.PHONY : io/reader.obj
+.PHONY : module/builder.obj
 
 # target to build an object file
-io/reader.c.obj:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/io/reader.c.obj
-.PHONY : io/reader.c.obj
+module/builder.c.obj:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/builder.c.obj
+.PHONY : module/builder.c.obj
 
-io/reader.i: io/reader.c.i
+module/builder.i: module/builder.c.i
 
-.PHONY : io/reader.i
+.PHONY : module/builder.i
 
 # target to preprocess a source file
-io/reader.c.i:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/io/reader.c.i
-.PHONY : io/reader.c.i
+module/builder.c.i:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/builder.c.i
+.PHONY : module/builder.c.i
 
-io/reader.s: io/reader.c.s
+module/builder.s: module/builder.c.s
 
-.PHONY : io/reader.s
+.PHONY : module/builder.s
 
 # target to generate assembly for a file
-io/reader.c.s:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/io/reader.c.s
-.PHONY : io/reader.c.s
+module/builder.c.s:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/builder.c.s
+.PHONY : module/builder.c.s
 
 module/code.obj: module/code.c.obj
 
@@ -230,6 +230,87 @@ module/data.c.s:
 	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/data.c.s
 .PHONY : module/data.c.s
 
+module/parser.obj: module/parser.c.obj
+
+.PHONY : module/parser.obj
+
+# target to build an object file
+module/parser.c.obj:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/parser.c.obj
+.PHONY : module/parser.c.obj
+
+module/parser.i: module/parser.c.i
+
+.PHONY : module/parser.i
+
+# target to preprocess a source file
+module/parser.c.i:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/parser.c.i
+.PHONY : module/parser.c.i
+
+module/parser.s: module/parser.c.s
+
+.PHONY : module/parser.s
+
+# target to generate assembly for a file
+module/parser.c.s:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/parser.c.s
+.PHONY : module/parser.c.s
+
+module/reader.obj: module/reader.c.obj
+
+.PHONY : module/reader.obj
+
+# target to build an object file
+module/reader.c.obj:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/reader.c.obj
+.PHONY : module/reader.c.obj
+
+module/reader.i: module/reader.c.i
+
+.PHONY : module/reader.i
+
+# target to preprocess a source file
+module/reader.c.i:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/reader.c.i
+.PHONY : module/reader.c.i
+
+module/reader.s: module/reader.c.s
+
+.PHONY : module/reader.s
+
+# target to generate assembly for a file
+module/reader.c.s:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/reader.c.s
+.PHONY : module/reader.c.s
+
+module/switch.obj: module/switch.c.obj
+
+.PHONY : module/switch.obj
+
+# target to build an object file
+module/switch.c.obj:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/switch.c.obj
+.PHONY : module/switch.c.obj
+
+module/switch.i: module/switch.c.i
+
+.PHONY : module/switch.i
+
+# target to preprocess a source file
+module/switch.c.i:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/switch.c.i
+.PHONY : module/switch.c.i
+
+module/switch.s: module/switch.c.s
+
+.PHONY : module/switch.s
+
+# target to generate assembly for a file
+module/switch.c.s:
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/switch.c.s
+.PHONY : module/switch.c.s
+
 module/table.obj: module/table.c.obj
 
 .PHONY : module/table.obj
@@ -257,87 +338,6 @@ module/table.c.s:
 	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/table.c.s
 .PHONY : module/table.c.s
 
-utilities/builder.obj: utilities/builder.c.obj
-
-.PHONY : utilities/builder.obj
-
-# target to build an object file
-utilities/builder.c.obj:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/builder.c.obj
-.PHONY : utilities/builder.c.obj
-
-utilities/builder.i: utilities/builder.c.i
-
-.PHONY : utilities/builder.i
-
-# target to preprocess a source file
-utilities/builder.c.i:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/builder.c.i
-.PHONY : utilities/builder.c.i
-
-utilities/builder.s: utilities/builder.c.s
-
-.PHONY : utilities/builder.s
-
-# target to generate assembly for a file
-utilities/builder.c.s:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/builder.c.s
-.PHONY : utilities/builder.c.s
-
-utilities/parser.obj: utilities/parser.c.obj
-
-.PHONY : utilities/parser.obj
-
-# target to build an object file
-utilities/parser.c.obj:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/parser.c.obj
-.PHONY : utilities/parser.c.obj
-
-utilities/parser.i: utilities/parser.c.i
-
-.PHONY : utilities/parser.i
-
-# target to preprocess a source file
-utilities/parser.c.i:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/parser.c.i
-.PHONY : utilities/parser.c.i
-
-utilities/parser.s: utilities/parser.c.s
-
-.PHONY : utilities/parser.s
-
-# target to generate assembly for a file
-utilities/parser.c.s:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/parser.c.s
-.PHONY : utilities/parser.c.s
-
-utilities/switch.obj: utilities/switch.c.obj
-
-.PHONY : utilities/switch.obj
-
-# target to build an object file
-utilities/switch.c.obj:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/switch.c.obj
-.PHONY : utilities/switch.c.obj
-
-utilities/switch.i: utilities/switch.c.i
-
-.PHONY : utilities/switch.i
-
-# target to preprocess a source file
-utilities/switch.c.i:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/switch.c.i
-.PHONY : utilities/switch.c.i
-
-utilities/switch.s: utilities/switch.c.s
-
-.PHONY : utilities/switch.s
-
-# target to generate assembly for a file
-utilities/switch.c.s:
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/switch.c.s
-.PHONY : utilities/switch.c.s
-
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -350,27 +350,27 @@ help:
 	@echo ... assembler.obj
 	@echo ... assembler.i
 	@echo ... assembler.s
-	@echo ... io/reader.obj
-	@echo ... io/reader.i
-	@echo ... io/reader.s
+	@echo ... module/builder.obj
+	@echo ... module/builder.i
+	@echo ... module/builder.s
 	@echo ... module/code.obj
 	@echo ... module/code.i
 	@echo ... module/code.s
 	@echo ... module/data.obj
 	@echo ... module/data.i
 	@echo ... module/data.s
+	@echo ... module/parser.obj
+	@echo ... module/parser.i
+	@echo ... module/parser.s
+	@echo ... module/reader.obj
+	@echo ... module/reader.i
+	@echo ... module/reader.s
+	@echo ... module/switch.obj
+	@echo ... module/switch.i
+	@echo ... module/switch.s
 	@echo ... module/table.obj
 	@echo ... module/table.i
 	@echo ... module/table.s
-	@echo ... utilities/builder.obj
-	@echo ... utilities/builder.i
-	@echo ... utilities/builder.s
-	@echo ... utilities/parser.obj
-	@echo ... utilities/parser.i
-	@echo ... utilities/parser.s
-	@echo ... utilities/switch.obj
-	@echo ... utilities/switch.i
-	@echo ... utilities/switch.s
 .PHONY : help
 
 

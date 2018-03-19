@@ -4,14 +4,14 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
-  "C:/Users/Admin/GitHub/assembler/io/reader.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/IO/reader.c.obj"
   "C:/Users/Admin/GitHub/assembler/assembler.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/assembler.c.obj"
+  "C:/Users/Admin/GitHub/assembler/module/builder.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/builder.c.obj"
   "C:/Users/Admin/GitHub/assembler/module/code.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/code.c.obj"
   "C:/Users/Admin/GitHub/assembler/module/data.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/data.c.obj"
+  "C:/Users/Admin/GitHub/assembler/module/parser.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/parser.c.obj"
+  "C:/Users/Admin/GitHub/assembler/module/reader.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/reader.c.obj"
+  "C:/Users/Admin/GitHub/assembler/module/switch.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/switch.c.obj"
   "C:/Users/Admin/GitHub/assembler/module/table.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/module/table.c.obj"
-  "C:/Users/Admin/GitHub/assembler/utilities/builder.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/utilities/builder.c.obj"
-  "C:/Users/Admin/GitHub/assembler/utilities/parser.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/utilities/parser.c.obj"
-  "C:/Users/Admin/GitHub/assembler/utilities/switch.c" "C:/Users/Admin/GitHub/assembler/cmake-build-debug/CMakeFiles/assembler.dir/utilities/switch.c.obj"
   )
 set(CMAKE_C_COMPILER_ID "GNU")
 

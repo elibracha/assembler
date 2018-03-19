@@ -7,25 +7,42 @@
 
 #include "table.h"
 
+const char *convert_2bits_to_32(const char *);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
 struct label *head_lab = NULL;
 struct label *current_lab = NULL;
 
-struct label * get_head_label(){
+struct label *get_head_label() {
     return head_lab;
 }
 
 //display the list
-void print_label_list() {
+void write_label_list(char *name) {
     struct label *ptr = head_lab;
-    printf("\n[ ");
 
-    //start from the beginning
+    FILE *fptr = NULL;
+
+
     while (ptr != NULL) {
-        printf("(lab - %s, line - %d, ex - %d, action - %d) ", ptr->label, ptr->line, ptr->ext, ptr->action);
+        if (ptr->ext == 1) {
+            if(fptr == NULL){
+                fptr = fopen(name, "w");
+
+                if (!fptr) {
+                    printf("Build: Error Writing Files.");
+                    exit(1);
+                }
+
+            }
+            fprintf(fptr, "%s\t%s \n", ptr->label, convert_2bits_to_32(convert_10bits_to_2(ptr->line, 1)));
+        }
         ptr = ptr->next;
     }
 
-    printf(" ]\n");
+    fclose(fptr);
+
 }
 
 //insert link at the first location
@@ -79,11 +96,11 @@ void update_label(int number) {
     current_lab = head_lab;
     //if it is last data
     while (current_lab->next != NULL) {
-        if(current_lab->action == 0)
+        if (current_lab->action == 0)
             current_lab->line += number;
         current_lab = current_lab->next;
     }
-    if(current_lab->action == 0)
+    if (current_lab->action == 0)
         current_lab->line += number;
 }
 

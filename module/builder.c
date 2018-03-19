@@ -59,6 +59,8 @@ struct label *get_head_label();
 
 void handle_case(int, int);
 
+char *plus_to_minus(char *);
+
 char *completing_number(char *, int);
 
 void handle_round2_c1(int, int, char **, int);
@@ -196,6 +198,7 @@ void stop_handler(char *label, char *op, char **operands, int line, int n, int r
 }
 
 void data_handler(char *label, char **operands, int params, int line) {
+    _Bool flag = 0;
     if (label != NULL) {
         struct label *head = get_head_label();
         if (head == NULL) {
@@ -206,23 +209,37 @@ void data_handler(char *label, char **operands, int params, int line) {
     while (params) {
         int i = 0;
         for (i = 0; *((*operands) + i) != '\0'; ++i) {
-            if (i == 0 && *((*operands) + i) == '-' || *((*operands) + i) == '+')
+            if (i == 0 && *((*operands) + i) == '-' || *((*operands) + i) == '+') {
+                flag = 1;
                 continue;
-            if (*((*operands) + i) <= 57 && *((*operands) + i) >= 48) {
+            }if (*((*operands) + i) <= 57 && *((*operands) + i) >= 48) {
                 continue;
             } else {
                 printf("Syntex: Invalid Char In Middle Of A Number.\n");
                 return;
             }
         }
-        int number = atoi(*operands);
+        int number;
+        if(flag)
+            number = atoi((*operands)+1);
+        else
+            number = atoi(*operands);
         if (get_head_data() == NULL) {
-            insert_first_data(DC++, convert_10bits_to_2(number, 1));
+            if(flag){
+                insert_first_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1)));
+            }else {
+                insert_first_data(DC++, convert_10bits_to_2(number, 1));
+            }
         } else {
-            insert_last_data(DC++, convert_10bits_to_2(number, 1));
+            if(flag){
+                insert_last_data(DC++, plus_to_minus(convert_10bits_to_2(number, 1)));
+            }else {
+                insert_last_data(DC++, convert_10bits_to_2(number, 1));
+            }
         }
         operands++;
         params--;
+        flag--;
     }
 }
 
@@ -303,7 +320,7 @@ void entry_handler(char *label, char *op, char **operands, int line, int n) {
 _Bool check_Addressing_0(char *operand, int line, int *num) {
     if (*operand == ASTRICK) {
         int j = 1;
-        if (*(operand + 1) == NEGATIVE || *(operand + 1) == POSITIVE) {
+        if (*(operand + 1) == POSITIVE) {
             j = 2;
         }
         char *clean_operand = (char *) malloc(sizeof(strlen(operand) - j));
@@ -317,9 +334,12 @@ _Bool check_Addressing_0(char *operand, int line, int *num) {
                 *(clean_operand + i) = END_OF_INPUT;
                 continue;
             }
+
             if (!isdigit(*(operand + i + j))) {
-                printf(INVALID_ADDRASSING_0, line, operand);
-                return 0;
+                if(!(*(operand + 1) == NEGATIVE &&  i + j ==  1)) {
+                    printf(INVALID_ADDRASSING_0, line, operand);
+                    return 0;
+                }
             }
             *(clean_operand + i) = *(operand + i + j);
         }
@@ -607,34 +627,34 @@ void handle_cmd(char *label, char **operands, int line, int n, method *md, int a
     } else {
         switch (val_op1) {
             case 0:
-                handle_case(result_op1,0);
+                handle_case(result_op1, 0);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                handle_case(result_op1,0);
+                handle_case(result_op1, 0);
                 break;
             case 3:
-                handle_case(result_op1,1);
+                handle_case(result_op1, 1);
             default:
                 break;
         }
 
         switch (val_op2) {
             case 0:
-                handle_case(result,0);
+                handle_case(result, 0);
                 break;
             case 1:
                 IC++;
                 break;
             case 2:
                 IC++;
-                handle_case(result,0);
+                handle_case(result, 0);
                 break;
             case 3:
-                handle_case(result,2);
+                handle_case(result, 2);
                 break;
             default:
                 break;
@@ -723,14 +743,19 @@ void handle_round2_c1(int val_op1, int val_op2, char **operands, int line) {
 }
 
 void handle_case(int result, int pos) {
-    char *number = convert_10bits_to_2(result, 0);
-    if(pos == 1) {
+    char *number = convert_10bits_to_2(abs(result), 0);
+    _Bool flag = 0;
+
+    if(result < 0){
+        flag = 1;
+    }
+    if (pos == 1) {
         number = completing_number(number, 4);
         strcat(number, "000000");
-    } else if(pos == 2){
+    } else if (pos == 2) {
         number = completing_number(number, 4);
-        char *temp = (char*) calloc((size_t) temp, 11);
-        if(!temp){
+        char *temp = (char *) calloc((size_t) temp, 11);
+        if (!temp) {
             printf("Syntex: Not Enough Space In Memory To parse");
             return;
         }
@@ -739,11 +764,14 @@ void handle_case(int result, int pos) {
             temp[k] = '0';
         }
         strcat(temp, number);
-        strcat(temp,"00");
+        strcat(temp, "00");
         number = temp;
-    }
-    else{
-        number = completing_number(number, 8);
+    } else {
+        if(flag)
+            number = plus_to_minus(completing_number(number, 8));
+        else
+            number = completing_number(number, 8);
+
         strcat(number, "00");
     }
     if (get_head_code() == NULL) {

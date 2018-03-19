@@ -14,8 +14,8 @@
 #define PARENTHESIS_OUT 41
 #define DOT_COMMA 59
 #define TWO_DOTS 58
-#define NEGATIVE 43
-#define POSITIVE 45
+#define NEGATIVE 45
+#define POSITIVE 43
 
 
 #endif

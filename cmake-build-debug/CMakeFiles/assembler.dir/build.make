@@ -80,100 +80,100 @@ CMakeFiles/assembler.dir/assembler.c.obj.provides: CMakeFiles/assembler.dir/asse
 CMakeFiles/assembler.dir/assembler.c.obj.provides.build: CMakeFiles/assembler.dir/assembler.c.obj
 
 
-CMakeFiles/assembler.dir/utilities/switch.c.obj: CMakeFiles/assembler.dir/flags.make
-CMakeFiles/assembler.dir/utilities/switch.c.obj: ../utilities/switch.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/assembler.dir/utilities/switch.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\utilities\switch.c.obj   -c C:\Users\Admin\GitHub\assembler\utilities\switch.c
+CMakeFiles/assembler.dir/module/switch.c.obj: CMakeFiles/assembler.dir/flags.make
+CMakeFiles/assembler.dir/module/switch.c.obj: ../module/switch.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/assembler.dir/module/switch.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\module\switch.c.obj   -c C:\Users\Admin\GitHub\assembler\module\switch.c
 
-CMakeFiles/assembler.dir/utilities/switch.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/utilities/switch.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\utilities\switch.c > CMakeFiles\assembler.dir\utilities\switch.c.i
+CMakeFiles/assembler.dir/module/switch.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/module/switch.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\module\switch.c > CMakeFiles\assembler.dir\module\switch.c.i
 
-CMakeFiles/assembler.dir/utilities/switch.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/utilities/switch.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\utilities\switch.c -o CMakeFiles\assembler.dir\utilities\switch.c.s
+CMakeFiles/assembler.dir/module/switch.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/module/switch.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\module\switch.c -o CMakeFiles\assembler.dir\module\switch.c.s
 
-CMakeFiles/assembler.dir/utilities/switch.c.obj.requires:
+CMakeFiles/assembler.dir/module/switch.c.obj.requires:
 
-.PHONY : CMakeFiles/assembler.dir/utilities/switch.c.obj.requires
+.PHONY : CMakeFiles/assembler.dir/module/switch.c.obj.requires
 
-CMakeFiles/assembler.dir/utilities/switch.c.obj.provides: CMakeFiles/assembler.dir/utilities/switch.c.obj.requires
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/switch.c.obj.provides.build
-.PHONY : CMakeFiles/assembler.dir/utilities/switch.c.obj.provides
+CMakeFiles/assembler.dir/module/switch.c.obj.provides: CMakeFiles/assembler.dir/module/switch.c.obj.requires
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/switch.c.obj.provides.build
+.PHONY : CMakeFiles/assembler.dir/module/switch.c.obj.provides
 
-CMakeFiles/assembler.dir/utilities/switch.c.obj.provides.build: CMakeFiles/assembler.dir/utilities/switch.c.obj
-
-
-CMakeFiles/assembler.dir/io/reader.c.obj: CMakeFiles/assembler.dir/flags.make
-CMakeFiles/assembler.dir/io/reader.c.obj: ../io/reader.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/assembler.dir/io/reader.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\io\reader.c.obj   -c C:\Users\Admin\GitHub\assembler\io\reader.c
-
-CMakeFiles/assembler.dir/io/reader.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/io/reader.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\io\reader.c > CMakeFiles\assembler.dir\io\reader.c.i
-
-CMakeFiles/assembler.dir/io/reader.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/io/reader.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\io\reader.c -o CMakeFiles\assembler.dir\io\reader.c.s
-
-CMakeFiles/assembler.dir/io/reader.c.obj.requires:
-
-.PHONY : CMakeFiles/assembler.dir/io/reader.c.obj.requires
-
-CMakeFiles/assembler.dir/io/reader.c.obj.provides: CMakeFiles/assembler.dir/io/reader.c.obj.requires
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/io/reader.c.obj.provides.build
-.PHONY : CMakeFiles/assembler.dir/io/reader.c.obj.provides
-
-CMakeFiles/assembler.dir/io/reader.c.obj.provides.build: CMakeFiles/assembler.dir/io/reader.c.obj
+CMakeFiles/assembler.dir/module/switch.c.obj.provides.build: CMakeFiles/assembler.dir/module/switch.c.obj
 
 
-CMakeFiles/assembler.dir/utilities/parser.c.obj: CMakeFiles/assembler.dir/flags.make
-CMakeFiles/assembler.dir/utilities/parser.c.obj: ../utilities/parser.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/assembler.dir/utilities/parser.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\utilities\parser.c.obj   -c C:\Users\Admin\GitHub\assembler\utilities\parser.c
+CMakeFiles/assembler.dir/module/reader.c.obj: CMakeFiles/assembler.dir/flags.make
+CMakeFiles/assembler.dir/module/reader.c.obj: ../module/reader.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/assembler.dir/module/reader.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\module\reader.c.obj   -c C:\Users\Admin\GitHub\assembler\module\reader.c
 
-CMakeFiles/assembler.dir/utilities/parser.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/utilities/parser.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\utilities\parser.c > CMakeFiles\assembler.dir\utilities\parser.c.i
+CMakeFiles/assembler.dir/module/reader.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/module/reader.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\module\reader.c > CMakeFiles\assembler.dir\module\reader.c.i
 
-CMakeFiles/assembler.dir/utilities/parser.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/utilities/parser.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\utilities\parser.c -o CMakeFiles\assembler.dir\utilities\parser.c.s
+CMakeFiles/assembler.dir/module/reader.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/module/reader.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\module\reader.c -o CMakeFiles\assembler.dir\module\reader.c.s
 
-CMakeFiles/assembler.dir/utilities/parser.c.obj.requires:
+CMakeFiles/assembler.dir/module/reader.c.obj.requires:
 
-.PHONY : CMakeFiles/assembler.dir/utilities/parser.c.obj.requires
+.PHONY : CMakeFiles/assembler.dir/module/reader.c.obj.requires
 
-CMakeFiles/assembler.dir/utilities/parser.c.obj.provides: CMakeFiles/assembler.dir/utilities/parser.c.obj.requires
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/parser.c.obj.provides.build
-.PHONY : CMakeFiles/assembler.dir/utilities/parser.c.obj.provides
+CMakeFiles/assembler.dir/module/reader.c.obj.provides: CMakeFiles/assembler.dir/module/reader.c.obj.requires
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/reader.c.obj.provides.build
+.PHONY : CMakeFiles/assembler.dir/module/reader.c.obj.provides
 
-CMakeFiles/assembler.dir/utilities/parser.c.obj.provides.build: CMakeFiles/assembler.dir/utilities/parser.c.obj
+CMakeFiles/assembler.dir/module/reader.c.obj.provides.build: CMakeFiles/assembler.dir/module/reader.c.obj
 
 
-CMakeFiles/assembler.dir/utilities/builder.c.obj: CMakeFiles/assembler.dir/flags.make
-CMakeFiles/assembler.dir/utilities/builder.c.obj: ../utilities/builder.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/assembler.dir/utilities/builder.c.obj"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\utilities\builder.c.obj   -c C:\Users\Admin\GitHub\assembler\utilities\builder.c
+CMakeFiles/assembler.dir/module/parser.c.obj: CMakeFiles/assembler.dir/flags.make
+CMakeFiles/assembler.dir/module/parser.c.obj: ../module/parser.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/assembler.dir/module/parser.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\module\parser.c.obj   -c C:\Users\Admin\GitHub\assembler\module\parser.c
 
-CMakeFiles/assembler.dir/utilities/builder.c.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/utilities/builder.c.i"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\utilities\builder.c > CMakeFiles\assembler.dir\utilities\builder.c.i
+CMakeFiles/assembler.dir/module/parser.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/module/parser.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\module\parser.c > CMakeFiles\assembler.dir\module\parser.c.i
 
-CMakeFiles/assembler.dir/utilities/builder.c.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/utilities/builder.c.s"
-	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\utilities\builder.c -o CMakeFiles\assembler.dir\utilities\builder.c.s
+CMakeFiles/assembler.dir/module/parser.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/module/parser.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\module\parser.c -o CMakeFiles\assembler.dir\module\parser.c.s
 
-CMakeFiles/assembler.dir/utilities/builder.c.obj.requires:
+CMakeFiles/assembler.dir/module/parser.c.obj.requires:
 
-.PHONY : CMakeFiles/assembler.dir/utilities/builder.c.obj.requires
+.PHONY : CMakeFiles/assembler.dir/module/parser.c.obj.requires
 
-CMakeFiles/assembler.dir/utilities/builder.c.obj.provides: CMakeFiles/assembler.dir/utilities/builder.c.obj.requires
-	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/utilities/builder.c.obj.provides.build
-.PHONY : CMakeFiles/assembler.dir/utilities/builder.c.obj.provides
+CMakeFiles/assembler.dir/module/parser.c.obj.provides: CMakeFiles/assembler.dir/module/parser.c.obj.requires
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/parser.c.obj.provides.build
+.PHONY : CMakeFiles/assembler.dir/module/parser.c.obj.provides
 
-CMakeFiles/assembler.dir/utilities/builder.c.obj.provides.build: CMakeFiles/assembler.dir/utilities/builder.c.obj
+CMakeFiles/assembler.dir/module/parser.c.obj.provides.build: CMakeFiles/assembler.dir/module/parser.c.obj
+
+
+CMakeFiles/assembler.dir/module/builder.c.obj: CMakeFiles/assembler.dir/flags.make
+CMakeFiles/assembler.dir/module/builder.c.obj: ../module/builder.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\Admin\GitHub\assembler\cmake-build-debug\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building C object CMakeFiles/assembler.dir/module/builder.c.obj"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles\assembler.dir\module\builder.c.obj   -c C:\Users\Admin\GitHub\assembler\module\builder.c
+
+CMakeFiles/assembler.dir/module/builder.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/assembler.dir/module/builder.c.i"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E C:\Users\Admin\GitHub\assembler\module\builder.c > CMakeFiles\assembler.dir\module\builder.c.i
+
+CMakeFiles/assembler.dir/module/builder.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/assembler.dir/module/builder.c.s"
+	C:\MinGW\bin\gcc.exe $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S C:\Users\Admin\GitHub\assembler\module\builder.c -o CMakeFiles\assembler.dir\module\builder.c.s
+
+CMakeFiles/assembler.dir/module/builder.c.obj.requires:
+
+.PHONY : CMakeFiles/assembler.dir/module/builder.c.obj.requires
+
+CMakeFiles/assembler.dir/module/builder.c.obj.provides: CMakeFiles/assembler.dir/module/builder.c.obj.requires
+	$(MAKE) -f CMakeFiles\assembler.dir\build.make CMakeFiles/assembler.dir/module/builder.c.obj.provides.build
+.PHONY : CMakeFiles/assembler.dir/module/builder.c.obj.provides
+
+CMakeFiles/assembler.dir/module/builder.c.obj.provides.build: CMakeFiles/assembler.dir/module/builder.c.obj
 
 
 CMakeFiles/assembler.dir/module/table.c.obj: CMakeFiles/assembler.dir/flags.make
@@ -251,10 +251,10 @@ CMakeFiles/assembler.dir/module/code.c.obj.provides.build: CMakeFiles/assembler.
 # Object files for target assembler
 assembler_OBJECTS = \
 "CMakeFiles/assembler.dir/assembler.c.obj" \
-"CMakeFiles/assembler.dir/utilities/switch.c.obj" \
-"CMakeFiles/assembler.dir/io/reader.c.obj" \
-"CMakeFiles/assembler.dir/utilities/parser.c.obj" \
-"CMakeFiles/assembler.dir/utilities/builder.c.obj" \
+"CMakeFiles/assembler.dir/module/switch.c.obj" \
+"CMakeFiles/assembler.dir/module/reader.c.obj" \
+"CMakeFiles/assembler.dir/module/parser.c.obj" \
+"CMakeFiles/assembler.dir/module/builder.c.obj" \
 "CMakeFiles/assembler.dir/module/table.c.obj" \
 "CMakeFiles/assembler.dir/module/data.c.obj" \
 "CMakeFiles/assembler.dir/module/code.c.obj"
@@ -263,10 +263,10 @@ assembler_OBJECTS = \
 assembler_EXTERNAL_OBJECTS =
 
 assembler.exe: CMakeFiles/assembler.dir/assembler.c.obj
-assembler.exe: CMakeFiles/assembler.dir/utilities/switch.c.obj
-assembler.exe: CMakeFiles/assembler.dir/io/reader.c.obj
-assembler.exe: CMakeFiles/assembler.dir/utilities/parser.c.obj
-assembler.exe: CMakeFiles/assembler.dir/utilities/builder.c.obj
+assembler.exe: CMakeFiles/assembler.dir/module/switch.c.obj
+assembler.exe: CMakeFiles/assembler.dir/module/reader.c.obj
+assembler.exe: CMakeFiles/assembler.dir/module/parser.c.obj
+assembler.exe: CMakeFiles/assembler.dir/module/builder.c.obj
 assembler.exe: CMakeFiles/assembler.dir/module/table.c.obj
 assembler.exe: CMakeFiles/assembler.dir/module/data.c.obj
 assembler.exe: CMakeFiles/assembler.dir/module/code.c.obj
@@ -283,10 +283,10 @@ CMakeFiles/assembler.dir/build: assembler.exe
 .PHONY : CMakeFiles/assembler.dir/build
 
 CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/assembler.c.obj.requires
-CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/utilities/switch.c.obj.requires
-CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/io/reader.c.obj.requires
-CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/utilities/parser.c.obj.requires
-CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/utilities/builder.c.obj.requires
+CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/switch.c.obj.requires
+CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/reader.c.obj.requires
+CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/parser.c.obj.requires
+CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/builder.c.obj.requires
 CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/table.c.obj.requires
 CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/data.c.obj.requires
 CMakeFiles/assembler.dir/requires: CMakeFiles/assembler.dir/module/code.c.obj.requires
