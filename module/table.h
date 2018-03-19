@@ -8,6 +8,10 @@
 
 #define ERROR_ALLOCATION "Error: Couldn't Allocate Enough Memory To Program To Parse.\n"
 
+const char *convert_2bits_to_32(const char *);
+
+char *convert_10bits_to_2(signed int, _Bool);
+
 struct label {
     char *label;
     int line;
@@ -16,4 +20,10 @@ struct label {
     struct label *next;
 };
 
-#endif //ASSEMBLER_TABLE_H
+struct ex_label {
+    char *label;
+    int line;
+    struct ex_label *next;
+};
+
+#endif

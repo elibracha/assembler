@@ -7,37 +7,31 @@
 
 #include "table.h"
 
-const char *convert_2bits_to_32(const char *);
-
-char *convert_10bits_to_2(signed int, _Bool);
-
 struct label *head_lab = NULL;
 struct label *current_lab = NULL;
+struct ex_label *head_ex = NULL;
+struct ex_label *current_ex = NULL;
 
 struct label *get_head_label() {
     return head_lab;
 }
 
-//display the list
 void write_label_list(char *name) {
-    struct label *ptr = head_lab;
+    struct ex_label *ptr = head_ex;
 
     FILE *fptr = NULL;
 
-
     while (ptr != NULL) {
-        if (ptr->ext == 1) {
-            if(fptr == NULL){
-                fptr = fopen(name, "w");
+        if (fptr == NULL) {
+            fptr = fopen(name, "w");
 
-                if (!fptr) {
-                    printf("Build: Error Writing Files.");
-                    exit(1);
-                }
-
+            if (!fptr) {
+                printf("Build: Error Writing Files.");
+                exit(1);
             }
-            fprintf(fptr, "%s\t%s \n", ptr->label, convert_2bits_to_32(convert_10bits_to_2(ptr->line, 1)));
+
         }
+        fprintf(fptr, "%s\t%s \n", ptr->label, convert_2bits_to_32(convert_10bits_to_2(ptr->line, 1)));
         ptr = ptr->next;
     }
 
@@ -45,9 +39,8 @@ void write_label_list(char *name) {
 
 }
 
-//insert link at the first location
 void insert_first_label(char *label, int line, _Bool ext, int action) {
-    //create a link
+
     struct label *link = (struct label *) malloc(sizeof(struct label));
 
     if (!link) {
@@ -59,14 +52,12 @@ void insert_first_label(char *label, int line, _Bool ext, int action) {
     link->line = line;
     link->ext = ext;
     link->action = action;
-    //point it to old first label
+
     link->next = head_lab;
 
-    //point first to new first label
     head_lab = link;
 }
 
-//insert link at the end location
 void insert_last_label(char *label, int line, _Bool ext, int action) {
     //create a link
     struct label *link = (struct label *) malloc(sizeof(struct label));
@@ -83,7 +74,7 @@ void insert_last_label(char *label, int line, _Bool ext, int action) {
     link->next = NULL;
 
     current_lab = head_lab;
-    //if it is last label
+
     while (current_lab->next != NULL) {
         current_lab = current_lab->next;
     }
@@ -92,9 +83,9 @@ void insert_last_label(char *label, int line, _Bool ext, int action) {
 }
 
 void update_label(int number) {
-    //create a link
+
     current_lab = head_lab;
-    //if it is last data
+
     while (current_lab->next != NULL) {
         if (current_lab->action == 0)
             current_lab->line += number;
@@ -104,31 +95,60 @@ void update_label(int number) {
         current_lab->line += number;
 }
 
-//find a link with given key
-struct label *find_label(char *label) {
+struct label *find_label(char *label, int line) {
 
-    //start from the first link
     struct label *current = head_lab;
 
-    //if list is empty
     if (head_lab == NULL) {
         return NULL;
     }
 
     struct label *l = current;
 
-    //navigate through list
     while (strcmp(current->label, label) != 0) {
 
-        //if it is last label
         if (current->next == NULL) {
             return NULL;
         } else {
-            //go to next link
             current = current->next;
         }
     }
 
-    //if data found, return the current Link
+    if (current->ext == 1) {
+        if (head_ex == NULL) {
+            head_ex = (struct ex_label *) malloc(sizeof(struct ex_label));
+
+
+            if (!head_ex) {
+                printf(ERROR_ALLOCATION);
+                exit(0);
+            }
+
+            head_ex->line = line;
+            head_ex->label = label;
+            head_ex->next = NULL;
+        } else {
+            struct ex_label *link = (struct ex_label *) malloc(sizeof(struct ex_label));
+
+            if (!link) {
+                printf(ERROR_ALLOCATION);
+                exit(0);
+            }
+
+            link->label = label;
+            link->line = line;
+            link->next = NULL;
+
+            if(current_ex == NULL){
+                current_ex = head_ex;
+            }
+
+            while (current_ex->next != NULL) {
+                current_ex = current_ex->next;
+            }
+
+            current_ex->next = link;
+        }
+    }
     return current;
 }

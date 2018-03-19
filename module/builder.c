@@ -49,7 +49,7 @@ void insert_last_code(int, char *);
 
 void insert_first_code(int, char *);
 
-struct label *find_label(char *);
+struct label *find_label(char *, int);
 
 struct code *get_head_code();
 
@@ -699,7 +699,7 @@ void handle_round2_c2(int val_op1, int val_op2, char **operands, int line, int p
     }
 
     if (m1 != NULL) {
-        struct label *lab = find_label(m1);
+        struct label *lab = find_label(m1, IC);
         if (lab != NULL) {
             char *ln = convert_10bits_to_2(lab->line, 0);
             ln = completing_number(ln, 8);
@@ -718,9 +718,9 @@ void handle_round2_c2(int val_op1, int val_op2, char **operands, int line, int p
 void handle_round2_c1(int val_op1, int val_op2, char **operands, int line) {
     struct label *lab;
     if (val_op1 != -1 && val_op2 != -1)
-        lab = find_label(*(operands + 1));
+        lab = find_label(*(operands + 1), IC);
     else
-        lab = find_label(*operands);
+        lab = find_label(*operands, IC);
 
     if (lab != NULL) {
         char *ln = convert_10bits_to_2(lab->line, 0);
