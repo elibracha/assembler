@@ -9,12 +9,19 @@
 #define TOO_MANY_ARGUMENTS "Syntex: Too Many Aruments For %s Commend (On Line - %d).\n"
 #define TOO_LOW_ARGUMENTS "Syntex: Commend %s Needs More Arguments (On Line - %d).\n"
 #define INVALID_ADDRASSING_0 "Syntex: Invalid Paramter in line %d (%s).\n"
-#define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space To Varibles.\n"
+#define SPACE_ALLOCATION_FAILED "Error: Couldn't Allocate Enough Space.\n"
 #define MISSPLACED_ADDRESSING "Syntex: Addressing Operand Number %d , With Addressing Method Number %d (%s) Is Invalid (line - %d).\n"
 #define UNKNOWN_CHAR_MIDDLE "Syntex: Invalid Char In Middle Of A Number.\n"
 #define TOO_MANY_STRINGS "Syntex: To Many Aruments For String.\n"
 #define NO_MARKS_AT_BEGINING "Syntex: String Data Most start With ' \" ' .\n"
 #define NO_MARKS_AT_END "Syntex: String Data Most End With ' \" ' .\n"
+#define EXTERN_ARGS_NUMBER "Syntex: To Many Aruments For Extern Or No Arguments. \n"
+#define INVALID_LABEL_START "Syntex: Label Can't Start With '%c', Invalid (line - %d).\n"
+#define INVALID_LABEL_MIDDLE "Syntex: Label Can't Contain '%c' Or Too Long, Invalid (line - %d).\n"
+#define INVALID_STRUCT_START "Syntex: Struct Can't Start With '%c', Invalid (line - %d).\n "
+#define INVALID_STRUCT_MIDDLE "Syntex: Struct Can't Contain '%c' Or Too Long, Invalid (line - %d).\n"
+#define STRCUT_SECOND_PARAM_ERROR "Syntex: Struct Fields Most Be Address With 1 or 2, Invalid (line - %d).\n"
+#define LABEL_NOT_FOUND "Syntex: Label Not Found Or Not Declared Please Fix Line - %d.\n"
 
 #define TWO_ARGUMENTS 2
 #define ONE_ARGUMENTS 1
@@ -41,11 +48,11 @@ method mov, add, sub, cmp, not, clr, lea, inc, dec, jmp, bne, red, prn, jsr, rts
 
 _Bool check_Addressing_0(char *, int, int *);
 
-_Bool check_Addressing_2(char *, int, int *, _Bool);
+_Bool check_Addressing_2(char *, int, int *);
 
 _Bool check_Addressing_1(char *, int, _Bool);
 
-_Bool check_Addressing_3(char *, int, int *, _Bool);
+_Bool check_Addressing_3(char *, int *);
 
 _Bool check_arguments(int, char *, int, int);
 
@@ -81,6 +88,6 @@ void handle_round2_c1(int, int, char **, int);
 
 void handle_round2_c2(int, int, char **, int, int);
 
-void handle_cmd(char *, char **, int, int, method *, int, int);
+void handle_cmd(char *, char **, int, method *, int, int);
 
 #endif

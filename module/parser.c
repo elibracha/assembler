@@ -162,7 +162,7 @@ unsigned int build_data(char *label, char *op, char **operands, int line, int pa
     } else if (strcmp(op, ".entry") == 0) {
         //  entry_handler(label, op, operands, line, params);
     } else if (strcmp(op, ".extern") == 0 && round != 2) {
-        extern_handler(label, operands, params);
+        extern_handler(operands, params);
     } else if (strcmp(op, ".data") == 0 && round != 2) {
         data_handler(label, operands, params);
     } else if(round != 2) {
